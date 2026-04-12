@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绘境——词条生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #ADD8E6 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .title {
+            font-size: 2.2em;
+            color: #5a7d8a;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            font-size: 0.95em;
+            color: #8a9a9f;
+            text-align: center;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            padding: 15px;
+            background: rgba(90, 125, 138, 0.08);
+            border-radius: 10px;
+        }
+
+        .input-section {
+            margin-bottom: 25px;
+        }
+
+        .input-label {
+            font-size: 0.9em;
+            color: #8a9a9f;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e8ea;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: #5a7d8a;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(90, 125, 138, 0.1);
+        }
+
+        .output-section {
+            margin-bottom: 25px;
+        }
+
+        .output-box {
+            width: 100%;
+            min-height: 200px;
+            padding: 20px;
+            border: 2px solid #e0e8ea;
+            border-radius: 12px;
+            font-size: 0.95em;
+            line-height: 1.8;
+            background: #fafbfc;
+            color: #5a7d8a;
+            resize: none;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .output-box[readonly] {
+            cursor: text;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5a7d8a, #7a9da8);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(90, 125, 138, 0.4);
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #8a9a9f, #9aabad);
+            color: #fff;
+            padding: 12px 20px;
+            font-size: 0.95em;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(138, 154, 159, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #6abf8a, #8adba8);
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 6px 20px rgba(106, 191, 138, 0.4);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(90, 125, 138, 0.95);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 0.95em;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .format-tip {
+            font-size: 0.85em;
+            color: #8a9a9f;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(90, 125, 138, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #5a7d8a;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 30px 20px;
+            }
+            .title {
+                font-size: 1.8em;
+            }
+            .btn-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="title">🎨 绘境——词条生成器</h1>
+            <p class="subtitle">用标签绘制意境，用词语营造画面<br>支持智能语义识别，自动生成 Danbooru 标准格式词条</p>
+
+            <div class="input-section">
+                <label class="input-label">请输入想要的词条主题（可选）</label>
+                <input type="text" class="input-box" id="themeInput" placeholder="例如：坐在草地上、黄昏时看书的少女、樱花树下的魔法少女...">
+            </div>
+
+            <div class="input-section">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="dreamMode" style="width: 20px; height: 20px;">
+                    <span style="font-size: 0.95em; color: #8a9a9f;">🌙 梦中奇幻（开启后自由搭配，不考虑合理性）</span>
+                </label>
+            </div>
+
+            <div class="output-section">
+                <textarea class="output-box" id="outputBox" readonly placeholder="点击"生成"按钮，生成专属词条..."></textarea>
+                <div class="format-tip">
+                    <strong>📝 格式说明：</strong> 输出为 Danbooru raw tag 格式，空格已自动转换为下划线（如 <code>blue_sky</code>），可直接用于 Neta 创作。
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="generateBtn" onclick="generate()">✨ 生成</button>
+
+            <div class="btn-group hidden" id="resultBtns">
+                <button class="btn btn-secondary btn-success" onclick="copyResult()">📋 复制</button>
+                <button class="btn btn-secondary" onclick="generate()">🔄 再次生成</button>
+                <button class="btn btn-secondary" onclick="reset()">🗑️ 重置页面</button>
+            </div>
+
+            <div class="back-link" style="text-align: center; margin-top: 25px;">
+                <a href="index.html" style="color: #5a7d8a; text-decoration: none; padding: 10px 20px; background: rgba(90, 125, 138, 0.1); border-radius: 8px; transition: all 0.3s ease; display: inline-block; font-size: 0.95em;">← 返回主页</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">已复制到剪贴板！</div>
+
+    <script>
+        // ==================== 基础标签库（按【绘境】skill 规范） ====================
+        const baseTags = {
+            // 一、质量词库
+            quality: [
+                "masterpiece", "best_quality", "high_quality", "ultra-detailed",
+                "detailed", "intricate_details", "fine_details", "cinematic_lighting",
+                "HDR", "ray_tracing", "global_illumination", "volumetric_lighting",
+                "8k", "4k", "high_resolution", "professional", "award-winning",
+                "photorealistic", "anime_style", "digital_art", "illustration"
+            ],
+            // 二、光影词库
+            lighting: [
+                "cinematic_lighting", "soft_lighting", "dramatic_lighting", "natural_light",
+                "studio_lighting", "sunlight", "moonlight", "candlelight", "sunset",
+                "sunrise", "golden_hour", "blue_hour", "firelight", "lamp_light",
+                "rim_light", "god_rays", "lens_flare", "subsurface_scattering",
+                "ambient_occlusion", "bloom", "light_particles"
+            ],
+            // 三、动作词库
+            action: [
+                "standing", "sitting", "lying", "kneeling", "walking", "running", "jumping",
+                "hand_up", "hands_on_hips", "arms_crossed", "holding", "reaching_out",
+                "waving", "clapping", "head_tilt", "looking_away", "looking_down",
+                "looking_up", "head_back", "smile", "closed_eyes", "closed_mouth",
+                "parted_lips", "one_eye_closed", "open_mouth", "blush", "tears",
+                "surprised", "serious", "confident", "shy"
+            ],
+            // 四、场景词库
+            scene: [
+                "outdoors", "nature", "flower", "tree", "grass", "forest", "beach",
+                "ocean", "mountain", "river", "lake", "garden", "park", "street",
+                "city", "building", "bridge", "rooftop", "balcony", "indoors",
+                "room", "bedroom", "living_room", "kitchen", "office", "library",
+                "classroom", "cafe", "restaurant", "shop", "hallway", "staircase",
+                "sky", "cloud", "sun", "moon", "star", "day", "night", "dawn",
+                "dusk", "rain", "snow", "fog", "wind", "food", "drink", "book",
+                "chair", "table", "window", "door", "bed", "mirror", "candle", "lamp"
+            ],
+            // 五、构图/视角词库
+            composition: [
+                "full_body", "upper_body", "lower_body", "cowboy_shot", "close-up",
+                "extreme_close-up", "portrait", "headshot", "looking_at_viewer",
+                "from_above", "from_below", "from_side", "front_view", "side_view",
+                "back_view", "three_quarter_view", "solo_focus", "centered",
+                "rule_of_thirds", "symmetrical", "dynamic_angle", "dutch_angle",
+                "depth_of_field", "bokeh"
+            ],
+            // 六、情绪/氛围词库
+            emotion: [
+                "blush", "sweat", "glow", "barefoot", "wet", "dry", "happy",
+                "sad", "angry", "calm", "excited", "nervous", "relaxed",
+                "confident", "shy", "proud", "lonely", "peaceful", "romantic",
+                "mysterious", "dreamy", "nostalgic", "warm", "cold", "bright",
+                "dark", "soft", "harsh", "gentle", "intense", "serene", "vibrant", "muted"
+            ]
+        };
+
+        // ==================== 语义标签库（中文→英文标签，Danbooru 格式） ====================
+        const semanticTags = {
+            // 动作类
+            action: {
+                "坐": ["sitting", "seated"],
+                "站": ["standing"],
+                "躺": ["lying_down", "lying"],
+                "跑": ["running", "sprinting"],
+                "跳": ["jumping", "leap"],
+                "走": ["walking"],
+                "蹲": ["squatting", "crouching"],
+                "靠": ["leaning"],
+                "睡": ["sleeping", "asleep"],
+                "吃": ["eating", "biting"],
+                "喝": ["drinking", "sipping"],
+                "看": ["looking", "watching", "gazing"],
+                "读": ["reading"],
+                "写": ["writing"],
+                "画": ["painting", "drawing"],
+                "唱": ["singing"],
+                "笑": ["smiling", "laughing"],
+                "哭": ["crying", "tears"],
+                "思考": ["thinking", "pondering", "contemplating"],
+                "等待": ["waiting"],
+                "招手": ["waving"],
+                "拥抱": ["hugging"],
+                "战斗": ["fighting", "battle", "combat"],
+                "施法": ["casting_spell", "magic_circle"],
+                "舞蹈": ["dancing", "ballet", "twirling"],
+                "飞翔": ["flying", "in_flight"],
+                "游泳": ["swimming"],
+                "骑马": ["riding_horse", "horseback_riding"],
+                "开车": ["driving"],
+                "拍照": ["taking_photo"],
+                "弹琴": ["playing_piano", "playing_instrument"],
+                "吹笛": ["playing_flute"],
+                "拉琴": ["playing_violin"],
+                "打伞": ["holding_umbrella"],
+                "拿花": ["holding_flower"],
+                "拿书": ["holding_book"],
+                "拿剑": ["holding_sword"],
+                "拿法杖": ["holding_staff"],
+                "捧脸": ["hands_on_face"],
+                "托腮": ["hand_on_cheek"],
+                "叉腰": ["hands_on_hips"],
+                "抱膝": ["hugging_knees"],
+                "伸懒腰": ["stretching"],
+                "回头": ["looking_back"],
+                "闭眼": ["closed_eyes"],
+                "眨眼": ["winking"],
+                "张嘴": ["open_mouth"],
+                "吐舌": ["tongue_out"]
+            },
+            // 场景类
+            scene: {
+                "草地": ["grass", "lawn", "meadow", "green_grass"],
+                "花园": ["garden", "flower_garden"],
+                "森林": ["forest", "woods", "trees"],
+                "海边": ["seaside", "beach", "ocean_shore"],
+                "山上": ["mountain", "hillside"],
+                "河边": ["riverside", "by_the_river"],
+                "湖边": ["lakeside", "by_the_lake"],
+                "树下": ["under_tree", "beneath_tree"],
+                "樱花树": ["cherry_blossom_tree", "sakura_tree"],
+                "窗边": ["by_window", "window_side"],
+                "阳台": ["balcony", "terrace"],
+                "屋顶": ["rooftop"],
+                "天台": ["terrace", "rooftop"],
+                "街道": ["street", "road"],
+                "小巷": ["alley", "narrow_street"],
+                "广场": ["plaza", "square"],
+                "公园": ["park"],
+                "城堡": ["castle"],
+                "宫殿": ["palace"],
+                "学校": ["school"],
+                "教室": ["classroom"],
+                "图书馆": ["library"],
+                "咖啡厅": ["cafe", "coffee_shop"],
+                "餐厅": ["restaurant"],
+                "房间": ["room", "indoor"],
+                "卧室": ["bedroom"],
+                "客厅": ["living_room"],
+                "浴室": ["bathroom"],
+                "厨房": ["kitchen"],
+                "走廊": ["hallway", "corridor"],
+                "楼梯": ["stairs", "staircase"],
+                "门口": ["doorway", "at_the_door"],
+                "桥上": ["on_bridge"],
+                "船上": ["on_boat", "on_ship"],
+                "车内": ["inside_car"],
+                "帐篷": ["tent", "camping"],
+                "废墟": ["ruins"],
+                "沙漠": ["desert"],
+                "雪地": ["snow_field", "snowy"],
+                "田野": ["field", "countryside"],
+                "麦田": ["wheat_field"],
+                "花海": ["sea_of_flowers"],
+                "竹林": ["bamboo_forest"],
+                "枫林": ["maple_forest"],
+                "洞穴": ["cave"],
+                "瀑布": ["waterfall"],
+                "温泉": ["hot_spring"],
+                "星空下": ["under_stars", "starry_sky"],
+                "月光下": ["under_moonlight"],
+                "阳光下": ["under_sunlight"],
+                "彩虹下": ["under_rainbow"]
+            },
+            // 时间类
+            time: {
+                "清晨": ["early_morning", "dawn", "morning"],
+                "早晨": ["morning"],
+                "上午": ["morning"],
+                "中午": ["noon", "midday"],
+                "下午": ["afternoon"],
+                "傍晚": ["evening", "dusk"],
+                "黄昏": ["dusk", "sunset", "golden_hour", "twilight"],
+                "日落": ["sunset"],
+                "夜晚": ["night", "nighttime"],
+                "深夜": ["late_night", "midnight"],
+                "午夜": ["midnight"],
+                "黎明": ["dawn", "daybreak"],
+                "日出": ["sunrise"],
+                "春天": ["spring"],
+                "夏天": ["summer"],
+                "秋天": ["autumn", "fall"],
+                "冬天": ["winter"],
+                "春日": ["spring_day"],
+                "夏日": ["summer_day"],
+                "秋日": ["autumn_day"],
+                "冬日": ["winter_day"],
+                "雨天": ["rainy_day"],
+                "雪天": ["snowy_day"],
+                "晴天": ["sunny_day", "clear_sky"],
+                "阴天": ["cloudy_day", "overcast"]
+            },
+            // 角色类
+            character: {
+                "少女": ["girl", "young_girl"],
+                "少年": ["boy", "young_boy"],
+                "女人": ["woman", "female"],
+                "男人": ["man", "male"],
+                "女孩": ["girl"],
+                "男孩": ["boy"],
+                "女性": ["female"],
+                "男性": ["male"],
+                "孩子": ["child", "kid"],
+                "小孩": ["child", "little_one"],
+                "婴儿": ["baby"],
+                "老人": ["elderly", "old_person"],
+                "姐姐": ["older_sister", "big_sister"],
+                "妹妹": ["younger_sister", "little_sister"],
+                "哥哥": ["older_brother", "big_brother"],
+                "弟弟": ["younger_brother"],
+                "妈妈": ["mother", "mom"],
+                "爸爸": ["father", "dad"],
+                "老师": ["teacher"],
+                "学生": ["student"],
+                "医生": ["doctor"],
+                "护士": ["nurse"],
+                "女仆": ["maid"],
+                "仆人": ["servant"],
+                "公主": ["princess"],
+                "王子": ["prince"],
+                "女王": ["queen"],
+                "国王": ["king"],
+                "骑士": ["knight"],
+                "战士": ["warrior", "fighter"],
+                "法师": ["mage", "wizard", "magician"],
+                "巫师": ["wizard", "witch"],
+                "魔女": ["witch"],
+                "精灵": ["elf", "fairy"],
+                "天使": ["angel"],
+                "恶魔": ["demon", "devil"],
+                "龙": ["dragon"],
+                "仙女": ["fairy", "celestial_maiden"],
+                "女神": ["goddess"],
+                "神明": ["god", "deity"],
+                "幽灵": ["ghost", "spirit"],
+                "吸血鬼": ["vampire"],
+                "人鱼": ["mermaid", "merman"],
+                "猫娘": ["cat_girl", "nekomimi"],
+                "兔娘": ["rabbit_girl", "usagimimi"],
+                "狐娘": ["fox_girl", "kitsune"],
+                "狼娘": ["wolf_girl"],
+                "兽耳": ["animal_ears"],
+                "猫耳": ["cat_ears"],
+                "兔耳": ["rabbit_ears"],
+                "狐耳": ["fox_ears"],
+                "翅膀": ["wings"],
+                "角": ["horns"],
+                "尾巴": ["tail"]
+            },
+            // 天气/自然现象类
+            weather: {
+                "下雨": ["rain", "rainy"],
+                "下雪": ["snow", "snowing"],
+                "刮风": ["windy", "breeze"],
+                "起雾": ["fog", "foggy", "mist"],
+                "打雷": ["thunder", "lightning"],
+                "彩虹": ["rainbow"],
+                "雪花": ["snowflake"],
+                "雨滴": ["raindrop"],
+                "水滴": ["waterdrop"],
+                "露珠": ["dew"],
+                "霜": ["frost"],
+                "冰": ["ice"],
+                "火焰": ["fire", "flame"],
+                "烟雾": ["smoke", "mist"],
+                "蒸汽": ["steam"],
+                "泡泡": ["bubbles"],
+                "花瓣": ["petals", "flower_petals"],
+                "落叶": ["falling_leaves"],
+                "蒲公英": ["dandelion"],
+                "蝴蝶": ["butterfly"],
+                "蜜蜂": ["bee"],
+                "鸟": ["bird"],
+                "鸽子": ["pigeon"],
+                "鹤": ["crane"],
+                "鱼": ["fish"],
+                "猫": ["cat"],
+                "狗": ["dog"],
+                "兔子": ["rabbit"],
+                "狐狸": ["fox"],
+                "狼": ["wolf"],
+                "马": ["horse"],
+                "鹿": ["deer"]
+            },
+            // 风格/氛围类
+            style: {
+                "古风": ["traditional_chinese", "ancient_chinese", "hanfu"],
+                "中国风": ["chinese_style", "oriental"],
+                "和风": ["japanese_style", "japanese"],
+                "西式": ["western_style", "western"],
+                "欧式": ["european_style", "european"],
+                "哥特": ["gothic", "goth"],
+                "洛丽塔": ["lolita"],
+                "甜美": ["sweet", "cute"],
+                "可爱": ["cute", "kawaii"],
+                "优雅": ["elegant", "graceful"],
+                "高贵": ["noble", "royal"],
+                "神秘": ["mysterious", "mystery"],
+                "梦幻": ["dreamy", "fantasy"],
+                "浪漫": ["romantic"],
+                "温馨": ["warm", "cozy"],
+                "悲伤": ["sad", "melancholy"],
+                "孤独": ["lonely", "solitude"],
+                "宁静": ["peaceful", "serene", "tranquil"],
+                "热闹": ["lively", "bustling"],
+                "庄严": ["solemn", "majestic"],
+                "神圣": ["holy", "divine", "sacred"],
+                "黑暗": ["dark", "darkness"],
+                "光明": ["bright", "light"],
+                "温暖": ["warm"],
+                "寒冷": ["cold", "chilly"],
+                "清新": ["fresh"],
+                "复古": ["retro", "vintage"],
+                "现代": ["modern"],
+                "未来": ["futuristic", "future"],
+                "赛博朋克": ["cyberpunk"],
+                "蒸汽朋克": ["steampunk"],
+                "奇幻": ["fantasy", "magical"],
+                "科幻": ["sci-fi", "science_fiction"],
+                "恐怖": ["horror"],
+                "喜剧": ["comedy", "funny"],
+                "悲剧": ["tragic", "tragedy"]
+            }
+        };
+
+        // ==================== 智能拆分函数 ====================
+        function parseInput(input) {
+            const result = {
+                action: [],
+                scene: [],
+                time: [],
+                character: [],
+                weather: [],
+                style: [],
+                unmatched: ""
+            };
+
+            // 遍历所有语义类别
+            for (const [category, tags] of Object.entries(semanticTags)) {
+                // 遍历该类别下的所有关键词
+                for (const [keyword, enTags] of Object.entries(tags)) {
+                    // 检查输入是否包含该关键词
+                    if (input.includes(keyword)) {
+                        // 匹配成功，添加英文标签
+                        result[category].push(...enTags);
+                    }
+                }
+            }
+
+            // 收集未匹配的字符（用于自由发挥）
+            let matchedText = input;
+            for (const category of ['action', 'scene', 'time', 'character', 'weather', 'style']) {
+                if (semanticTags[category]) {
+                    for (const [keyword, enTags] of Object.entries(semanticTags[category])) {
+                        if (input.includes(keyword)) {
+                            matchedText = matchedText.replace(new RegExp(keyword, 'g'), '');
+                        }
+                    }
+                }
+            }
+            
+            // 去除标点符号和空格
+            result.unmatched = matchedText.replace(/[，。！？、；："'""''（）()【】\[\]{}]/g, '').trim();
+
+            return result;
+        }
+
+        // ==================== 辅助函数 ====================
+        function shuffleArray(array) {
+            return array.sort(() => 0.5 - Math.random());
+        }
+
+        // ==================== 合理搭配规则 ====================
+        // 定义场景与光影、情绪、细节标签的合理搭配
+        const compatibleRules = {
+            // 室内场景搭配
+            indoors: {
+                lighting: ['soft_lighting', 'studio_lighting', 'candlelight', 'lamp_light', 'natural_light'],
+                emotions: ['calm', 'relaxed', 'peaceful', 'warm', 'cozy', 'serene'],
+                details: ['indoors', 'room', 'furniture', 'wall', 'floor', 'ceiling']
+            },
+            // 户外自然场景搭配
+            outdoors_nature: {
+                lighting: ['sunlight', 'golden_hour', 'sunset', 'sunrise', 'natural_light', 'moonlight'],
+                emotions: ['happy', 'peaceful', 'romantic', 'dreamy', 'vibrant', 'fresh'],
+                details: ['outdoors', 'nature', 'sky', 'horizon']
+            },
+            // 水边/水上场景搭配
+            water: {
+                lighting: ['sunlight', 'natural_light', 'golden_hour', 'sunset', 'water_reflection'],
+                emotions: ['happy', 'peaceful', 'relaxed', 'refreshing', 'vibrant', 'calm'],
+                details: ['water', 'waves', 'splash', 'ripples', 'wet', 'droplets', 'underwater', 'surface', 'deep_water', 'shallow_water', 'ocean_wave', 'lake_surface']
+            },
+            // 天空/高空场景搭配
+            sky: {
+                lighting: ['sunlight', 'golden_hour', 'sunset', 'sunrise', 'clouds', 'natural_light'],
+                emotions: ['free', 'peaceful', 'dreamy', 'romantic', 'vibrant', 'happy'],
+                details: ['sky', 'clouds', 'horizon', 'aerial_view', 'from_above']
+            },
+            // 夜晚场景搭配
+            night: {
+                lighting: ['moonlight', 'candlelight', 'firelight', 'soft_lighting', 'dark', 'starry'],
+                emotions: ['mysterious', 'romantic', 'lonely', 'peaceful', 'dreamy', 'calm'],
+                details: ['night_sky', 'stars', 'moon', 'darkness', 'shadow']
+            },
+            // 战斗/动态场景搭配
+            action_scene: {
+                lighting: ['dramatic_lighting', 'rim_light', 'god_rays', 'firelight'],
+                emotions: ['intense', 'excited', 'confident', 'serious', 'vibrant'],
+                details: ['motion_blur', 'dynamic', 'action_pose', 'impact', 'energy']
+            },
+            // 雪景搭配
+            snow: {
+                lighting: ['sunlight', 'natural_light', 'soft_lighting', 'cold'],
+                emotions: ['peaceful', 'calm', 'pure', 'quiet', 'serene', 'cold'],
+                details: ['snow', 'snowflake', 'snow_covered', 'frost', 'ice', 'cold_breath', 'powder_snow']
+            },
+            // 花园/花海搭配
+            garden: {
+                lighting: ['sunlight', 'golden_hour', 'soft_lighting', 'natural_light'],
+                emotions: ['romantic', 'happy', 'peaceful', 'dreamy', 'vibrant', 'sweet'],
+                details: ['flowers', 'petals', 'bloom', 'garden', 'floral', 'blossom', 'flower_field']
+            },
+            // 森林搭配
+            forest: {
+                lighting: ['sunlight', 'natural_light', 'god_rays', 'soft_lighting', 'dappled_light'],
+                emotions: ['peaceful', 'mysterious', 'calm', 'serene', 'fresh', 'quiet'],
+                details: ['trees', 'forest', 'foliage', 'trunk', 'branches', 'leaves', 'undergrowth', 'woodland']
+            },
+            // 山地搭配
+            mountain: {
+                lighting: ['sunlight', 'golden_hour', 'sunrise', 'sunset', 'natural_light'],
+                emotions: ['majestic', 'peaceful', 'awestruck', 'serene', 'vibrant', 'fresh'],
+                details: ['mountain', 'peak', 'valley', 'cliff', 'rock', 'slope', 'summit', 'ridge']
+            },
+            // 城市搭配
+            city: {
+                lighting: ['sunlight', 'neon_glow', 'street_light', 'natural_light', 'urban'],
+                emotions: ['energetic', 'modern', 'vibrant', 'busy', 'excited', 'dynamic'],
+                details: ['buildings', 'street', 'cityscape', 'urban', 'road', 'sidewalk', 'traffic']
+            }
+        };
+
+        // ==================== 动作 - 场景绑定规则 ====================
+        // 某些动作必须在特定场景下才能合理存在
+        const actionSceneRequirements = {
+            // 水上动作 → 必须有水场景
+            'swimming': ['water'],
+            'swim': ['water'],
+            'diving': ['water'],
+            'surfing': ['water'],
+            'floating': ['water'],
+            'underwater': ['water'],
+            'fishing': ['water'],
+            'boating': ['water'],
+            
+            // 飞行动作 → 必须有天空/高空场景
+            'flying': ['sky'],
+            'fly': ['sky'],
+            'gliding': ['sky'],
+            'parachuting': ['sky'],
+            
+            // 滑雪动作 → 必须有雪景
+            'skiing': ['snow'],
+            'snowboarding': ['snow'],
+            
+            // 室内动作 → 必须有室内场景
+            'sleeping': ['indoors'],
+            'reading': ['indoors'],
+            'writing': ['indoors'],
+            'cooking': ['indoors'],
+            'eating': ['indoors', 'outdoors_nature', 'garden'], // 可以在户外吃
+            'drinking': ['indoors', 'outdoors_nature', 'garden'],
+            
+            // 战斗动作 → 可以是多种场景
+            'fighting': ['outdoors_nature', 'city', 'forest', 'mountain'],
+            'casting_spell': ['outdoors_nature', 'forest', 'mountain', 'indoors'],
+            'attacking': ['outdoors_nature', 'city', 'forest'],
+            
+            // 攀爬动作 → 山地/森林/城市
+            'climbing': ['mountain', 'forest', 'city'],
+            
+            // 驾驶动作 → 城市/户外
+            'driving': ['city', 'outdoors_nature'],
+            'riding': ['outdoors_nature', 'forest', 'mountain']
+        };
+
+        // 检查动作是否需要特定场景
+        function getRequiredScenesForAction(actionTags) {
+            const requiredScenes = new Set();
+            
+            for (const action of actionTags) {
+                const actionLower = action.toLowerCase();
+                for (const [key, scenes] of Object.entries(actionSceneRequirements)) {
+                    if (actionLower.includes(key)) {
+                        scenes.forEach(s => requiredScenes.add(s));
+                    }
+                }
+            }
+            
+            return Array.from(requiredScenes);
+        }
+
+        // 判断场景类型（支持多个场景类型，基于动作和场景标签）
+        function detectSceneTypes(sceneTags, actionTags, themeInput) {
+            const detectedTypes = [];
+            const allTags = [...sceneTags, ...actionTags].join(' ').toLowerCase();
+            const inputLower = (themeInput || '').toLowerCase();
+
+            // ========== 优先检查输入中的中文关键词（最准确） ==========
+            
+            // ========== 优先检查输入中的中文关键词（最准确） ==========
+            // 支持复杂短语识别：长短语优先于短词
+            // 使用权重系统：长词权重高，短词需要多个同时出现才判定
+            
+            const sceneScores = {
+                water: 0,
+                sky: 0,
+                night: 0,
+                snow: 0,
+                garden: 0,
+                indoors: 0,
+                action_scene: 0,
+                forest: 0,
+                mountain: 0,
+                city: 0
+            };
+            
+            // 水边/水上场景（扩展复杂短语）
+            const waterInputKeywords = {
+                // 长短语（权重 3，直接判定）
+                highWeight: [
+                    '在海边游泳', '在河里游泳', '在湖里游泳', '在海里游泳', '在泳池游泳',
+                    '海边漫步', '沙滩漫步', '湖畔散步', '河边散步',
+                    '海上日落', '湖边日落', '河畔日落',
+                    '海浪拍打', '波涛汹涌', '碧波荡漾', '湖水清澈', '河水潺潺',
+                    '潜水员', '冲浪者', '渔船', '游艇', '帆船',
+                    '海上升明月', '黄河之水天上来', '孤帆远影碧空尽', '春江潮水连海平',
+                    '无边落木萧萧下', '不尽长江滚滚来', '大江东去', '日出江花红胜火',
+                    '一道残阳铺水中', '烟笼寒水月笼沙', '落霞与孤鹜齐飞', '秋水共长天一色',
+                    '飞流直下三千尺', '桃花潭水深千尺', '竹外桃花三两枝', '春江水暖鸭先知',
+                    '泉眼无声惜细流', '小荷才露尖尖角', '接天莲叶无穷碧', '孤舟蓑笠翁',
+                    '野渡无人舟自横', '春潮带雨晚来急', '姑苏城外寒山寺', '夜半钟声到客船',
+                    '烟波江上使人愁', '山随平野尽', '江入大荒流', '星垂平野阔', '月涌大江流',
+                    '潮平两岸阔', '风正一帆悬', '东临碣石', '以观沧海', '水何澹澹',
+                    '秋风萧瑟', '洪波涌起', '蒹葭苍苍', '白露为霜', '所谓伊人', '在水一方'
+                ],
+                // 中等词（权重 2）
+                mediumWeight: [
+                    '游泳', '游', '海', '河', '湖', '温泉', '瀑布', '潜水', '冲浪', '划船', '钓鱼',
+                    '海滩', '沙滩', '海岸', '海滨', '湖畔', '河畔', '水岸', '码头', '港口', '海湾',
+                    '水上', '水中', '水下', '水面', '海浪', '涟漪', '波纹', '水滴', '水花', '水雾',
+                    '海洋', '大海', '碧海', '蓝海', '深海', '浅海', '江河', '河流', '小溪', '溪流',
+                    '泉水', '池塘', '水库', '运河', '轮船', '邮轮', '快艇', '皮划艇', '竹筏', '木舟',
+                    '帆船', '军舰', '游泳圈', '救生圈', '潜水镜', '呼吸管', '脚蹼', '冲浪板', '鱼竿'
+                ],
+                // 短词（权重 1，需要多个同时出现）
+                lowWeight: ['水', '池', '鱼', '舟', '船', '江', '洋']
+            };
+            
+            // 计算水边场景得分
+            waterInputKeywords.highWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.water += 3; });
+            waterInputKeywords.mediumWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.water += 2; });
+            waterInputKeywords.lowWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.water += 1; });
+
+            // 天空/高空场景
+            const skyInputKeywords = {
+                highWeight: [
+                    '在天空中飞翔', '在空中翱翔', '云端之上', '云霄之上',
+                    '屋顶上晒太阳', '阳台上看风景', '高楼俯瞰', '俯瞰城市', '俯瞰大地',
+                    '蓝天白云', '万里无云', '云海翻腾', '云层密布',
+                    '飞机划过', '飞鸟翱翔', '热气球', '滑翔伞', '降落伞',
+                    '明月几时有', '把酒问青天', '不知天上宫阙', '今夕是何年',
+                    '我欲乘风归去', '又恐琼楼玉宇', '高处不胜寒', '起舞弄清影',
+                    '危楼高百尺', '手可摘星辰', '不敢高声语', '恐惊天上人',
+                    '会当凌绝顶', '一览众山小', '荡胸生曾云', '决眦入归鸟',
+                    '不畏浮云遮望眼', '自缘身在最高层', '欲穷千里目', '更上一层楼',
+                    '行到水穷处', '坐看云起时', '只在此山中', '云深不知处',
+                    '月下飞天镜', '云生结海楼', '众鸟高飞尽', '孤云独去闲',
+                    '黄鹤一去不复返', '白云千载空悠悠', '落霞与孤鹜齐飞',
+                    '天接云涛连晓雾', '星河欲转千帆舞', '九万里风鹏正举',
+                    '云想衣裳花想容', '长风破浪会有时', '直挂云帆济沧海',
+                    '俱怀逸兴壮思飞', '欲上青天揽明月', '蜀道之难', '难于上青天'
+                ],
+                mediumWeight: [
+                    '飞', '天空', '云', '屋顶', '阳台', '高楼', '空中', '滑翔', '跳伞',
+                    '天际', '苍穹', '云霄', '云端', '云层', '云海', '云霞',
+                    '飞翔', '飞行', '翱翔', '腾空', '升空', '起飞', '降落',
+                    '飞机', '直升机', '无人机', '飞艇', '热气球', '滑翔机',
+                    '鸟儿', '飞鸟', '雄鹰', '燕子', '鸽子', '鹤',
+                    '风筝', '孔明灯', '烟花', '流星', '卫星', '火箭'
+                ],
+                lowWeight: ['天', '鸟', '云']
+            };
+            skyInputKeywords.highWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.sky += 3; });
+            skyInputKeywords.mediumWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.sky += 2; });
+            skyInputKeywords.lowWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.sky += 1; });
+
+            // 夜晚场景
+            const nightInputKeywords = {
+                highWeight: [
+                    '夜深人静', '夜深了', '深夜时分', '午夜时分',
+                    '月光如水', '月光洒落', '月色朦胧', '皓月当空', '新月如钩',
+                    '星光璀璨', '繁星点点', '满天星斗', '星河滚烫', '银河横跨',
+                    '黄昏时分', '傍晚时分', '日落时分', '黎明时分', '破晓时分',
+                    '夜幕降临', '夜色降临', '华灯初上', '灯火通明', '灯火阑珊',
+                    '夜色朦胧', '夜色迷人', '夜色如水', '夜色温柔',
+                    '床前明月光', '疑是地上霜', '举头望明月', '低头思故乡',
+                    '明月松间照', '清泉石上流', '月落乌啼霜满天', '江枫渔火对愁眠',
+                    '春江花月夜', '滟滟随波千万里', '何处春江无月明',
+                    '江天一色无纤尘', '皎皎空中孤月轮', '江畔何人初见月', '江月何年初照人',
+                    '海上生明月', '天涯共此时', '情人怨遥夜', '竟夕起相思',
+                    '灭烛怜光满', '披衣觉露滋', '不堪盈手赠', '还寝梦佳期',
+                    '月黑见渔灯', '孤光一点萤', '天阶夜色凉如水', '卧看牵牛织女星',
+                    '银烛秋光冷画屏', '轻罗小扇扑流萤', '迢迢牵牛星', '皎皎河汉女',
+                    '七夕今宵看碧霄', '牵牛织女渡河桥', '更深月色半人家',
+                    '北斗阑干南斗斜', '今夜偏知春气暖', '虫声新透绿窗纱',
+                    '云母屏风烛影深', '长河渐落晓星沉', '嫦娥应悔偷灵药', '碧海青天夜夜心',
+                    '夜来风雨声', '花落知多少', '随风潜入夜', '润物细无声',
+                    '野径云俱黑', '江船火独明', '月出惊山鸟', '时鸣春涧中',
+                    '人闲桂花落', '夜静春山空', '深林人不知', '明月来相照'
+                ],
+                mediumWeight: [
+                    '夜晚', '夜', '午夜', '月光', '星空', '黄昏', '傍晚', '日落', '黎明', '深夜',
+                    '黑夜', '暗夜', '夜幕', '夜色', '夜景', '夜空',
+                    '月亮', '月牙', '圆月', '满月', '弯月', '残月',
+                    '星星', '星辰', '星座', '流星', '北斗', '北极星',
+                    '夕阳', '落日', '余晖', '晚霞', '朝霞', '晨曦', '曙光',
+                    '路灯', '街灯', '霓虹', '灯光', '烛光', '灯火'
+                ],
+                lowWeight: ['月', '星', '灯', '夕', '暮']
+            };
+            nightInputKeywords.highWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.night += 3; });
+            nightInputKeywords.mediumWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.night += 2; });
+            nightInputKeywords.lowWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.night += 1; });
+
+            // 雪景
+            const snowInputKeywords = {
+                highWeight: [
+                    '雪花纷飞', '雪花飘落', '雪花飞舞', '漫天飞雪', '鹅毛大雪',
+                    '白雪皑皑', '白雪覆盖', '白雪茫茫', '银装素裹', '粉妆玉砌',
+                    '冰天雪地', '天寒地冻', '寒风刺骨', '滴水成冰',
+                    '雪山连绵', '雪峰耸立', '冰山一角', '冰川融化',
+                    '堆雪人', '打雪仗', '滚雪球', '滑雪橇', '溜冰',
+                    '雪中漫步', '踏雪寻梅', '雪夜归人', '风雪夜归人',
+                    '千山鸟飞绝', '万径人踪灭', '孤舟蓑笠翁', '独钓寒江雪',
+                    '北风卷地白草折', '胡天八月即飞雪', '忽如一夜春风来', '千树万树梨花开',
+                    '散入珠帘湿罗幕', '狐裘不暖锦衾薄', '将军角弓不得控', '都护铁衣冷难着',
+                    '瀚海阑干百丈冰', '愁云惨淡万里凝', '纷纷暮雪下辕门', '风掣红旗冻不翻',
+                    '轮台东门送君去', '去时雪满天山路', '山回路转不见君', '雪上空留马行处',
+                    '窗含西岭千秋雪', '门泊东吴万里船', '欲渡黄河冰塞川', '将登太行雪满山',
+                    '燕山雪花大如席', '片片吹落轩辕台', '五月天山雪', '无花只有寒',
+                    '日暮苍山远', '天寒白屋贫', '柴门闻犬吠', '风雪夜归人',
+                    '终南阴岭秀', '积雪浮云端', '林表明霁色', '城中增暮寒',
+                    '白雪却嫌春色晚', '故穿庭树作飞花', '梅须逊雪三分白', '雪却输梅一段香',
+                    '晚来天欲雪', '能饮一杯无', '千里黄云白日曛', '北风吹雁雪纷纷'
+                ],
+                mediumWeight: [
+                    '雪', '冰', '霜', '冬天', '冬', '滑雪', '雪球',
+                    '雪花', '雪片', '雪团', '积雪', '残雪', '融雪',
+                    '冰雪', '冰凌', '冰柱', '冰雕', '冰灯', '冰花',
+                    '寒', '冷', '冻', '凉', '凛冽', '严寒', '酷寒',
+                    '棉衣', '羽绒服', '围巾', '手套', '帽子', '耳罩'
+                ],
+                lowWeight: ['冬']
+            };
+            snowInputKeywords.highWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.snow += 3; });
+            snowInputKeywords.mediumWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.snow += 2; });
+            snowInputKeywords.lowWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.snow += 1; });
+
+            // 花园/花海
+            const gardenInputKeywords = {
+                highWeight: [
+                    '花开满园', '花香四溢', '花团锦簇', '繁花似锦', '百花争艳',
+                    '花海茫茫', '花的海洋', '漫山遍野的花', '一望无际的花海',
+                    '樱花盛开', '樱花飘落', '樱花树下', '樱花雨', '樱花瓣',
+                    '玫瑰盛开', '玫瑰花海', '玫瑰花园', '红玫瑰', '白玫瑰',
+                    '牡丹盛开', '牡丹花会', '国色天香',
+                    '荷花盛开', '荷塘月色', '接天莲叶', '映日荷花',
+                    '桃花盛开', '桃花源', '桃之夭夭', '灼灼其华',
+                    '杏花春雨', '杏花村', '杏花时节',
+                    '梅花傲雪', '梅花香自苦寒来', '暗香浮动',
+                    '菊花盛开', '菊花台', '秋菊傲霜',
+                    '郁金香花海', '薰衣草田', '向日葵花盘',
+                    '蝴蝶飞舞', '蜜蜂采蜜', '鸟语花香',
+                    '春眠不觉晓', '处处闻啼鸟', '夜来风雨声', '花落知多少',
+                    '人面不知何处去', '桃花依旧笑春风', '去年今日此门中', '人面桃花相映红',
+                    '竹外桃花三两枝', '春江水暖鸭先知', '等闲识得东风面', '万紫千红总是春',
+                    '胜日寻芳泗水滨', '无边光景一时新', '天街小雨润如酥', '草色遥看近却无',
+                    '最是一年春好处', '绝胜烟柳满皇都', '几处早莺争暖树', '谁家新燕啄春泥',
+                    '乱花渐欲迷人眼', '浅草才能没马蹄', '最爱湖东行不足', '绿杨阴里白沙堤',
+                    '迟日江山丽', '春风花草香', '泥融飞燕子', '沙暖睡鸳鸯',
+                    '黄四娘家花满蹊', '千朵万朵压枝低', '留连戏蝶时时舞', '自在娇莺恰恰啼',
+                    '采菊东篱下', '悠然见南山', '墙角数枝梅', '凌寒独自开',
+                    '遥知不是雪', '为有暗香来', '疏影横斜水清浅', '暗香浮动月黄昏',
+                    '唯有牡丹真国色', '花开时节动京城', '红豆生南国', '春来发几枝',
+                    '碧玉妆成一树高', '万条垂下绿丝绦', '两个黄鹂鸣翠柳', '一行白鹭上青天'
+                ],
+                mediumWeight: [
+                    '花园', '花', '樱花', '玫瑰', '桃', '杏', '梅', '荷', '莲', '牡丹', '郁金香', '花海', '草坪',
+                    '花朵', '花瓣', '花蕊', '花苞', '花蕾', '花枝', '花茎',
+                    '花香', '芬芳', '清香', '幽香', '浓郁',
+                    '园丁', '浇水', '修剪', '施肥', '移植', '播种', '育苗',
+                    '温室', '花房', '苗圃', '花坛', '花圃', '花架',
+                    '花篮', '花瓶', '花束', '花环', '花冠', '胸花'
+                ],
+                lowWeight: ['花', '草', '树', '叶']
+            };
+            gardenInputKeywords.highWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.garden += 3; });
+            gardenInputKeywords.mediumWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.garden += 2; });
+            gardenInputKeywords.lowWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.garden += 1; });
+
+            // 室内场景
+            const indoorInputKeywords = {
+                highWeight: [
+                    '在房间里', '在卧室里', '在客厅里', '在厨房里', '在书房里',
+                    '室内装饰', '室内设计', '室内装修', '室内布置',
+                    '温馨的卧室', '舒适的客厅', '整洁的厨房', '安静的书房',
+                    '躺在床上', '坐在沙发上', '坐在椅子上', '趴在桌子上',
+                    '靠在窗边', '站在门口', '坐在窗前', '躺在沙发上',
+                    '开灯', '关灯', '点灯', '点蜡烛', '开空调', '开暖气',
+                    '看电视', '听音乐', '看书', '写字', '画画', '做饭', '洗碗',
+                    '打扫卫生', '整理房间', '收拾东西', '洗衣服', '晾衣服',
+                    '洗澡', '洗漱', '化妆', '换衣服', '穿衣服', '脱衣服',
+                    '睡觉', '起床', '午睡', '休息', '小憩', '打盹',
+                    '客人来了', '客人来访', '拜访客人', '招待客人',
+                    '家庭聚会', '朋友聚会', '生日派对', '晚宴',
+                    '床前明月光', '疑是地上霜', '举头望明月', '低头思故乡',
+                    '松下问童子', '言师采药去', '只在此山中', '云深不知处',
+                    '空山不见人', '但闻人语响', '返景入深林', '复照青苔上',
+                    '独坐幽篁里', '弹琴复长啸', '深林人不知', '明月来相照',
+                    '移舟泊烟渚', '日暮客愁新', '野旷天低树', '江清月近人',
+                    '君问归期未有期', '巴山夜雨涨秋池', '何当共剪西窗烛', '却话巴山夜雨时',
+                    '寒雨连江夜入吴', '平明送客楚山孤', '洛阳亲友如相问', '一片冰心在玉壶',
+                    '葡萄美酒夜光杯', '欲饮琵琶马上催', '醉卧沙场君莫笑', '古来征战几人回',
+                    '秦时明月汉时关', '万里长征人未还', '但使龙城飞将在', '不教胡马度阴山',
+                    '渭城朝雨浥轻尘', '客舍青青柳色新', '劝君更尽一杯酒', '西出阳关无故人',
+                    '故人西辞黄鹤楼', '烟花三月下扬州', '孤帆远影碧空尽', '唯见长江天际流',
+                    '朝辞白帝彩云间', '千里江陵一日还', '两岸猿声啼不住', '轻舟已过万重山',
+                    '日照香炉生紫烟', '遥看瀑布挂前川', '飞流直下三千尺', '疑是银河落九天',
+                    '李白乘舟将欲行', '忽闻岸上踏歌声', '桃花潭水深千尺', '不及汪伦送我情',
+                    '谁家玉笛暗飞声', '散入春风满洛城', '此夜曲中闻折柳', '何人不起故园情',
+                    '峨眉山月半轮秋', '影入平羌江水流', '夜发清溪向三峡', '思君不见下渝州',
+                    '岐王宅里寻常见', '崔九堂前几度闻', '正是江南好风景', '落花时节又逢君',
+                    '锦瑟无端五十弦', '一弦一柱思华年', '庄生晓梦迷蝴蝶', '望帝春心托杜鹃',
+                    '沧海月明珠有泪', '蓝田日暖玉生烟', '此情可待成追忆', '只是当时已惘然'
+                ],
+                mediumWeight: [
+                    '室内', '房间', '卧室', '厨房', '办公室', '教室', '咖啡厅', '餐厅', '图书馆', '书店', '商场', '家里', '屋', '室',
+                    '客厅', '书房', '浴室', '卫生间', '厕所', '阳台', '露台', '阁楼', '地下室',
+                    '门', '窗', '墙', '地板', '天花板', '楼梯', '电梯',
+                    '家具', '床', '沙发', '桌子', '椅子', '柜子', '书架', '衣柜', '茶几',
+                    '家电', '电视', '冰箱', '洗衣机', '空调', '暖气', '热水器', '微波炉', '烤箱',
+                    '灯具', '台灯', '吊灯', '壁灯', '落地灯', '夜灯',
+                    '窗帘', '地毯', '抱枕', '毯子', '床单', '被套', '枕头',
+                    '装饰', '画', '照片', '花瓶', '钟表', '镜子', '相框'
+                ],
+                lowWeight: ['门', '窗', '床', '桌', '椅']
+            };
+            indoorInputKeywords.highWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.indoors += 3; });
+            indoorInputKeywords.mediumWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.indoors += 2; });
+            indoorInputKeywords.lowWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.indoors += 1; });
+
+            // 战斗/动态场景
+            const fightInputKeywords = {
+                highWeight: [
+                    '激烈战斗', '殊死搏斗', '生死对决', '巅峰对决', '世纪大战',
+                    '刀光剑影', '枪林弹雨', '炮火连天', '硝烟弥漫',
+                    '施展魔法', '念咒语', '画魔法阵', '召唤魔法', '元素魔法',
+                    '剑拔弩张', '一触即发', '剑指对方', '剑锋相对',
+                    '拳打脚踢', '闪转腾挪', '飞檐走壁', '轻功水上漂',
+                    '百步穿杨', '一箭穿心', '箭无虚发', '神箭手',
+                    '刀光闪烁', '刀锋凌厉', '刀法精湛', '刀客',
+                    '枪法如神', '枪出如龙', '长枪大戟', '枪手',
+                    '盾牌格挡', '盾击', '盾墙', '盾战士',
+                    '法术轰炸', '魔法爆炸', '元素爆发', '能量爆发',
+                    '战场', '前线', '阵地', '要塞', '城堡攻防',
+                    '醉里挑灯看剑', '梦回吹角连营', '八百里分麾下炙', '五十弦翻塞外声',
+                    '沙场秋点兵', '马作的卢飞快', '弓如霹雳弦惊',
+                    '了却君王天下事', '赢得生前身后名', '可怜白发生',
+                    '怒发冲冠', '凭栏处', '潇潇雨歇', '抬望眼', '仰天长啸', '壮怀激烈',
+                    '三十功名尘与土', '八千里路云和月', '莫等闲', '白了少年头', '空悲切',
+                    '靖康耻', '犹未雪', '臣子恨', '何时灭', '驾长车', '踏破贺兰山缺',
+                    '壮志饥餐胡虏肉', '笑谈渴饮匈奴血', '待从头', '收拾旧山河', '朝天阙',
+                    '大江东去', '浪淘尽', '千古风流人物', '乱石穿空', '惊涛拍岸', '卷起千堆雪',
+                    '江山如画', '一时多少豪杰', '羽扇纶巾', '谈笑间', '樯橹灰飞烟灭',
+                    '想当年', '金戈铁马', '气吞万里如虎', '十步杀一人', '千里不留行',
+                    '事了拂衣去', '深藏身与名', '银鞍照白马', '飒沓如流星',
+                    '三杯吐然诺', '五岳倒为轻', '眼花耳热后', '意气素霓生',
+                    '救赵挥金槌', '邯郸先震惊', '千秋二壮士', '煊赫大梁城',
+                    '纵死侠骨香', '不惭世上英'
+                ],
+                mediumWeight: [
+                    '战斗', '打', '战', '攻击', '施法', '魔法', '武术', '格斗', '射击', '剑', '刀', '弓', '箭',
+                    '侠', '侠士', '侠客', '武士', '战士', '骑士', '刺客', '弓箭手', '法师',
+                    '武器', '兵器', '装备', '盔甲', '铠甲', '护甲', '头盔', '护腕', '护腿',
+                    '技能', '招式', '套路', '心法', '内功', '外功',
+                    '敌人', '对手', '敌手', '仇敌', '仇人', '宿敌',
+                    '盟友', '队友', '同伴', '战友', '伙伴',
+                    '胜利', '失败', '输', '赢', '撤退', '逃跑', '追击', '伏击', '偷袭'
+                ],
+                lowWeight: ['武', '斗']
+            };
+            fightInputKeywords.highWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.action_scene += 3; });
+            fightInputKeywords.mediumWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.action_scene += 2; });
+            fightInputKeywords.lowWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.action_scene += 1; });
+
+            // 森林/树林
+            const forestInputKeywords = {
+                highWeight: [
+                    '森林深处', '密林深处', '丛林深处', '林海茫茫',
+                    '古木参天', '古树参天', '千年古树', '参天大树',
+                    '树影婆娑', '树影斑驳', '阳光透过树叶', '树叶沙沙',
+                    '林间小道', '林间小路', '林中漫步', '林中散步',
+                    '鸟语花香', '鸟鸣山更幽', '蝉鸣林愈静',
+                    '松涛阵阵', '竹林沙沙', '枫叶飘飘', '落叶纷飞',
+                    '采蘑菇', '摘野果', '砍柴', '打猎', '捕猎',
+                    '森林浴', '吸氧', '负氧离子', '天然氧吧',
+                    '空山不见人', '但闻人语响', '返景入深林', '复照青苔上',
+                    '独坐幽篁里', '弹琴复长啸', '深林人不知', '明月来相照',
+                    '人闲桂花落', '夜静春山空', '月出惊山鸟', '时鸣春涧中',
+                    '木末芙蓉花', '山中发红萼', '涧户寂无人', '纷纷开且落',
+                    '荆溪白石出', '天寒红叶稀', '山路元无雨', '空翠湿人衣',
+                    '松下问童子', '言师采药去', '只在此山中', '云深不知处',
+                    '青山横北郭', '白水绕东城', '此地一为别', '孤蓬万里征',
+                    '浮云游子意', '落日故人情', '挥手自兹去', '萧萧班马鸣',
+                    '树树皆秋色', '山山唯落晖', '牧人驱犊返', '猎马带禽归',
+                    '古木阴中系短篷', '杖藜扶我过桥东', '沾衣欲湿杏花雨', '吹面不寒杨柳风',
+                    '梅子黄时日日晴', '小溪泛尽却山行', '绿阴不减来时路', '添得黄鹂四五声',
+                    '庭中有奇树', '绿叶发华滋', '攀条折其荣', '将以遗所思',
+                    '青青河畔草', '郁郁园中柳', '明月皎夜光', '促织鸣东壁',
+                    '秋蝉鸣树间', '玄鸟逝安适', '迢迢牵牛星', '皎皎河汉女'
+                ],
+                mediumWeight: [
+                    '森林', '树', '林', '木', '松', '柏', '竹', '灌木', '丛林',
+                    '树林', '林地', '林区', '林场', '森林公园', '自然保护区',
+                    '树木', '树干', '树枝', '树叶', '树根', '树皮', '树冠',
+                    '松树', '柏树', '杉树', '橡树', '枫树', '柳树', '杨树', '槐树', '榆树',
+                    '竹林', '竹子', '竹笋', '竹叶', '竹竿',
+                    '灌木', '草丛', '草地', '野花', '野草', '藤蔓', '苔藓',
+                    '蘑菇', '菌类', '野果', '坚果', '松果', '橡子',
+                    '动物', '鸟', '兽', '虫', '鱼', '蛇', '鹿', '兔', '狐狸', '狼', '熊', '猴子', '松鼠'
+                ],
+                lowWeight: ['林', '木']
+            };
+            forestInputKeywords.highWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.forest += 3; });
+            forestInputKeywords.mediumWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.forest += 2; });
+            forestInputKeywords.lowWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.forest += 1; });
+
+            // 山地/高原
+            const mountainInputKeywords = {
+                highWeight: [
+                    '高山流水', '山高水长', '崇山峻岭', '层峦叠嶂', '峰峦叠嶂',
+                    '悬崖峭壁', '峭壁林立', '险峰耸立', '奇峰罗列', '怪石嶙峋',
+                    '山间小路', '山道弯弯', '盘山公路', '山重水复',
+                    '登高望远', '登高远眺', '一览众山小', '会当凌绝顶',
+                    '山花烂漫', '山野花开', '杜鹃花开', '高山杜鹃',
+                    '山泉叮咚', '溪流潺潺', '瀑布飞流', '飞流直下',
+                    '云海翻腾', '云雾缭绕', '云蒸霞蔚', '人间仙境',
+                    '日出东方', '日落西山', '夕阳西下', '晚霞满天',
+                    '星空璀璨', '银河横跨', '流星划过',
+                    '登山', '爬山', '攀岩', '徒步', '远足', '露营', '野餐',
+                    '会当凌绝顶', '一览众山小', '岱宗夫如何', '齐鲁青未了',
+                    '造化钟神秀', '阴阳割昏晓', '不畏浮云遮望眼', '自缘身在最高层',
+                    '飞来山上千寻塔', '闻说鸡鸣见日升', '欲穷千里目', '更上一层楼',
+                    '空山新雨后', '天气晚来秋', '明月松间照', '清泉石上流',
+                    '竹喧归浣女', '莲动下渔舟', '随意春芳歇', '王孙自可留',
+                    '太乙近天都', '连山接海隅', '白云回望合', '青霭入看无',
+                    '分野中峰变', '阴晴众壑殊', '欲投人处宿', '隔水问樵夫',
+                    '终南阴岭秀', '积雪浮云端', '林表明霁色', '城中增暮寒',
+                    '日暮苍山远', '天寒白屋贫', '柴门闻犬吠', '风雪夜归人',
+                    '千山鸟飞绝', '万径人踪灭', '孤舟蓑笠翁', '独钓寒江雪',
+                    '西塞山前白鹭飞', '桃花流水鳜鱼肥', '青箬笠', '绿蓑衣', '斜风细雨不须归',
+                    '采菊东篱下', '悠然见南山', '山气日夕佳', '飞鸟相与还',
+                    '山重水复疑无路', '柳暗花明又一村', '箫鼓追随春社近', '衣冠简朴古风存',
+                    '横看成岭侧成峰', '远近高低各不同', '不识庐山真面目', '只缘身在此山中',
+                    '水光潋滟晴方好', '山色空蒙雨亦奇', '欲把西湖比西子', '淡妆浓抹总相宜',
+                    '蜀道之难', '难于上青天', '蚕丛及鱼凫', '开国何茫然',
+                    '尔来四万八千岁', '不与秦塞通人烟', '西当太白有鸟道', '可以横绝峨眉巅',
+                    '地崩山摧壮士死', '然后天梯石栈相钩连', '上有六龙回日之高标',
+                    '下有冲波逆折之回川', '黄鹤之飞尚不得过', '猿猱欲度愁攀援',
+                    '扪参历井仰胁息', '以手抚膺坐长叹', '问君西游何时还', '畏途巉岩不可攀',
+                    '但见悲鸟号古木', '雄飞雌从绕林间', '又闻子规啼夜月', '愁空山',
+                    '连峰去天不盈尺', '枯松倒挂倚绝壁', '飞湍瀑流争喧豗', '砯崖转石万壑雷',
+                    '剑阁峥嵘而崔嵬', '一夫当关', '万夫莫开'
+                ],
+                mediumWeight: [
+                    '山', '峰', '岭', '崖', '谷', '丘', '高原', '山坡', '山顶',
+                    '山脉', '山峦', '山峰', '山脊', '山谷', '山沟', '山涧',
+                    '高山', '大山', '小山', '山丘', '山包', '山岗',
+                    '悬崖', '峭壁', '绝壁', '陡坡', '斜坡', '平地', '平原',
+                    '高原', '盆地', '丘陵', '戈壁', '沙漠', '草原',
+                    '岩石', '石头', '石块', '石子', '沙土', '泥土', '土壤',
+                    '植被', '草木', '灌木', '乔木', '森林', '草地'
+                ],
+                lowWeight: ['山']
+            };
+            mountainInputKeywords.highWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.mountain += 3; });
+            mountainInputKeywords.mediumWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.mountain += 2; });
+            mountainInputKeywords.lowWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.mountain += 1; });
+
+            // 城市/街道
+            const cityInputKeywords = {
+                highWeight: [
+                    '车水马龙', '车来车往', '川流不息', '人来人往', '熙熙攘攘',
+                    '高楼林立', '摩天大楼', '大厦耸立', '城市天际线',
+                    '繁华街道', '商业街', '步行街', '商业街', '购物街',
+                    '霓虹闪烁', '灯火辉煌', '不夜城', '夜生活',
+                    '地铁呼啸', '公交穿梭', '出租车', '网约车',
+                    '十字路口', '红绿灯', '斑马线', '人行道', '天桥', '地下通道',
+                    '城市公园', '市民广场', '音乐喷泉', '雕塑', '纪念碑',
+                    '咖啡馆', '餐厅', '酒店', '商场', '超市', '便利店',
+                    '银行', '邮局', '医院', '学校', '图书馆', '博物馆', '美术馆',
+                    '电影院', '剧院', '音乐厅', '体育馆', '游乐场', '动物园',
+                    '住宅区', '小区', '别墅', '公寓', '写字楼', '办公楼',
+                    '工厂', '工业园区', '科技园', '创业园',
+                    '城市夜景', '夜景迷人', '夜色阑珊', '灯火万家'
+                ],
+                mediumWeight: [
+                    '城市', '街', '路', '巷', '市', '建筑', '楼', '桥', '车站', '地铁', '公交',
+                    '城镇', '都市', '市区', '郊区', '县城', '乡镇', '村庄',
+                    '街道', '马路', '公路', '大道', '小巷', '胡同', '弄堂',
+                    '房屋', '房子', '住宅', '民居', '公寓', '别墅', '平房', '楼房',
+                    '商店', '店铺', '商场', '超市', '市场', '集市',
+                    '车辆', '汽车', '自行车', '电动车', '摩托车', '卡车', '客车',
+                    '行人', '路人', '市民', '居民', '游客', '外国人',
+                    '警察', '交警', '保安', '清洁工', '快递员', '外卖员',
+                    '招牌', '广告', '海报', '横幅', '标语', '指示牌'
+                ],
+                lowWeight: ['城', '市']
+            };
+            cityInputKeywords.highWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.city += 3; });
+            cityInputKeywords.mediumWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.city += 2; });
+            cityInputKeywords.lowWeight.forEach(k => { if (inputLower.includes(k)) sceneScores.city += 1; });
+
+            // ========== 判定：只要得分>0 就判定为该场景 ==========
+            // 单个短词也直接判定，不需要阈值
+            if (sceneScores.water > 0) detectedTypes.push('water');
+            if (sceneScores.sky > 0) detectedTypes.push('sky');
+            if (sceneScores.night > 0) detectedTypes.push('night');
+            if (sceneScores.snow > 0) detectedTypes.push('snow');
+            if (sceneScores.garden > 0) detectedTypes.push('garden');
+            if (sceneScores.indoors > 0) detectedTypes.push('indoors');
+            if (sceneScores.action_scene > 0) detectedTypes.push('action_scene');
+            if (sceneScores.forest > 0) detectedTypes.push('forest');
+            if (sceneScores.mountain > 0) detectedTypes.push('mountain');
+            if (sceneScores.city > 0) detectedTypes.push('city');
+
+            // ========== 如果没有从输入中检测到，再检查标签 ==========
+
+            // 雪景诗句
+            const snowPoems = [
+                '千山鸟飞绝', '万径人踪灭', '孤舟蓑笠翁', '独钓寒江雪',
+                '北风卷地白草折', '胡天八月即飞雪',
+                '忽如一夜春风来', '千树万树梨花开',
+                '散入珠帘湿罗幕', '狐裘不暖锦衾薄',
+                '将军角弓不得控', '都护铁衣冷难着',
+                '瀚海阑干百丈冰', '愁云惨淡万里凝',
+                '中军置酒饮归客', '胡琴琵琶与羌笛',
+                '纷纷暮雪下辕门', '风掣红旗冻不翻',
+                '轮台东门送君去', '去时雪满天山路',
+                '山回路转不见君', '雪上空留马行处',
+                '窗含西岭千秋雪', '门泊东吴万里船',
+                '欲渡黄河冰塞川', '将登太行雪满山',
+                '燕山雪花大如席', '片片吹落轩辕台',
+                '五月天山雪', '无花只有寒', '笛中闻折柳', '春色未曾看',
+                '晓战随金鼓', '宵眠抱玉鞍', '愿将腰下剑', '直为斩楼兰',
+                '日暮苍山远', '天寒白屋贫', '柴门闻犬吠', '风雪夜归人',
+                '终南阴岭秀', '积雪浮云端', '林表明霁色', '城中增暮寒',
+                '新年都未有芳华', '二月初惊见草芽',
+                '白雪却嫌春色晚', '故穿庭树作飞花',
+                '梅须逊雪三分白', '雪却输梅一段香',
+                '晚来天欲雪', '能饮一杯无', '绿蚁新醅酒', '红泥小火炉',
+                '千里黄云白日曛', '北风吹雁雪纷纷',
+                '莫愁前路无知己', '天下谁人不识君',
+                '六出飞花入户时', '坐看青竹变琼枝',
+                '如今好上高楼望', '盖尽人间恶路岐',
+                '旋扑珠帘过粉墙', '轻于柳絮重于霜',
+                '已随江令夸琼树', '又入卢家妒玉堂',
+                '侵夜可能争桂魄', '忍寒应欲试梅妆',
+                '关河冻合东西路', '肠断斑骓送陆郎',
+                '岁暮阴阳催短景', '天涯霜雪霁寒宵',
+                '五更鼓角声悲壮', '三峡星河影动摇',
+                '野哭千家闻战伐', '夷歌数处起渔樵',
+                '卧龙跃马终黄土', '人事音书漫寂寥'
+            ];
+            if (snowPoems.some(p => inputLower.includes(p))) {
+                detectedTypes.push('snow');
+            }
+
+            // 花园/自然诗句
+            const gardenPoems = [
+                '春眠不觉晓', '处处闻啼鸟', '夜来风雨声', '花落知多少',
+                '人面不知何处去', '桃花依旧笑春风',
+                '去年今日此门中', '人面桃花相映红',
+                '竹外桃花三两枝', '春江水暖鸭先知',
+                '蒌蒿满地芦芽短', '正是河豚欲上时',
+                '等闲识得东风面', '万紫千红总是春',
+                '胜日寻芳泗水滨', '无边光景一时新',
+                '天街小雨润如酥', '草色遥看近却无',
+                '最是一年春好处', '绝胜烟柳满皇都',
+                '几处早莺争暖树', '谁家新燕啄春泥',
+                '乱花渐欲迷人眼', '浅草才能没马蹄',
+                '最爱湖东行不足', '绿杨阴里白沙堤',
+                '孤山寺北贾亭西', '水面初平云脚低',
+                '迟日江山丽', '春风花草香', '泥融飞燕子', '沙暖睡鸳鸯',
+                '黄四娘家花满蹊', '千朵万朵压枝低',
+                '留连戏蝶时时舞', '自在娇莺恰恰啼',
+                '桃之夭夭', '灼灼其华', '之子于归', '宜其室家',
+                '有桃有杏', '有李有榆', '有松有柏', '有竹有梅',
+                '采菊东篱下', '悠然见南山', '山气日夕佳', '飞鸟相与还',
+                '此中有真意', '欲辨已忘言', '结庐在人境', '而无车马喧',
+                '问君何能尔', '心远地自偏',
+                '予独爱莲之出淤泥而不染', '濯清涟而不妖',
+                '中通外直', '不蔓不枝', '香远益清', '亭亭净植',
+                '可远观而不可亵玩焉', '予谓菊', '花之隐逸者也',
+                '牡丹', '花之富贵者也', '莲', '花之君子者也',
+                '噫', '菊之爱', '陶后鲜有闻', '莲之爱', '同予者何人',
+                '牡丹之爱', '宜乎众矣',
+                '墙角数枝梅', '凌寒独自开', '遥知不是雪', '为有暗香来',
+                '众芳摇落独暄妍', '占尽风情向小园',
+                '疏影横斜水清浅', '暗香浮动月黄昏',
+                '霜禽欲下先偷眼', '粉蝶如知合断魂',
+                '幸有微吟可相狎', '不须檀板共金樽',
+                '唯有牡丹真国色', '花开时节动京城',
+                '庭前芍药妖无格', '池上芙蕖净少情',
+                '红豆生南国', '春来发几枝', '愿君多采撷', '此物最相思',
+                '碧玉妆成一树高', '万条垂下绿丝绦',
+                '不知细叶谁裁出', '二月春风似剪刀',
+                '两个黄鹂鸣翠柳', '一行白鹭上青天',
+                '窗含西岭千秋雪', '门泊东吴万里船'
+            ];
+            if (gardenPoems.some(p => inputLower.includes(p))) {
+                detectedTypes.push('garden');
+            }
+
+            // 室内诗句
+            const indoorPoems = [
+                '床前明月光', '疑是地上霜', '举头望明月', '低头思故乡',
+                '松下问童子', '言师采药去', '只在此山中', '云深不知处',
+                '空山不见人', '但闻人语响', '返景入深林', '复照青苔上',
+                '独坐幽篁里', '弹琴复长啸', '深林人不知', '明月来相照',
+                '移舟泊烟渚', '日暮客愁新', '野旷天低树', '江清月近人',
+                '千山鸟飞绝', '万径人踪灭', '孤舟蓑笠翁', '独钓寒江雪',
+                '月落乌啼霜满天', '江枫渔火对愁眠',
+                '姑苏城外寒山寺', '夜半钟声到客船',
+                '君问归期未有期', '巴山夜雨涨秋池',
+                '何当共剪西窗烛', '却话巴山夜雨时',
+                '寒雨连江夜入吴', '平明送客楚山孤',
+                '洛阳亲友如相问', '一片冰心在玉壶',
+                '葡萄美酒夜光杯', '欲饮琵琶马上催',
+                '醉卧沙场君莫笑', '古来征战几人回',
+                '秦时明月汉时关', '万里长征人未还',
+                '但使龙城飞将在', '不教胡马度阴山',
+                '黄河远上白云间', '一片孤城万仞山',
+                '羌笛何须怨杨柳', '春风不度玉门关',
+                '渭城朝雨浥轻尘', '客舍青青柳色新',
+                '劝君更尽一杯酒', '西出阳关无故人',
+                '千里黄云白日曛', '北风吹雁雪纷纷',
+                '莫愁前路无知己', '天下谁人不识君',
+                '故人西辞黄鹤楼', '烟花三月下扬州',
+                '孤帆远影碧空尽', '唯见长江天际流',
+                '朝辞白帝彩云间', '千里江陵一日还',
+                '两岸猿声啼不住', '轻舟已过万重山',
+                '天门中断楚江开', '碧水东流至此回',
+                '两岸青山相对出', '孤帆一片日边来',
+                '日照香炉生紫烟', '遥看瀑布挂前川',
+                '飞流直下三千尺', '疑是银河落九天',
+                '李白乘舟将欲行', '忽闻岸上踏歌声',
+                '桃花潭水深千尺', '不及汪伦送我情',
+                '谁家玉笛暗飞声', '散入春风满洛城',
+                '此夜曲中闻折柳', '何人不起故园情',
+                '峨眉山月半轮秋', '影入平羌江水流',
+                '夜发清溪向三峡', '思君不见下渝州',
+                '岐王宅里寻常见', '崔九堂前几度闻',
+                '正是江南好风景', '落花时节又逢君',
+                '锦瑟无端五十弦', '一弦一柱思华年',
+                '庄生晓梦迷蝴蝶', '望帝春心托杜鹃',
+                '沧海月明珠有泪', '蓝田日暖玉生烟',
+                '此情可待成追忆', '只是当时已惘然'
+            ];
+            if (indoorPoems.some(p => inputLower.includes(p))) {
+                detectedTypes.push('indoors');
+            }
+
+            // 战斗/武侠诗句
+            const fightPoems = [
+                '醉里挑灯看剑', '梦回吹角连营', '八百里分麾下炙',
+                '五十弦翻塞外声', '沙场秋点兵',
+                '马作的卢飞快', '弓如霹雳弦惊',
+                '了却君王天下事', '赢得生前身后名', '可怜白发生',
+                '怒发冲冠', '凭栏处', '潇潇雨歇',
+                '抬望眼', '仰天长啸', '壮怀激烈',
+                '三十功名尘与土', '八千里路云和月',
+                '莫等闲', '白了少年头', '空悲切',
+                '靖康耻', '犹未雪', '臣子恨', '何时灭',
+                '驾长车', '踏破贺兰山缺',
+                '壮志饥餐胡虏肉', '笑谈渴饮匈奴血',
+                '待从头', '收拾旧山河', '朝天阙',
+                '大江东去', '浪淘尽', '千古风流人物',
+                '故垒西边', '人道是', '三国周郎赤壁',
+                '乱石穿空', '惊涛拍岸', '卷起千堆雪',
+                '江山如画', '一时多少豪杰',
+                '遥想公瑾当年', '小乔初嫁了', '雄姿英发',
+                '羽扇纶巾', '谈笑间', '樯橹灰飞烟灭',
+                '故国神游', '多情应笑我', '早生华发',
+                '人生如梦', '一尊还酹江月',
+                '想当年', '金戈铁马', '气吞万里如虎',
+                '元嘉草草', '封狼居胥', '赢得仓皇北顾',
+                '四十三年', '望中犹记', '烽火扬州路',
+                '可堪回首', '佛狸祠下', '一片神鸦社鼓',
+                '凭谁问', '廉颇老矣', '尚能饭否',
+                '郁孤台下清江水', '中间多少行人泪',
+                '西北望长安', '可怜无数山',
+                '青山遮不住', '毕竟东流去',
+                '江晚正愁余', '山深闻鹧鸪',
+                '少年不识愁滋味', '爱上层楼',
+                '爱上层楼', '为赋新词强说愁',
+                '而今识尽愁滋味', '欲说还休',
+                '欲说还休', '却道天凉好个秋',
+                '破阵子', '为陈同甫赋壮词以寄之',
+                '将军百战身名裂', '向河梁', '回头万里', '故人长绝',
+                '易水萧萧西风冷', '满座衣冠似雪',
+                '正壮士', '悲歌未彻', '啼鸟还知如许恨',
+                '料不啼清泪长啼血', '谁共我', '醉明月',
+                '赵客缦胡缨', '吴钩霜雪明', '银鞍照白马', '飒沓如流星',
+                '十步杀一人', '千里不留行', '事了拂衣去', '深藏身与名',
+                '闲过信陵饮', '脱剑膝前横', '将炙啖朱亥', '持觞劝侯嬴',
+                '三杯吐然诺', '五岳倒为轻', '眼花耳热后', '意气素霓生',
+                '救赵挥金槌', '邯郸先震惊', '千秋二壮士', '煊赫大梁城',
+                '纵死侠骨香', '不惭世上英', '谁能书阁下', '白首太玄经'
+            ];
+            if (fightPoems.some(p => inputLower.includes(p))) {
+                detectedTypes.push('action_scene');
+            }
+
+            // 森林诗句
+            const forestPoems = [
+                '空山不见人', '但闻人语响', '返景入深林', '复照青苔上',
+                '独坐幽篁里', '弹琴复长啸', '深林人不知', '明月来相照',
+                '人闲桂花落', '夜静春山空', '月出惊山鸟', '时鸣春涧中',
+                '木末芙蓉花', '山中发红萼', '涧户寂无人', '纷纷开且落',
+                '荆溪白石出', '天寒红叶稀', '山路元无雨', '空翠湿人衣',
+                '松下问童子', '言师采药去', '只在此山中', '云深不知处',
+                '青山横北郭', '白水绕东城', '此地一为别', '孤蓬万里征',
+                '浮云游子意', '落日故人情', '挥手自兹去', '萧萧班马鸣',
+                '树树皆秋色', '山山唯落晖', '牧人驱犊返', '猎马带禽归',
+                '相顾无相识', '长歌怀采薇', '东皋薄暮望', '徙倚欲何依',
+                '古木阴中系短篷', '杖藜扶我过桥东',
+                '沾衣欲湿杏花雨', '吹面不寒杨柳风',
+                '梅子黄时日日晴', '小溪泛尽却山行',
+                '绿阴不减来时路', '添得黄鹂四五声',
+                '一树春风千万枝', '嫩于金色软于丝',
+                '永丰西角荒园里', '尽日无人属阿谁',
+                '庭中有奇树', '绿叶发华滋', '攀条折其荣', '将以遗所思',
+                '馨香盈怀袖', '路远莫致之', '此物何足贵', '但感别经时',
+                '青青河畔草', '郁郁园中柳', '盈盈楼上女', '皎皎当窗牖',
+                '娥娥红粉妆', '纤纤出素手', '昔为倡家女', '今为荡子妇',
+                '荡子行不归', '空床难独守',
+                '明月皎夜光', '促织鸣东壁', '玉衡指孟冬', '众星何历历',
+                '白露沾野草', '时节忽复易', '秋蝉鸣树间', '玄鸟逝安适',
+                '昔我同门友', '高举振六翮', '不念携手好', '弃我如遗迹',
+                '南箕北有斗', '牵牛不负轭', '良无盘石固', '虚名复何益',
+                '迢迢牵牛星', '皎皎河汉女', '纤纤擢素手', '札札弄机杼',
+                '终日不成章', '泣涕零如雨', '河汉清且浅', '相去复几许',
+                '盈盈一水间', '脉脉不得语'
+            ];
+            if (forestPoems.some(p => inputLower.includes(p))) {
+                detectedTypes.push('forest');
+            }
+
+            // 山地诗句
+            const mountainPoems = [
+                '会当凌绝顶', '一览众山小', '荡胸生曾云', '决眦入归鸟',
+                '岱宗夫如何', '齐鲁青未了', '造化钟神秀', '阴阳割昏晓',
+                '不畏浮云遮望眼', '自缘身在最高层',
+                '飞来山上千寻塔', '闻说鸡鸣见日升',
+                '欲穷千里目', '更上一层楼', '白日依山尽', '黄河入海流',
+                '空山新雨后', '天气晚来秋', '明月松间照', '清泉石上流',
+                '竹喧归浣女', '莲动下渔舟', '随意春芳歇', '王孙自可留',
+                '太乙近天都', '连山接海隅', '白云回望合', '青霭入看无',
+                '分野中峰变', '阴晴众壑殊', '欲投人处宿', '隔水问樵夫',
+                '终南阴岭秀', '积雪浮云端', '林表明霁色', '城中增暮寒',
+                '日暮苍山远', '天寒白屋贫', '柴门闻犬吠', '风雪夜归人',
+                '千山鸟飞绝', '万径人踪灭', '孤舟蓑笠翁', '独钓寒江雪',
+                '西塞山前白鹭飞', '桃花流水鳜鱼肥',
+                '青箬笠', '绿蓑衣', '斜风细雨不须归',
+                '采菊东篱下', '悠然见南山', '山气日夕佳', '飞鸟相与还',
+                '此中有真意', '欲辨已忘言', '结庐在人境', '而无车马喧',
+                '问君何能尔', '心远地自偏',
+                '山重水复疑无路', '柳暗花明又一村',
+                '箫鼓追随春社近', '衣冠简朴古风存',
+                '从今若许闲乘月', '拄杖无时夜叩门',
+                '莫笑农家腊酒浑', '丰年留客足鸡豚',
+                '横看成岭侧成峰', '远近高低各不同',
+                '不识庐山真面目', '只缘身在此山中',
+                '水光潋滟晴方好', '山色空蒙雨亦奇',
+                '欲把西湖比西子', '淡妆浓抹总相宜',
+                '毕竟西湖六月中', '风光不与四时同',
+                '接天莲叶无穷碧', '映日荷花别样红',
+                '孤山寺北贾亭西', '水面初平云脚低',
+                '几处早莺争暖树', '谁家新燕啄春泥',
+                '乱花渐欲迷人眼', '浅草才能没马蹄',
+                '最爱湖东行不足', '绿杨阴里白沙堤',
+                '蜀道之难', '难于上青天', '蚕丛及鱼凫', '开国何茫然',
+                '尔来四万八千岁', '不与秦塞通人烟',
+                '西当太白有鸟道', '可以横绝峨眉巅',
+                '地崩山摧壮士死', '然后天梯石栈相钩连',
+                '上有六龙回日之高标', '下有冲波逆折之回川',
+                '黄鹤之飞尚不得过', '猿猱欲度愁攀援',
+                '扪参历井仰胁息', '以手抚膺坐长叹',
+                '问君西游何时还', '畏途巉岩不可攀',
+                '但见悲鸟号古木', '雄飞雌从绕林间',
+                '又闻子规啼夜月', '愁空山', '蜀道之难', '难于上青天',
+                '使人听此凋朱颜', '连峰去天不盈尺', '枯松倒挂倚绝壁',
+                '飞湍瀑流争喧豗', '砯崖转石万壑雷',
+                '其险也如此', '嗟尔远道之人胡为乎来哉',
+                '剑阁峥嵘而崔嵬', '一夫当关', '万夫莫开',
+                '所守或匪亲', '化为狼与豺', '朝避猛虎', '夕避长蛇',
+                '磨牙吮血', '杀人如麻', '锦城虽云乐', '不如早还家',
+                '蜀道之难', '难于上青天', '侧身西望长咨嗟'
+            ];
+            // 诗句已整合到权重系统中，不再单独判定
+
+            // ========== 如果没有从输入中检测到，再检查标签 ==========
+            if (detectedTypes.length === 0) {
+                // 水边/水上场景
+                const waterTagKeywords = ['water', 'ocean', 'beach', 'sea', 'river', 'lake', 'swimming', 'swim', 'pool', 'waterfall', 'hot_spring', 'underwater', 'seaside', 'shore', 'wave', 'surfing', 'diving', 'fishing'];
+                if (waterTagKeywords.some(k => allTags.includes(k))) {
+                    detectedTypes.push('water');
+                }
+
+                // 天空/高空场景
+                const skyTagKeywords = ['sky', 'air', 'fly', 'flying', 'cloud', 'rooftop', 'balcony', 'high', 'aerial', 'gliding'];
+                if (skyTagKeywords.some(k => allTags.includes(k))) {
+                    detectedTypes.push('sky');
+                }
+
+                // 夜晚场景
+                const nightTagKeywords = ['night', 'midnight', 'moonlight', 'starry', 'dark', 'evening', 'dusk', 'dawn', 'sunset', 'sunrise'];
+                if (nightTagKeywords.some(k => allTags.includes(k))) {
+                    detectedTypes.push('night');
+                }
+
+                // 雪景
+                const snowTagKeywords = ['snow', 'snowy', 'ice', 'frost', 'winter', 'skiing'];
+                if (snowTagKeywords.some(k => allTags.includes(k))) {
+                    detectedTypes.push('snow');
+                }
+
+                // 花园/花海
+                const gardenTagKeywords = ['garden', 'flower', 'blossom', 'sakura', 'rose', 'bloom', 'meadow', 'tulip', 'lotus'];
+                if (gardenTagKeywords.some(k => allTags.includes(k))) {
+                    detectedTypes.push('garden');
+                }
+
+                // 室内场景
+                const indoorTagKeywords = ['indoor', 'room', 'bedroom', 'living_room', 'kitchen', 'office', 'library', 'classroom', 'cafe', 'restaurant', 'shop', 'hallway', 'staircase', 'bathroom', 'house'];
+                if (indoorTagKeywords.some(k => allTags.includes(k))) {
+                    detectedTypes.push('indoors');
+                }
+
+                // 战斗/动态场景
+                const actionTagKeywords = ['fight', 'battle', 'combat', 'attack', 'defend', 'cast', 'spell', 'magic', 'weapon', 'sword'];
+                if (actionTagKeywords.some(k => allTags.includes(k))) {
+                    detectedTypes.push('action_scene');
+                }
+
+                // 森林
+                const forestTagKeywords = ['forest', 'woods', 'tree', 'jungle', 'bamboo', 'pine'];
+                if (forestTagKeywords.some(k => allTags.includes(k))) {
+                    detectedTypes.push('forest');
+                }
+
+                // 山地
+                const mountainTagKeywords = ['mountain', 'hill', 'valley', 'cliff', 'peak', 'slope'];
+                if (mountainTagKeywords.some(k => allTags.includes(k))) {
+                    detectedTypes.push('mountain');
+                }
+
+                // 城市
+                const cityTagKeywords = ['city', 'street', 'road', 'building', 'bridge', 'station', 'urban', 'plaza'];
+                if (cityTagKeywords.some(k => allTags.includes(k))) {
+                    detectedTypes.push('city');
+                }
+            }
+
+            // 户外自然（默认，当没有其他场景时）
+            if (detectedTypes.length === 0) {
+                const outdoorKeywords = ['outdoor', 'nature', 'park', 'field', 'desert', 'grass', 'countryside'];
+                if (outdoorKeywords.some(k => allTags.includes(k)) || 
+                    outdoorKeywords.some(k => inputLower.includes(k))) {
+                    detectedTypes.push('outdoors_nature');
+                }
+            }
+
+            return detectedTypes;
+        }
+
+        // ==================== 生成词条 ====================
+        function generate() {
+            try {
+                const themeInput = document.getElementById('themeInput').value.trim();
+                const isDreamMode = document.getElementById('dreamMode').checked;
+                const outputBox = document.getElementById('outputBox');
+                const generateBtn = document.getElementById('generateBtn');
+                const resultBtns = document.getElementById('resultBtns');
+
+                let tags = [];
+                let matchedCategories = new Set();
+                let sceneTags = [];
+                let actionTags = [];
+
+                // ========== 正常流程 ==========
+                if (themeInput) {
+                    const parsed = parseInput(themeInput);
+
+                    // 添加匹配到的标签
+                    for (const [category, enTags] of Object.entries(parsed)) {
+                        if (enTags.length > 0 && category !== 'unmatched') {
+                            const uniqueTags = [...new Set(enTags)];
+                            tags.push(...uniqueTags);
+                            matchedCategories.add(category);
+                            
+                            if (category === 'scene') sceneTags.push(...uniqueTags);
+                            if (category === 'action') actionTags.push(...uniqueTags);
+                        }
+                    }
+
+                    // 2. 基础标签补充（确保质量）
+                    const qualityPool = baseTags.quality;
+                    const qualityCount = Math.floor(Math.random() * 3) + 3;
+                    tags.push(...shuffleArray([...qualityPool]).slice(0, qualityCount));
+
+                    // 3. 检查动作是否需要特定场景（防止不合理搭配）
+                    const requiredScenes = getRequiredScenesForAction(actionTags);
+                    let detectedTypes = [];
+                    
+                    if (!isDreamMode && (sceneTags.length > 0 || actionTags.length > 0 || themeInput)) {
+                        detectedTypes = detectSceneTypes(sceneTags, actionTags, themeInput);
+                        
+                        // 如果动作需要特定场景，但检测到的场景不匹配，强制添加所需场景
+                        if (requiredScenes.length > 0) {
+                            requiredScenes.forEach(reqScene => {
+                                if (!detectedTypes.includes(reqScene)) {
+                                    detectedTypes.push(reqScene);
+                                    // 添加对应的场景标签
+                                    if (reqScene === 'water' && !sceneTags.some(s => s.includes('water'))) {
+                                        sceneTags.push('water');
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                    // 4. 根据场景类型选择合理的光影、情绪和细节标签
+                    let selectedLighting = [];
+                    let selectedEmotions = [];
+                    let selectedDetails = [];
+
+                    if (detectedTypes.length > 0) {
+                        // 使用合理搭配规则（支持多个场景类型）
+                        detectedTypes.forEach(type => {
+                            if (compatibleRules[type]) {
+                                const rule = compatibleRules[type];
+                                
+                                // 光影：从兼容列表选
+                                const compatibleLighting = rule.lighting.filter(l => baseTags.lighting.includes(l));
+                                selectedLighting.push(...shuffleArray(compatibleLighting).slice(0, 2));
+                                
+                                // 情绪：从兼容列表选
+                                const compatibleEmotions = rule.emotions.filter(e => baseTags.emotion.includes(e));
+                                selectedEmotions.push(...shuffleArray(compatibleEmotions).slice(0, 2));
+                                
+                                // 细节标签：添加场景特有描述
+                                if (rule.details) {
+                                    selectedDetails.push(...shuffleArray(rule.details).slice(0, 3));
+                                }
+                            }
+                        });
+                        
+                        // 去重
+                        selectedLighting = [...new Set(selectedLighting)];
+                        selectedEmotions = [...new Set(selectedEmotions)];
+                        selectedDetails = [...new Set(selectedDetails)];
+                        
+                        // 补充到足够数量
+                        while (selectedLighting.length < 4) {
+                            const remaining = baseTags.lighting.filter(l => !selectedLighting.includes(l));
+                            if (remaining.length === 0) break;
+                            selectedLighting.push(remaining[Math.floor(Math.random() * remaining.length)]);
+                        }
+                        while (selectedEmotions.length < 3) {
+                            const remaining = baseTags.emotion.filter(e => !selectedEmotions.includes(e));
+                            if (remaining.length === 0) break;
+                            selectedEmotions.push(remaining[Math.floor(Math.random() * remaining.length)]);
+                        }
+                    } else {
+                        // 没有匹配的场景类型，随机选择
+                        selectedLighting.push(...shuffleArray([...baseTags.lighting]).slice(0, 4));
+                        selectedEmotions.push(...shuffleArray([...baseTags.emotion]).slice(0, 3));
+                    }
+
+                    tags.push(...selectedLighting);
+
+                    // 5. 构图标签
+                    const compositionPool = baseTags.composition;
+                    const compositionCount = Math.floor(Math.random() * 3) + 2;
+                    tags.push(...shuffleArray([...compositionPool]).slice(0, compositionCount));
+
+                    // 6. 情绪标签
+                    tags.push(...selectedEmotions);
+
+                    // 7. 场景细节标签（水、雪、花等特有描述）
+                    tags.push(...selectedDetails);
+
+                    // 8. 自由发挥：未匹配的类别随机补充（梦中奇幻模式更多）
+                    const freeCount = isDreamMode ? 4 : 2;
+                    const freeCategories = ['action', 'scene'];
+                    freeCategories.forEach(cat => {
+                        if (!matchedCategories.has(cat)) {
+                            const pool = baseTags[cat];
+                            const count = Math.floor(Math.random() * freeCount) + 2;
+                            tags.push(...shuffleArray([...pool]).slice(0, count));
+                        }
+                    });
+
+                    // 9. 梦中奇幻模式：额外添加一些奇幻元素
+                    if (isDreamMode) {
+                        const fantasyTags = ['dreamy', 'fantasy', 'magical', 'ethereal', 'surreal', 'mysterious', 'vibrant', 'glow', 'light_particles', 'bloom'];
+                        tags.push(...shuffleArray(fantasyTags).slice(0, 4));
+                    }
+
+                    // 10. 去重并打乱顺序
+                    tags = [...new Set(tags)].sort(() => 0.5 - Math.random());
+
+                    // 11. 限制总数量
+                    const maxTags = isDreamMode ? 25 : 20;
+                    const minTags = isDreamMode ? 18 : 15;
+                    const finalCount = Math.floor(Math.random() * (maxTags - minTags + 1)) + minTags;
+                    tags = tags.slice(0, finalCount);
+
+                    outputBox.value = tags.join(', ');
+
+                    // 显示结果按钮
+                    generateBtn.classList.add('hidden');
+                    resultBtns.classList.remove('hidden');
+                } else {
+                    // 没有输入，生成随机标签
+                    const qualityPool = baseTags.quality;
+                    tags.push(...shuffleArray([...qualityPool]).slice(0, 3));
+                    
+                    const lightingPool = baseTags.lighting;
+                    tags.push(...shuffleArray([...lightingPool]).slice(0, 4));
+                    
+                    const compositionPool = baseTags.composition;
+                    tags.push(...shuffleArray([...compositionPool]).slice(0, 3));
+                    
+                    const emotionPool = baseTags.emotion;
+                    tags.push(...shuffleArray([...emotionPool]).slice(0, 3));
+                    
+                    tags = [...new Set(tags)].sort(() => 0.5 - Math.random());
+                    outputBox.value = tags.join(', ');
+                    generateBtn.classList.add('hidden');
+                    resultBtns.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('生成失败:', error);
+                showToast('生成失败，请重试');
+            }
+        }
+
+        // ==================== 复制结果 ====================
+        function copyResult() {
+            const outputBox = document.getElementById('outputBox');
+            outputBox.select();
+            document.execCommand('copy');
+            
+            showToast('已复制到剪贴板！');
+        }
+
+        // ==================== 重制页面 ====================
+        function reset() {
+            document.getElementById('themeInput').value = '';
+            document.getElementById('outputBox').value = '';
+            document.getElementById('generateBtn').classList.remove('hidden');
+            document.getElementById('resultBtns').classList.add('hidden');
+            
+            showToast('页面已重制');
+        }
+
+        // ==================== 显示提示 ====================
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+    </script>
+</body>
+</html>

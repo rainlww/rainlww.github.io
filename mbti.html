@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 人格检测 - 专业版</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Georgia", "Microsoft YaHei", serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+        .title {
+            font-size: 2em;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(240, 147, 251, 0.08));
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        /* 选项卡 */
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .tab-btn {
+            padding: 15px 25px;
+            border: 2px solid #e0e8ea;
+            border-radius: 12px;
+            background: #fafbfc;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            border-color: #667eea;
+        }
+        .tab-btn:hover:not(.active) {
+            background: #f0f2f5;
+        }
+        
+        .input-section { margin-bottom: 25px; }
+        .input-label { font-size: 0.9em; color: #555; margin-bottom: 10px; display: block; font-weight: 600; }
+        .input-box {
+            width: 100%; padding: 18px;
+            border: 2px solid #e0e8ea;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+            min-height: 200px;
+            resize: vertical;
+            font-family: inherit;
+            line-height: 1.8;
+        }
+        .input-box:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+        }
+        .btn {
+            width: 100%; padding: 18px 35px;
+            border: none; border-radius: 12px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(102, 126, 234, 0.45); }
+        .btn-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .btn-secondary {
+            background: linear-gradient(135deg, #a8a8b0, #b8b8c0);
+            color: #fff;
+            padding: 14px 20px;
+            font-size: 0.95em;
+        }
+        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); }
+        .hidden { display: none !important; }
+        
+        /* 结果样式 */
+        .result-header {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(240, 147, 251, 0.1));
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 2px solid #667eea;
+        }
+        .mbti-type {
+            font-size: 3.5em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+        }
+        .mbti-name { font-size: 1.3em; color: #666; margin-bottom: 15px; }
+        .confidence-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        /* 维度分析 */
+        .dimensions-section {
+            margin-bottom: 25px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .section-title {
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+        }
+        .dimension-row {
+            display: grid;
+            grid-template-columns: 1fr 120px 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .dimension-label {
+            font-size: 0.9em;
+            color: #555;
+            font-weight: 600;
+        }
+        .dimension-bar-container {
+            height: 10px;
+            background: rgba(102, 126, 234, 0.15);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        .dimension-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            border-radius: 5px;
+            transition: width 1s ease;
+        }
+        .dimension-center {
+            width: 2px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* 认知功能 */
+        .functions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .function-card {
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(240, 147, 251, 0.08));
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+        .function-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .function-role {
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .function-desc { font-size: 0.85em; color: #666; line-height: 1.7; }
+        
+        /* 分析报告 */
+        .analysis-section {
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .analysis-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed rgba(102, 126, 234, 0.2);
+        }
+        .analysis-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .analysis-label {
+            font-size: 0.95em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .analysis-content {
+            font-size: 0.9em;
+            color: #444;
+            line-height: 2;
+            text-align: justify;
+        }
+        
+        /* 发展建议 */
+        .suggestions-section {
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.08), rgba(34, 153, 84, 0.08));
+            border-radius: 15px;
+            border-left: 4px solid #27ae60;
+        }
+        .suggestion-item {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+        }
+        .suggestion-item::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .suggestion-text { font-size: 0.9em; color: #444; line-height: 1.8; }
+        
+        .back-link { text-align: center; margin-top: 25px; }
+        .back-link a {
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15));
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+            display: inline-block;
+        }
+        .back-link a:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.25));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .loading-section { text-align: center; padding: 50px 30px; }
+        .loading-section > div:first-child { font-size: 4em; margin-bottom: 25px; animation: bounce 1.5s ease-in-out infinite; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @media (max-width: 600px) {
+            .card { padding: 30px 20px; }
+            .title { font-size: 1.6em; }
+            .btn-group { grid-template-columns: 1fr; }
+            .tabs { grid-template-columns: 1fr; }
+            .dimension-row { grid-template-columns: 1fr; gap: 8px; }
+            .functions-grid { grid-template-columns: 1fr; }
+            .mbti-type { font-size: 2.5em; letter-spacing: 5px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="title">🧠 MBTI 人格类型检测</h1>
+            <p class="subtitle">基于荣格八维认知功能理论的专业人格分析</p>
+            
+            <!-- 选项卡 -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('text')">📝 粘贴简介</button>
+                <button class="tab-btn" onclick="switchTab('link')">🔗 Neta 链接</button>
+            </div>
+            
+            <!-- 文本输入区 -->
+            <div id="textSection" class="input-section">
+                <label class="input-label">请输入人物简介/行为描述/自述</label>
+                <textarea class="input-box" id="textInput"></textarea>
+            </div>
+            
+            <!-- 链接输入区 -->
+            <div id="linkSection" class="input-section hidden">
+                <label class="input-label">请输入 Neta 人物链接或安利语</label>
+                <textarea class="input-box" id="linkInput"></textarea>
+            </div>
+            
+            <button class="btn btn-primary" onclick="analyzeMBTI()" id="analyzeBtn">🔬 开始专业分析</button>
+            
+            <div class="loading-section hidden" id="loadingSection">
+                <div id="loadingText" style="font-size: 0.9em; color: #667eea; margin-bottom: 12px; font-style: italic;">执行者雨落正在读你的心……</div>
+                <div style="width: 250px; height: 8px; background: rgba(102, 126, 234, 0.2); border-radius: 4px; margin: 0 auto; overflow: hidden;">
+                    <div id="loadingBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2, #f093fb); border-radius: 4px; transition: width 0.3s ease;"></div>
+                </div>
+            </div>
+            
+            <div class="output-section hidden" id="mbtiResultSection">
+                <div id="mbtiResult"></div>
+                <div class="btn-group" style="margin-top: 20px;">
+                    <button class="btn btn-secondary btn-success" onclick="copyMBTIResult()">📋 复制报告</button>
+                    <button class="btn btn-secondary" onclick="resetMBTI()">🗑️ 重新分析</button>
+                </div>
+            </div>
+        </div>
+        <div class="back-link">
+            <a href="index.html">← 返回主页</a>
+        </div>
+    </div>
+    
+    <div id="toast" style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); color: #fff; padding: 14px 28px; border-radius: 12px; opacity: 0; transition: opacity 0.3s ease; font-weight: 500; box-shadow: 0 5px 20px rgba(0,0,0,0.3);">已复制！</div>
+    
+    <script>
+        // 切换标签页
+        function switchTab(tab) {
+            const textSection = document.getElementById('textSection');
+            const linkSection = document.getElementById('linkSection');
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            
+            if (tab === 'text') {
+                textSection.classList.remove('hidden');
+                linkSection.classList.add('hidden');
+                tabBtns[0].classList.add('active');
+                tabBtns[1].classList.remove('active');
+            } else {
+                textSection.classList.add('hidden');
+                linkSection.classList.remove('hidden');
+                tabBtns[0].classList.remove('active');
+                tabBtns[1].classList.add('active');
+            }
+        }
+
+        // ========== 专业 MBTI 分析引擎 ==========
+        // 基于荣格八维认知功能理论
+        
+        // 认知功能关键词库（按功能分类）
+        const cognitiveFunctions = {
+            Ne: {
+                keywords: ['探索', '可能性', '联想', '发散', '创意', '灵感', '头脑风暴', '多点思考', '跳跃思维', '举一反三', '触类旁通', '新颖', '独特', '创新', '变革', '未来导向', '潜在', '机遇', '模式识别', '概念连接', '跨领域', '整合', '综合', '多元化', '开放性', '好奇心', '尝试', '实验', '冒险', '变化', '灵活', '适应', '随机', '即兴', '自发', '自由', '不受约束', '打破常规', '挑战传统', '质疑现状', '另辟蹊径'],
+                weight: 3,
+                description: '外向直觉——探索外部世界的无限可能性，善于发现事物之间的联系和潜在机会'
+            },
+            Ni: {
+                keywords: ['洞察', '预见', '愿景', '直觉', '本质', '核心', '深层', '规律', '趋势', '未来', '长远', '战略', '宏观', '整体', '系统', '框架', '模型', '理论', '抽象', '概念', '象征', '隐喻', '原型', '集体无意识', '顿悟', '觉醒', '觉悟', '看透', '看穿', '看破', '理解', '明白', '懂得', '领会', '领悟', '融会贯通', '一针见血', '直击本质', '高瞻远瞩', '深谋远虑', '未雨绸缪', '运筹帷幄', '洞察先机', '先知先觉', '第六感'],
+                weight: 3,
+                description: '内向直觉——洞察事物的本质和深层规律，能够预见未来发展趋势'
+            },
+            Se: {
+                keywords: ['当下', '现在', '此刻', '实时', '即时', '感官', '五感', '视觉', '听觉', '触觉', '味觉', '嗅觉', '体验', '感受', '感知', '观察', '注意', '细节', '具体', '实际', '现实', '事实', '数据', '证据', '实证', '实践', '操作', '执行', '行动', '动手', '身体', '运动', '活力', '能量', '刺激', '冒险', '挑战', '竞争', '速度', '反应', '敏捷', '灵活', '适应', '环境', '周围', '现场', '在场', '身临其境'],
+                weight: 3,
+                description: '外向感觉——敏锐感知当下的外部世界，注重实际体验和即时反应'
+            },
+            Si: {
+                keywords: ['过去', '回忆', '记忆', '经验', '传统', '习惯', '惯例', '常规', '熟悉', '已知', '稳定', '安全', '可靠', '保守', '谨慎', '小心', '细致', '详细', '精确', '准确', '标准', '规范', '流程', '步骤', '程序', '方法', '技巧', '技能', '熟练', '精通', '专业', '专家', '权威', '参考', '比较', '对比', '对照', '类比', '相似', '相同', '类似', '重复', '复制', '模仿', '学习', '积累', '沉淀', '储存', '保存', '记录', '档案', '历史'],
+                weight: 3,
+                description: '内向感觉——依赖过去的经验和记忆，注重稳定性、传统和细节'
+            },
+            Te: {
+                keywords: ['逻辑', '理性', '分析', '推理', '论证', '证明', '验证', '测试', '实验', '科学', '客观', '公正', '公平', '标准', '规则', '原则', '制度', '政策', '流程', '程序', '系统', '结构', '组织', '管理', '领导', '指挥', '控制', '监督', '评估', '评价', '衡量', '测量', '指标', '数据', '统计', '效率', '效果', '结果', '成果', '绩效', '目标', '任务', '计划', '规划', '安排', '时间管理', '优先级', '决策', '判断', '选择', '决定', '果断', '坚决', '坚定', '执行', '实施', '落地', '实用', '应用'],
+                weight: 3,
+                description: '外向思考——运用外部逻辑和客观标准进行分析和决策，注重效率和结果'
+            },
+            Ti: {
+                keywords: ['思考', '分析', '推理', '逻辑', '原理', '机制', '运作', '系统', '结构', '框架', '模型', '理论', '概念', '定义', '分类', '范畴', '类型', '种类', '区分', '辨别', '鉴别', '识别', '判断', '评估', '评价', '批判', '质疑', '怀疑', '求证', '验证', '精确', '准确', '严谨', '严密', '严格', '一丝不苟', '精益求精', '完美', '理想', '标准', '规范', '原则', '规则', '定律', '公式', '定理', '公理', '推导', '推断', '推测', '预测', '建模', '抽象', '概括', '总结', '归纳', '演绎'],
+                weight: 3,
+                description: '内向思考——构建内在的逻辑框架和理论体系，追求精确和一致性'
+            },
+            Fe: {
+                keywords: ['情感', '情绪', '感受', '感情', '关系', '人际', '社交', '和谐', '和睦', '友好', '友善', '温暖', '热情', '热心', '善良', '仁慈', '同情', '同理心', '共情', '理解', '体谅', '包容', '接纳', '尊重', '关心', '关怀', '照顾', '帮助', '支持', '鼓励', '安慰', '陪伴', '倾听', '分享', '交流', '沟通', '表达', '表露', '外显', '外露', '开放', '坦诚', '真诚', '真实', '诚实', '信任', '忠诚', '承诺', '责任', '义务', '道德', '伦理', '价值观', '信念', '信仰', '理想', '追求', '目标', '意义', '价值'],
+                weight: 3,
+                description: '外向情感——关注他人的情感需求和群体和谐，重视人际关系和社会价值'
+            },
+            Fi: {
+                keywords: ['内心', '内在', '个人', '自我', '自己', '真实', '真诚', '诚实', '价值', '信念', '原则', '道德', '伦理', '良心', '正直', '诚信', '身份', '认同', '独特', '个性', '独立', '自主', '私密', '深层', '深刻', '有意义', '重要', '珍贵', '宝贵', '珍爱', '热爱', '关怀', '保护', '安全', '舒适', '平静', '宁静', '独处', '孤独', '自主', '自立', '自我导向', '自我决定', '自我定义', '自我表达', '自我实现'],
+                weight: 3,
+                description: '内向情感——忠于内心的价值观和真实感受，追求自我一致性和 authenticity'
+            }
+        };
+
+        // MBTI 类型与认知功能栈
+        const typeFunctionStacks = {
+            'INTJ': ['Ni', 'Te', 'Fi', 'Se'],
+            'INTP': ['Ti', 'Ne', 'Si', 'Fe'],
+            'ENTJ': ['Te', 'Ni', 'Se', 'Fi'],
+            'ENTP': ['Ne', 'Ti', 'Fe', 'Si'],
+            'INFJ': ['Ni', 'Fe', 'Ti', 'Se'],
+            'INFP': ['Fi', 'Ne', 'Si', 'Te'],
+            'ENFJ': ['Fe', 'Ni', 'Se', 'Ti'],
+            'ENFP': ['Ne', 'Fi', 'Te', 'Si'],
+            'ISTJ': ['Si', 'Te', 'Fi', 'Ne'],
+            'ISFJ': ['Si', 'Fe', 'Ti', 'Ne'],
+            'ESTJ': ['Te', 'Si', 'Ne', 'Fi'],
+            'ESFJ': ['Fe', 'Si', 'Ne', 'Ti'],
+            'ISTP': ['Ti', 'Se', 'Ni', 'Fe'],
+            'ISFP': ['Fi', 'Se', 'Ni', 'Te'],
+            'ESTP': ['Se', 'Ti', 'Fe', 'Ni'],
+            'ESFP': ['Se', 'Fi', 'Te', 'Ni']
+        };
+
+        // 类型名称和描述
+        const typeDescriptions = {
+            'INTJ': { name: '建筑师型', desc: '富有想象力和战略性的思想家，一切皆在计划之中' },
+            'INTP': { name: '逻辑学家型', desc: '具有创造力的发明家，对知识有着止不住的渴望' },
+            'ENTJ': { name: '指挥官型', desc: '大胆、富有想象力且意志强大的领导者' },
+            'ENTP': { name: '辩论家型', desc: '聪明好奇的思想者，不会放弃任何智力上的挑战' },
+            'INFJ': { name: '提倡者型', desc: '安静而神秘，同时鼓舞人心且不知疲倦的理想主义者' },
+            'INFP': { name: '调停者型', desc: '诗意、善良的利他主义者，总是热情地为正当理由提供帮助' },
+            'ENFJ': { name: '主人公型', desc: '富有魅力、鼓舞人心的领导者，有能力让听众为之着迷' },
+            'ENFP': { name: '竞选者型', desc: '热情、有创造力、爱社交的自由人，总能找到理由微笑' },
+            'ISTJ': { name: '物流师型', desc: '实用、注重事实的可靠人士' },
+            'ISFJ': { name: '守卫者型', desc: '非常专注而温暖的守护者，时刻准备着保护爱着的人们' },
+            'ESTJ': { name: '总经理型', desc: '出色的管理者，在管理事情或人的方面无与伦比' },
+            'ESFJ': { name: '执政官型', desc: '极有同情心、爱社交、受欢迎的人，总是热心提供帮助' },
+            'ISTP': { name: '鉴赏家型', desc: '大胆而实际的实验家，擅长使用各种形式的工具' },
+            'ISFP': { name: '探险家型', desc: '有魅力、随时准备探索未知的新鲜事物' },
+            'ESTP': { name: '企业家型', desc: '聪明、精力充沛、善于感知的人，真心享受生活在边缘' },
+            'ESFP': { name: '表演者型', desc: '自发的、精力充沛、热情的表演者——生活在他们周围永远不会无聊' }
+        };
+
+        const loadingTexts = [
+            '执行者雨落正在读你的心……'
+        ];
+
+        // Neta 链接解析器 - 支持多种格式
+        function parseNetaLink(text) {
+            // 格式 1: 完整句子 "我在捏 Ta 给你安利...（角色名）～ https://t.nieta.art/xxx"
+            const sentencePattern = /(?:nieta|捏 Ta|捏捏).*?(https?:\/\/[^\s]+)/i;
+            const sentenceMatch = text.match(sentencePattern);
+            if (sentenceMatch) {
+                const url = sentenceMatch[1];
+                const result = extractUuidFromUrl(url);
+                if (result) return result;
+            }
+            
+            // 格式 2: 直接 URL
+            const urlPatterns = [
+                /https?:\/\/t\.nieta\.art\/([a-zA-Z0-9_-]+)/i,
+                /https?:\/\/nieta\.art\/character\/([a-f0-9-]+)/i,
+                /https?:\/\/nieta\.art\/([a-f0-9-]+)/i,
+                /https?:\/\/app\.nieta\.art\/[^\s]*uuid=([a-f0-9-]+)/i,
+                /https?:\/\/[^\s]*uuid=([a-f0-9-]+)/i
+            ];
+            
+            for (const pattern of urlPatterns) {
+                const match = text.match(pattern);
+                if (match) {
+                    const extracted = match[1].toLowerCase();
+                    // 如果是 UUID 格式（36 字符），直接返回
+                    if (/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(extracted)) {
+                        return extracted;
+                    }
+                    // 如果是短链接 ID，返回标记
+                    return { type: 'short', id: extracted };
+                }
+            }
+            
+            // 格式 3: 单独 UUID
+            const uuidPattern = /([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/i;
+            const uuidMatch = text.match(uuidPattern);
+            if (uuidMatch) {
+                return uuidMatch[1].toLowerCase();
+            }
+            
+            return null;
+        }
+        
+        // 从 URL 中提取 UUID
+        function extractUuidFromUrl(url) {
+            // 短链接：https://t.nieta.art/VlIVZA7l
+            const shortPattern = /t\.nieta\.art\/([a-zA-Z0-9_-]+)/i;
+            const shortMatch = url.match(shortPattern);
+            if (shortMatch) {
+                const id = shortMatch[1].toLowerCase();
+                if (/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id)) {
+                    return id;
+                }
+                return { type: 'short', id: id };
+            }
+            
+            // 标准链接：https://nieta.art/character/xxx
+            const charPattern = /nieta\.art\/character\/([a-f0-9-]+)/i;
+            const charMatch = url.match(charPattern);
+            if (charMatch) return charMatch[1].toLowerCase();
+            
+            // 带参数的链接：https://app.nieta.art/...?uuid=xxx
+            const paramPattern = /uuid=([a-f0-9-]+)/i;
+            const paramMatch = url.match(paramPattern);
+            if (paramMatch) return paramMatch[1].toLowerCase();
+            
+            return null;
+        }
+
+        // 从 Neta API 获取角色简介
+        async function fetchNetaCharacter(uuid) {
+            const apiUrl = `https://api.talesofai.com/v2/travel/parent/${uuid}/profile`;
+            
+            try {
+                // 尝试使用 CORS 代理
+                const corsProxies = [
+                    `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`,
+                    `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`,
+                    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`
+                ];
+                
+                let data = null;
+                let lastError = null;
+                
+                for (const proxyUrl of corsProxies) {
+                    try {
+                        console.log('尝试代理:', proxyUrl);
+                        const response = await fetch(proxyUrl, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+                        console.log('响应状态:', response.status);
+                        if (response.ok) {
+                            data = await response.json();
+                            console.log('成功获取数据:', data);
+                            break;
+                        }
+                    } catch (e) {
+                        lastError = e;
+                        console.log(`代理 ${proxyUrl} 失败:`, e.message);
+                    }
+                }
+                
+                if (!data) {
+                    console.error('所有代理都失败，最后错误:', lastError);
+                    throw new Error('无法连接到 Neta API，可能是 CORS 限制或网络问题');
+                }
+                
+                // 提取简介信息（按优先级）
+                const bio = data.oc_bio || {};
+                const description = bio.description || bio.persona || data.name || '';
+                
+                console.log('提取的简介:', description.substring(0, 50) + '...');
+                return description;
+            } catch (error) {
+                console.error('获取 Neta 角色失败:', error);
+                throw error;
+            }
+        }
+
+        async function analyzeMBTI() {
+            try {
+                const currentTab = document.querySelector('.tab-btn.active');
+                const isTextTab = currentTab.textContent.includes('粘贴简介');
+                
+                let input = '';
+                
+                if (isTextTab) {
+                    input = document.getElementById('textInput').value.trim();
+                    if (!input) { showToast('请输入人物描述～'); return; }
+                } else {
+                    const linkInput = document.getElementById('linkInput').value.trim();
+                    if (!linkInput) { showToast('请输入 Neta 链接～'); return; }
+                    
+                    const uuid = parseNetaLink(linkInput);
+                    if (!uuid) { showToast('无效的 Neta 链接格式～'); return; }
+                    
+                    // 获取角色信息
+                    const analyzeBtn = document.getElementById('analyzeBtn');
+                    const loadingSection = document.getElementById('loadingSection');
+                    const loadingText = document.getElementById('loadingText');
+                    
+                    analyzeBtn.classList.add('hidden');
+                    loadingSection.classList.remove('hidden');
+                    loadingText.textContent = '正在获取 Neta 角色信息...';
+                    
+                    try {
+                        // 处理短链接 ID
+                        let actualUuid = uuid;
+                        if (uuid && typeof uuid === 'object' && uuid.type === 'short') {
+                            console.log('检测到短链接 ID:', uuid.id);
+                            showToast('短链接需要重定向，请切换到「粘贴简介」手动输入简介～');
+                            analyzeBtn.classList.remove('hidden');
+                            loadingSection.classList.add('hidden');
+                            return;
+                        }
+                        
+                        input = await fetchNetaCharacter(actualUuid);
+                        if (!input || input.length < 30) {
+                            showToast('该角色简介太短或获取失败，请切换到「粘贴简介」手动输入～');
+                            analyzeBtn.classList.remove('hidden');
+                            loadingSection.classList.add('hidden');
+                            return;
+                        }
+                    } catch (error) {
+                        console.error('获取 Neta 角色失败:', error);
+                        showToast('无法获取角色信息，请切换到「粘贴简介」手动输入～');
+                        analyzeBtn.classList.remove('hidden');
+                        loadingSection.classList.add('hidden');
+                        return;
+                    }
+                }
+                
+                if (input.length < 30) { showToast('描述太短了，请提供更详细的信息（至少 30 字）～'); return; }
+                
+                // 开始分析流程
+                const analyzeBtn = document.getElementById('analyzeBtn');
+                const loadingSection = document.getElementById('loadingSection');
+                const loadingBar = document.getElementById('loadingBar');
+                const loadingText = document.getElementById('loadingText');
+                const resultSection = document.getElementById('mbtiResultSection');
+                
+                analyzeBtn.classList.add('hidden');
+                resultSection.classList.add('hidden');
+                loadingSection.classList.remove('hidden');
+                loadingText.textContent = '读取文本信息...';
+                loadingBar.style.width = '0%';
+                
+                let progress = 0;
+                const loadingInterval = setInterval(() => {
+                    progress += Math.random() * 15 + 5;
+                    if (progress > 100) progress = 100;
+                    loadingBar.style.width = progress + '%';
+                    if (progress >= 100) {
+                        clearInterval(loadingInterval);
+                        setTimeout(() => { showResult(input); }, 500);
+                    }
+                }, 400);
+            } catch (error) {
+                console.error('MBTI 分析失败:', error);
+                showToast('分析失败，请重试');
+                document.getElementById('analyzeBtn').classList.remove('hidden');
+                document.getElementById('loadingSection').classList.add('hidden');
+            }
+        }
+
+        function showResult(input) {
+            try {
+                // 分析认知功能
+                const functionScores = analyzeCognitiveFunctions(input);
+                
+                // 推导 MBTI 类型
+                const mbtiType = deriveMBTIType(functionScores);
+                
+                // 生成报告
+                const report = generateProfessionalReport(input, mbtiType, functionScores);
+                
+                // 显示结果
+                displayResult(mbtiType, report);
+            } catch (error) {
+                console.error('MBTI 分析失败:', error);
+                showToast('分析失败，请重试');
+            } finally {
+                document.getElementById('analyzeBtn').classList.remove('hidden');
+                document.getElementById('loadingSection').classList.add('hidden');
+            }
+        }
+
+        function analyzeCognitiveFunctions(text) {
+            const textLower = text.toLowerCase();
+            const scores = {};
+            const matchedKeywords = {};
+            
+            for (const [func, data] of Object.entries(cognitiveFunctions)) {
+                scores[func] = 0;
+                matchedKeywords[func] = [];
+                
+                for (const keyword of data.keywords) {
+                    const kwLower = keyword.toLowerCase();
+                    if (textLower.includes(kwLower)) {
+                        const lengthBonus = kwLower.length > 4 ? 1.5 : 1;
+                        scores[func] += data.weight * lengthBonus;
+                        if (!matchedKeywords[func].includes(keyword)) {
+                            matchedKeywords[func].push(keyword);
+                        }
+                    }
+                }
+            }
+            
+            return { scores, matchedKeywords };
+        }
+
+        function deriveMBTIType(functionScores) {
+            const { scores } = functionScores;
+            
+            const E_score = scores.Ne + scores.Se + scores.Te + scores.Fe;
+            const I_score = scores.Ni + scores.Si + scores.Ti + scores.Fi;
+            const EI = E_score >= I_score ? 'E' : 'I';
+            
+            const S_score = scores.Se + scores.Si;
+            const N_score = scores.Ne + scores.Ni;
+            const SN = S_score >= N_score ? 'S' : 'N';
+            
+            const T_score = scores.Te + scores.Ti;
+            const F_score = scores.Fe + scores.Fi;
+            const TF = T_score >= F_score ? 'T' : 'F';
+            
+            const J_score = scores.Te + scores.Fe + scores.Si + scores.Ni;
+            const P_score = scores.Ti + scores.Fi + scores.Se + scores.Ne;
+            const JP = J_score >= P_score ? 'J' : 'P';
+            
+            return EI + SN + TF + JP;
+        }
+
+        function generateProfessionalReport(text, mbtiType, functionScores) {
+            const { scores, matchedKeywords } = functionScores;
+            const stack = typeFunctionStacks[mbtiType];
+            const typeInfo = typeDescriptions[mbtiType];
+            
+            const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
+            const confidence = totalScore > 100 ? '非常高' : totalScore > 60 ? '较高' : totalScore > 30 ? '中等' : '仅供参考';
+            
+            const E_score = scores.Ne + scores.Se + scores.Te + scores.Fe;
+            const I_score = scores.Ni + scores.Si + scores.Ti + scores.Fi;
+            const EI_total = E_score + I_score || 1;
+            
+            const S_score = scores.Se + scores.Si;
+            const N_score = scores.Ne + scores.Ni;
+            const SN_total = S_score + N_score || 1;
+            
+            const T_score = scores.Te + scores.Ti;
+            const F_score = scores.Fe + scores.Fi;
+            const TF_total = T_score + F_score || 1;
+            
+            const J_score = scores.Te + scores.Fe + scores.Si + scores.Ni;
+            const P_score = scores.Ti + scores.Fi + scores.Se + scores.Ne;
+            const JP_total = J_score + P_score || 1;
+            
+            const percents = {
+                E: Math.round((E_score / EI_total) * 100),
+                I: Math.round((I_score / EI_total) * 100),
+                S: Math.round((S_score / SN_total) * 100),
+                N: Math.round((N_score / SN_total) * 100),
+                T: Math.round((T_score / TF_total) * 100),
+                F: Math.round((F_score / TF_total) * 100),
+                J: Math.round((J_score / JP_total) * 100),
+                P: Math.round((P_score / JP_total) * 100)
+            };
+            
+            return {
+                type: mbtiType,
+                name: typeInfo.name,
+                desc: typeInfo.desc,
+                confidence,
+                percents,
+                stack,
+                scores,
+                matchedKeywords,
+                suggestions: generateSuggestions(mbtiType, functionScores)
+            };
+        }
+
+        function generateSuggestions(mbtiType, functionScores) {
+            const suggestions = {
+                'INTJ': ['适当放松对完美的追求', '多关注当下和身边人的感受', '学会表达情感', '在行动前多听取他人意见'],
+                'INTP': ['将想法付诸实践', '学会做决定并坚持执行', '多参与社交活动', '关注他人的情感需求'],
+                'ENTJ': ['倾听他人的想法', '关注团队成员的情感需求', '适当放慢节奏', '学会欣赏过程中的美好'],
+                'ENTP': ['学会坚持完成项目', '在做决定时多考虑他人的感受', '培养耐心和毅力', '学会倾听'],
+                'INFJ': ['学会设立边界', '多关注自己的需求', '接受不完美', '学会直接表达'],
+                'INFP': ['将理想付诸行动', '学会面对冲突', '培养批判性思维', '学会做决定并坚持'],
+                'ENFJ': ['关注自己的需求', '学会接受批评', '培养独立思考能力', '学会说不'],
+                'ENFP': ['学会专注', '培养自律', '学会面对负面情绪', '在做决定时多考虑现实因素'],
+                'ISTJ': ['尝试接受新的方法和想法', '学会灵活应变', '多表达情感', '学会放松'],
+                'ISFJ': ['学会表达自己的需求', '接受变化', '培养自信', '学会说不'],
+                'ESTJ': ['倾听他人的想法', '学会灵活应变', '关注他人的情感需求', '学会放松'],
+                'ESFJ': ['学会独立思考', '接受不同的价值观', '关注自己的需求', '学会面对冲突'],
+                'ISTP': ['学会表达情感', '培养长远规划能力', '学会承诺并坚持', '多关注他人的情感需求'],
+                'ISFP': ['学会表达自己', '培养规划能力', '学会面对冲突和批评', '多关注逻辑和客观事实'],
+                'ESTP': ['学会三思而后行', '培养长远规划能力', '关注他人的情感需求', '学会承诺和责任'],
+                'ESFP': ['学会规划和自律', '培养深度思考能力', '学会面对负面情绪', '多关注长远目标']
+            };
+            return suggestions[mbtiType] || [];
+        }
+
+        function displayResult(mbtiType, report) {
+            const resultSection = document.getElementById('mbtiResultSection');
+            const resultDiv = document.getElementById('mbtiResult');
+            
+            const stackNames = {
+                'Ni': '内向直觉', 'Ne': '外向直觉',
+                'Si': '内向感觉', 'Se': '外向感觉',
+                'Ti': '内向思考', 'Te': '外向思考',
+                'Fi': '内向情感', 'Fe': '外向情感'
+            };
+            
+            const roleNames = ['主导功能', '辅助功能', '第三功能', '劣势功能'];
+            
+            resultDiv.innerHTML = `
+                <div class="result-header">
+                    <div class="mbti-type">${report.type}</div>
+                    <div class="mbti-name">${report.name} · ${report.desc}</div>
+                    <div class="confidence-badge">分析置信度：${report.confidence}</div>
+                </div>
+                
+                <div class="dimensions-section">
+                    <div class="section-title">📊 四维度分析</div>
+                    <div class="dimension-row">
+                        <div class="dimension-label" style="text-align: right;">外向 E ${report.percents.E}%</div>
+                        <div class="dimension-bar-container">
+                            <div class="dimension-center"></div>
+                            <div class="dimension-bar" style="width: ${report.percents.E}%;"></div>
+                        </div>
+                        <div class="dimension-label">内向 I ${report.percents.I}%</div>
+                    </div>
+                    <div class="dimension-row">
+                        <div class="dimension-label" style="text-align: right;">实感 S ${report.percents.S}%</div>
+                        <div class="dimension-bar-container">
+                            <div class="dimension-center"></div>
+                            <div class="dimension-bar" style="width: ${report.percents.S}%;"></div>
+                        </div>
+                        <div class="dimension-label">直觉 N ${report.percents.N}%</div>
+                    </div>
+                    <div class="dimension-row">
+                        <div class="dimension-label" style="text-align: right;">理性 T ${report.percents.T}%</div>
+                        <div class="dimension-bar-container">
+                            <div class="dimension-center"></div>
+                            <div class="dimension-bar" style="width: ${report.percents.T}%;"></div>
+                        </div>
+                        <div class="dimension-label">感性 F ${report.percents.F}%</div>
+                    </div>
+                    <div class="dimension-row">
+                        <div class="dimension-label" style="text-align: right;">判断 J ${report.percents.J}%</div>
+                        <div class="dimension-bar-container">
+                            <div class="dimension-center"></div>
+                            <div class="dimension-bar" style="width: ${report.percents.J}%;"></div>
+                        </div>
+                        <div class="dimension-label">感知 P ${report.percents.P}%</div>
+                    </div>
+                </div>
+                
+                <div class="analysis-section">
+                    <div class="section-title">🧩 认知功能栈</div>
+                    <div class="functions-grid">
+                        ${report.stack.map((func, i) => `
+                            <div class="function-card">
+                                <div class="function-name">${func} · ${stackNames[func]}</div>
+                                <div class="function-role">${roleNames[i]}</div>
+                                <div class="function-desc">${cognitiveFunctions[func].description}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="analysis-section">
+                    <div class="section-title">📝 匹配关键词分析</div>
+                    ${Object.entries(report.matchedKeywords).filter(([_, kws]) => kws.length > 0).map(([func, kws]) => `
+                        <div class="analysis-item">
+                            <div class="analysis-label">${func} · ${stackNames[func]}（得分：${report.scores[func].toFixed(1)}）</div>
+                            <div class="analysis-content">匹配到：${kws.slice(0, 10).join('、')}${kws.length > 10 ? '...' : ''}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="suggestions-section">
+                    <div class="section-title" style="color: #27ae60; border-color: rgba(39, 174, 96, 0.3);">💡 个人发展建议</div>
+                    ${report.suggestions.map(s => `
+                        <div class="suggestion-item">
+                            <div class="suggestion-text">${s}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: rgba(102, 126, 234, 0.05); border-radius: 10px; font-size: 0.85em; color: #888; text-align: center;">
+                    ⚠️ 本分析基于文本关键词匹配和荣格认知功能理论，仅供参考。专业人格评估需要结合面谈、量表等多种方法。
+                </div>
+            `;
+            
+            resultSection.classList.remove('hidden');
+            showToast('分析完成！');
+        }
+
+        function copyMBTIResult() {
+            const resultDiv = document.getElementById('mbtiResult');
+            const type = resultDiv.querySelector('.mbti-type').textContent;
+            const name = resultDiv.querySelector('.mbti-name').textContent;
+            const text = `MBTI 人格类型：${type} - ${name}\n\n（完整报告请查看页面）`;
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('已复制结果！');
+        }
+
+        function resetMBTI() {
+            document.getElementById('textInput').value = '';
+            document.getElementById('linkInput').value = '';
+            document.getElementById('mbtiResultSection').classList.add('hidden');
+            document.getElementById('mbtiResult').innerHTML = '';
+            showToast('已清空');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+        }
+    </script>
+</body>
+</html>

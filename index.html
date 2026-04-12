@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎来到雨落的世界！</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Microsoft YaHei', 'Segoe UI', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Loading 页面 */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #ADD8E6 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            font-size: 2.8em;
+            color: #fff;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', 'Chalkboard', 'YouYuan', 'Microsoft YaHei', cursive;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 30px;
+            letter-spacing: 5px;
+            animation: bounce 4s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+            25% {
+                transform: translateY(-10px) scale(1.05);
+            }
+            50% { 
+                opacity: 0.8; 
+                transform: translateY(-5px) scale(1);
+            }
+            75% {
+                transform: translateY(-10px) scale(1.05);
+            }
+        }
+
+        .loading-bar-container {
+            width: 300px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .loading-bar {
+            width: 0%;
+            height: 100%;
+            background: #fff;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            animation: loading 2s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        /* 主页 */
+        #main-screen {
+            display: none;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #ADD8E6 100%);
+            padding: 40px 20px;
+        }
+
+        #main-screen.visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .banner-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto;
+            cursor: pointer;
+        }
+
+        .banner-image {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: block;
+            transition: all 0.5s ease;
+        }
+
+        .banner-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .banner-tip {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85em;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .title {
+            font-size: 3.5em;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+            margin-bottom: 15px;
+            letter-spacing: 8px;
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            color: rgba(255, 255, 255, 0.95);
+            font-style: italic;
+            margin-bottom: 60px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            letter-spacing: 2px;
+        }
+
+        .entries-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .entries-grid { grid-template-columns: 1fr; }
+        }
+
+        .entry-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            text-align: left;
+        }
+
+        .entry-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+            background: #fff;
+        }
+
+        .entry-icon {
+            font-size: 2.5em;
+            margin-bottom: 12px;
+        }
+
+        .entry-title {
+            font-size: 1.2em;
+            color: #5a7d8a;
+            font-weight: bold;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .entry-desc {
+            font-size: 0.85em;
+            color: #8a9a9f;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .entry-btn {
+            background: linear-gradient(135deg, #5a7d8a, #7a9da8);
+            color: #fff;
+            border: none;
+            padding: 8px 25px;
+            font-size: 0.95em;
+            border-radius: 35px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 12px rgba(90, 125, 138, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .entry-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(90, 125, 138, 0.45);
+            background: linear-gradient(135deg, #6a8d9a, #8aada8);
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.95em;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            line-height: 1.8;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .title { font-size: 2.5em; letter-spacing: 5px; }
+            .subtitle { font-size: 1.1em; }
+            .entries-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading 页面 -->
+    <div id="loading-screen">
+        <div class="loading-text">Loading...</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+    </div>
+
+    <!-- 主页 -->
+    <div id="main-screen">
+        <div class="container">
+            <h1 class="title">欢迎来到雨落的世界！</h1>
+            <div class="banner-container" onclick="changeBanner()">
+                <img src="banner.jpg" alt="雨落的世界" class="banner-image" id="banner">
+                <p class="banner-tip">✨ 点击图片切换 ✨</p>
+            </div>
+
+            <div class="entries-grid">
+                <!-- 雨落们的观测记录 -->
+                <div class="entry-card" onclick="event.stopPropagation(); window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;">
+                    <h2 class="entry-title">雨落们的观测记录</h2>
+                    <p class="entry-desc">
+                        这里存放着观测站，以及各个世界的精彩时刻！<br>
+                        快来快来！
+                    </p>
+                    <button class="entry-btn" onclick="event.stopPropagation(); window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;">点击进入</button>
+                </div>
+
+                <!-- 绘境 · 标签配方库 -->
+                <div class="entry-card" onclick="navigateTo('huijing.html')">
+                    <h2 class="entry-title">绘境 · 标签配方库</h2>
+                    <p class="entry-desc">
+                        这是一个神奇的 tag 生成器！指哪打哪，萌新福音！<br>
+                        来试试吗？
+                    </p>
+                    <button class="entry-btn">进入绘境</button>
+                </div>
+
+                <!-- MBTI 人格检测 -->
+                <div class="entry-card" onclick="navigateTo('mbti.html')">
+                    <h2 class="entry-title">🧠 MBTI 人格检测</h2>
+                    <p class="entry-desc">
+                        根据简介分析人物 MBTI 人格类型<br>
+                        16 种人格，看看 ta 是哪一种？
+                    </p>
+                    <button class="entry-btn">开始检测</button>
+                </div>
+
+                <!-- 预留入口 -->
+                <div class="entry-card" onclick="navigateTo('coming-soon.html')">
+                    <h2 class="entry-title">创作工坊</h2>
+                    <p class="entry-desc">
+                        角色设计 · 世界观设定 · 故事创作<br>
+                        敬请期待
+                    </p>
+                    <button class="entry-btn">即将上线</button>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>💜 雨落的世界 · 由 伊斯派菈 制作 💜</p>
+                <p style="margin-top: 8px;">每一个世界，都是一段独特的旅程</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 图片数组
+        const banners = ['banner.jpg', 'banner2.jpg'];
+        let currentBannerIndex = 0;
+        let lastBannerIndex = -1;
+
+        // 随机显示一张图片（不重复）
+        function initBanner() {
+            currentBannerIndex = Math.floor(Math.random() * banners.length);
+            const banner = document.getElementById('banner');
+            banner.src = banners[currentBannerIndex];
+            lastBannerIndex = currentBannerIndex;
+            return banner;
+        }
+
+        // 切换图片（不重复）
+        function changeBanner() {
+            const banner = document.getElementById('banner');
+            // 选择一个与当前不同的图片
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * banners.length);
+            } while (newIndex === currentBannerIndex && banners.length > 1);
+            
+            lastBannerIndex = currentBannerIndex;
+            currentBannerIndex = newIndex;
+            
+            banner.style.opacity = '0';
+            setTimeout(function() {
+                banner.src = banners[currentBannerIndex];
+                banner.style.opacity = '1';
+            }, 250);
+        }
+
+        // 真实加载进度
+        const loadingBar = document.querySelector('.loading-bar');
+        const loadingScreen = document.getElementById('loading-screen');
+        const mainScreen = document.getElementById('main-screen');
+
+        // 统计资源加载
+        let loadedCount = 0;
+        let totalCount = 0;
+        let isLoadingComplete = false;
+
+        // 更新进度
+        function updateProgress() {
+            loadedCount++;
+            const progress = Math.min(100, Math.floor((loadedCount / totalCount) * 100));
+            loadingBar.style.width = progress + '%';
+
+            // 检查是否完成
+            if (loadedCount >= totalCount && !isLoadingComplete) {
+                isLoadingComplete = true;
+                // 确保至少显示 2 秒
+                setTimeout(function() {
+                    loadingScreen.classList.add('hidden');
+                    mainScreen.classList.add('visible');
+                }, 2000);
+            }
+        }
+
+        // 页面加载 - 只执行一次
+        window.addEventListener('DOMContentLoaded', function() {
+            // 初始化随机图片
+            const banner = initBanner();
+
+            // 统计需要加载的资源
+            const images = document.querySelectorAll('img');
+            totalCount = images.length;
+
+            if (totalCount === 0) {
+                // 没有图片，直接完成
+                loadingBar.style.width = '100%';
+                setTimeout(function() {
+                    loadingScreen.classList.add('hidden');
+                    mainScreen.classList.add('visible');
+                }, 2000);
+                return;
+            }
+
+            // 为每张图片添加加载监听
+            images.forEach(function(img) {
+                if (img.complete) {
+                    // 已缓存
+                    updateProgress();
+                } else {
+                    img.addEventListener('load', updateProgress);
+                    img.addEventListener('error', updateProgress);
+                }
+            });
+
+            // 最少等待 2 秒，确保用户看到 Loading 动画
+            setTimeout(function() {
+                if (!isLoadingComplete) {
+                    isLoadingComplete = true;
+                    loadingBar.style.width = '100%';
+                    setTimeout(function() {
+                        loadingScreen.classList.add('hidden');
+                        mainScreen.classList.add('visible');
+                    }, 300);
+                }
+            }, 2000);
+        });
+
+        // 导航函数（带 Loading）
+        function navigateTo(url) {
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainScreen = document.getElementById('main-screen');
+            const loadingBar = document.querySelector('.loading-bar');
+
+            loadingScreen.classList.remove('hidden');
+            mainScreen.classList.remove('visible');
+
+            // 重置加载条
+            loadingBar.style.width = '0%';
+
+            // 模拟加载（慢一点，每次切换都显示）
+            let progress = 0;
+            const interval = setInterval(function() {
+                progress += 5;
+                loadingBar.style.width = progress + '%';
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    // 等加载条跑完再跳转
+                    setTimeout(function() {
+                        window.location.href = url;
+                    }, 800);
+                }
+            }, 100);
+        }
+
+
+    </script>
+</body>
+</html>
