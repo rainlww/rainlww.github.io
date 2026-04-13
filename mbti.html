@@ -602,7 +602,8 @@
                             if (!matchedPatterns[dimension].includes(desc)) {
                                 matchedPatterns[dimension].push(desc);
                             }
-                        } else {
+                        } else if (weight < 0) {
+                            // 负权重：加分给对立维度
                             const opposite = getOppositeDimension(dimension);
                             scores[opposite] += Math.abs(weight);
                             if (!matchedPatterns[opposite].includes(desc)) {
@@ -614,6 +615,14 @@
             }
             
             console.log('分析结果:', scores);
+            
+            // 确保每个维度至少有 1 分，避免除以 0
+            for (const dim of ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P']) {
+                if (scores[dim] === 0) {
+                    scores[dim] = 0.1;  // 给一个很小的基础分
+                }
+            }
+            
             return { scores, matchedPatterns };
         }
         
@@ -641,20 +650,21 @@
             const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
             const confidence = totalScore > 15 ? '较高' : totalScore > 8 ? '中等' : '仅供参考';
             
-            const EI_total = scores.E + scores.I || 1;
-            const SN_total = scores.S + scores.N || 1;
-            const TF_total = scores.T + scores.F || 1;
-            const JP_total = scores.J + scores.P || 1;
+            // 计算百分比（确保每对维度加起来是 100%）
+            const EI_total = scores.E + scores.I;
+            const SN_total = scores.S + scores.N;
+            const TF_total = scores.T + scores.F;
+            const JP_total = scores.J + scores.P;
             
             const percents = {
-                E: Math.round((scores.E / EI_total) * 100),
-                I: Math.round((scores.I / EI_total) * 100),
-                S: Math.round((scores.S / SN_total) * 100),
-                N: Math.round((scores.N / SN_total) * 100),
-                T: Math.round((scores.T / TF_total) * 100),
-                F: Math.round((scores.F / TF_total) * 100),
-                J: Math.round((scores.J / JP_total) * 100),
-                P: Math.round((scores.P / JP_total) * 100)
+                E: EI_total > 0 ? Math.round((scores.E / EI_total) * 100) : 50,
+                I: EI_total > 0 ? Math.round((scores.I / EI_total) * 100) : 50,
+                S: SN_total > 0 ? Math.round((scores.S / SN_total) * 100) : 50,
+                N: SN_total > 0 ? Math.round((scores.N / SN_total) * 100) : 50,
+                T: TF_total > 0 ? Math.round((scores.T / TF_total) * 100) : 50,
+                F: TF_total > 0 ? Math.round((scores.F / TF_total) * 100) : 50,
+                J: JP_total > 0 ? Math.round((scores.J / JP_total) * 100) : 50,
+                P: JP_total > 0 ? Math.round((scores.P / JP_total) * 100) : 50
             };
             
             return {
