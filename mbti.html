@@ -52,7 +52,6 @@
             border: 1px dashed rgba(255, 152, 0, 0.4);
         }
         
-        /* 选项卡 */
         .tabs {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -123,7 +122,6 @@
         .btn-success { background: linear-gradient(135deg, #27ae60, #229954); }
         .hidden { display: none !important; }
         
-        /* 结果样式 */
         .result-header {
             text-align: center;
             padding: 30px;
@@ -153,7 +151,6 @@
             font-weight: 600;
         }
         
-        /* 维度分析 */
         .dimensions-section {
             margin-bottom: 25px;
             padding: 25px;
@@ -203,7 +200,6 @@
             transform: translateX(-50%);
         }
         
-        /* 认知功能 */
         .functions-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -234,7 +230,6 @@
         }
         .function-desc { font-size: 0.85em; color: #666; line-height: 1.7; }
         
-        /* 分析报告 */
         .analysis-section {
             padding: 25px;
             background: rgba(255, 255, 255, 0.8);
@@ -260,7 +255,6 @@
             text-align: justify;
         }
         
-        /* 发展建议 */
         .suggestions-section {
             padding: 25px;
             background: linear-gradient(135deg, rgba(39, 174, 96, 0.08), rgba(34, 153, 84, 0.08));
@@ -323,21 +317,18 @@
         <div class="card">
             <h1 class="title">MBTI 人格类型检测</h1>
             <p class="subtitle">基于荣格八维认知功能理论的专业人格分析</p>
-            <p class="accuracy-notice">⚠️ 当前使用关键词匹配模式（简化版），精确度有限，仅供参考～ AI 精准分析功能开发中...</p>
+            <p class="accuracy-notice">⚠️ 当前使用语义分析模式（简化版），精确度有限，仅供参考～ AI 精准分析功能开发中...</p>
             
-            <!-- 选项卡 -->
             <div class="tabs">
                 <button class="tab-btn active" onclick="switchTab('text')">📝 粘贴简介</button>
                 <button class="tab-btn" onclick="switchTab('link')">🔗 Neta 链接</button>
             </div>
             
-            <!-- 文本输入区 -->
             <div id="textSection" class="input-section">
                 <label class="input-label">请输入人物简介/行为描述/自述</label>
                 <textarea class="input-box" id="textInput"></textarea>
             </div>
             
-            <!-- 链接输入区 -->
             <div id="linkSection" class="input-section hidden">
                 <label class="input-label">请输入 Neta 人物链接或安利语</label>
                 <div style="padding: 20px; background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.1)); border: 2px dashed rgba(255, 152, 0, 0.4); border-radius: 12px; text-align: center; margin-bottom: 15px;">
@@ -376,7 +367,6 @@
     <div id="toast" style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); color: #fff; padding: 14px 28px; border-radius: 12px; opacity: 0; transition: opacity 0.3s ease; font-weight: 500; box-shadow: 0 5px 20px rgba(0,0,0,0.3);">已复制！</div>
     
     <script>
-        // 切换标签页
         function switchTab(tab) {
             const textSection = document.getElementById('textSection');
             const linkSection = document.getElementById('linkSection');
@@ -395,54 +385,70 @@
             }
         }
 
-        // ========== 专业 MBTI 分析引擎 ==========
-        // 基于荣格八维认知功能理论
+        // ========== 语义分析引擎 ==========
+        // 基于整体文本理解，不是单个词匹配
         
-        // 认知功能关键词库（按功能分类）
-        const cognitiveFunctions = {
-            Ne: {
-                keywords: ['探索', '可能性', '联想', '发散', '创意', '灵感', '头脑风暴', '多点思考', '跳跃思维', '举一反三', '触类旁通', '新颖', '独特', '创新', '变革', '未来导向', '潜在', '机遇', '模式识别', '概念连接', '跨领域', '整合', '综合', '多元化', '开放性', '好奇心', '尝试', '实验', '冒险', '变化', '灵活', '适应', '随机', '即兴', '自发', '自由', '不受约束', '打破常规', '挑战传统', '质疑现状', '另辟蹊径'],
-                weight: 3,
-                description: '外向直觉——探索外部世界的无限可能性，善于发现事物之间的联系和潜在机会'
-            },
-            Ni: {
-                keywords: ['洞察', '预见', '愿景', '直觉', '本质', '核心', '深层', '规律', '趋势', '未来', '长远', '战略', '宏观', '整体', '系统', '框架', '模型', '理论', '抽象', '概念', '象征', '隐喻', '原型', '集体无意识', '顿悟', '觉醒', '觉悟', '看透', '看穿', '看破', '理解', '明白', '懂得', '领会', '领悟', '融会贯通', '一针见血', '直击本质', '高瞻远瞩', '深谋远虑', '未雨绸缪', '运筹帷幄', '洞察先机', '先知先觉', '第六感'],
-                weight: 3,
-                description: '内向直觉——洞察事物的本质和深层规律，能够预见未来发展趋势'
-            },
-            Se: {
-                keywords: ['当下', '现在', '此刻', '实时', '即时', '感官', '五感', '视觉', '听觉', '触觉', '味觉', '嗅觉', '体验', '感受', '感知', '观察', '注意', '细节', '具体', '实际', '现实', '事实', '数据', '证据', '实证', '实践', '操作', '执行', '行动', '动手', '身体', '运动', '活力', '能量', '刺激', '冒险', '挑战', '竞争', '速度', '反应', '敏捷', '灵活', '适应', '环境', '周围', '现场', '在场', '身临其境'],
-                weight: 3,
-                description: '外向感觉——敏锐感知当下的外部世界，注重实际体验和即时反应'
-            },
-            Si: {
-                keywords: ['过去', '回忆', '记忆', '经验', '传统', '习惯', '惯例', '常规', '熟悉', '已知', '稳定', '安全', '可靠', '保守', '谨慎', '小心', '细致', '详细', '精确', '准确', '标准', '规范', '流程', '步骤', '程序', '方法', '技巧', '技能', '熟练', '精通', '专业', '专家', '权威', '参考', '比较', '对比', '对照', '类比', '相似', '相同', '类似', '重复', '复制', '模仿', '学习', '积累', '沉淀', '储存', '保存', '记录', '档案', '历史'],
-                weight: 3,
-                description: '内向感觉——依赖过去的经验和记忆，注重稳定性、传统和细节'
-            },
-            Te: {
-                keywords: ['逻辑', '理性', '分析', '推理', '论证', '证明', '验证', '测试', '实验', '科学', '客观', '公正', '公平', '标准', '规则', '原则', '制度', '政策', '流程', '程序', '系统', '结构', '组织', '管理', '领导', '指挥', '控制', '监督', '评估', '评价', '衡量', '测量', '指标', '数据', '统计', '效率', '效果', '结果', '成果', '绩效', '目标', '任务', '计划', '规划', '安排', '时间管理', '优先级', '决策', '判断', '选择', '决定', '果断', '坚决', '坚定', '执行', '实施', '落地', '实用', '应用'],
-                weight: 3,
-                description: '外向思考——运用外部逻辑和客观标准进行分析和决策，注重效率和结果'
-            },
-            Ti: {
-                keywords: ['思考', '分析', '推理', '逻辑', '原理', '机制', '运作', '系统', '结构', '框架', '模型', '理论', '概念', '定义', '分类', '范畴', '类型', '种类', '区分', '辨别', '鉴别', '识别', '判断', '评估', '评价', '批判', '质疑', '怀疑', '求证', '验证', '精确', '准确', '严谨', '严密', '严格', '一丝不苟', '精益求精', '完美', '理想', '标准', '规范', '原则', '规则', '定律', '公式', '定理', '公理', '推导', '推断', '推测', '预测', '建模', '抽象', '概括', '总结', '归纳', '演绎'],
-                weight: 3,
-                description: '内向思考——构建内在的逻辑框架和理论体系，追求精确和一致性'
-            },
-            Fe: {
-                keywords: ['情感', '情绪', '感受', '感情', '关系', '人际', '社交', '和谐', '和睦', '友好', '友善', '温暖', '热情', '热心', '善良', '仁慈', '同情', '同理心', '共情', '理解', '体谅', '包容', '接纳', '尊重', '关心', '关怀', '照顾', '帮助', '支持', '鼓励', '安慰', '陪伴', '倾听', '分享', '交流', '沟通', '表达', '表露', '外显', '外露', '开放', '坦诚', '真诚', '真实', '诚实', '信任', '忠诚', '承诺', '责任', '义务', '道德', '伦理', '价值观', '信念', '信仰', '理想', '追求', '目标', '意义', '价值'],
-                weight: 3,
-                description: '外向情感——关注他人的情感需求和群体和谐，重视人际关系和社会价值'
-            },
-            Fi: {
-                keywords: ['内心', '内在', '个人', '自我', '自己', '真实', '真诚', '诚实', '价值', '信念', '原则', '道德', '伦理', '良心', '正直', '诚信', '身份', '认同', '独特', '个性', '独立', '自主', '私密', '深层', '深刻', '有意义', '重要', '珍贵', '宝贵', '珍爱', '热爱', '关怀', '保护', '安全', '舒适', '平静', '宁静', '独处', '孤独', '自主', '自立', '自我导向', '自我决定', '自我定义', '自我表达', '自我实现'],
-                weight: 3,
-                description: '内向情感——忠于内心的价值观和真实感受，追求自我一致性和 authenticity'
-            }
+        // 语义模式库（按维度分类）
+        const semanticPatterns = {
+            // E vs I: 能量来源
+            E: [
+                { pattern: /喜欢 ( 和人|社交 | 聚会 | 热闹 | 朋友 | 群体|交流|聊天)/, weight: 3, desc: '偏好社交互动' },
+                { pattern: / (外向|活泼 | 开朗 | 热情|善于表达|乐于分享)/, weight: 2, desc: '外向特质' },
+                { pattern: / ( 人多的地方 | 人群中 | 社交场合)/, weight: 2, desc: '享受人群' },
+                { pattern: / ( 主动 ( 交流 | 搭话 | 接触|认识)|喜欢 ( 认识|结交) 新朋友)/, weight: 2, desc: '主动社交' },
+                { pattern: / ( 一个人|独处|独自|安静|内向|宅|不想 ( 说话 | 交流|见人)|害怕 ( 社交 | 陌生人)|社恐)/, weight: -3, desc: '回避社交（反向）' }
+            ],
+            I: [
+                { pattern: /喜欢 ( 一个人|独处|独自|安静|宅|思考|阅读|写作)/, weight: 3, desc: '偏好独处' },
+                { pattern: / (内向|安静|慢热|不善言辞|害羞|腼腆)/, weight: 2, desc: '内向特质' },
+                { pattern: / ( 需要 ( 独处|个人空间|自己的时间)|在 ( 安静|独自) 环境中)/, weight: 2, desc: '需要个人空间' },
+                { pattern: / ( 人多的地方 | 社交 | 聚会 | 热闹|群体活动) 感到 ( 累|疲惫 | 消耗 | 不适|想逃)/, weight: 2, desc: '社交消耗能量' },
+                { pattern: / ( 朋友不多 | 几个知心朋友 | 深度交流 | 一对一)/, weight: 2, desc: '偏好深度关系' }
+            ],
+            
+            // S vs N: 信息获取方式
+            S: [
+                { pattern: / ( 注重|关注|重视|在意) ( 细节|实际|现实|具体|当下|眼前|事实|数据|经验)/, weight: 3, desc: '关注具体现实' },
+                { pattern: / ( 脚踏实地|实事求是 | 按部就班|循规蹈矩|一步一步)/, weight: 2, desc: '务实特质' },
+                { pattern: / ( 相信 ( 经验 | 事实 | 数据|证据)|根据 ( 过去|经验 | 实际) )/, weight: 2, desc: '依赖经验' },
+                { pattern: / ( 抽象|理论|概念|想象|未来|可能性|脑洞|天马行空|不切实际)/, weight: -2, desc: '回避抽象（反向）' }
+            ],
+            N: [
+                { pattern: /喜欢 ( 想象|幻想|脑洞|抽象|理论|概念|思考 ( 未来 | 可能性))/, weight: 3, desc: '偏好抽象概念' },
+                { pattern: / ( 天马行空|富有想象力 | 创意|创新|独特|新颖|未来|可能性)/, weight: 2, desc: '直觉特质' },
+                { pattern: / ( 看到 ( 本质 | 规律 | 趋势|大局|整体)|洞察|预见|直觉)/, weight: 2, desc: '洞察本质' },
+                { pattern: / ( 细节|琐碎|重复|枯燥|实际|现实|当下) 感到 ( 无聊|厌倦 | 没耐心)/, weight: 2, desc: '厌倦细节' }
+            ],
+            
+            // T vs F: 决策方式
+            T: [
+                { pattern: / ( 理性|逻辑|分析|推理|客观|公平|原则|道理|对错)/, weight: 3, desc: '理性决策' },
+                { pattern: / ( 讲道理|论对错|追求 ( 真理 | 真相|公正)|重视 ( 逻辑 | 原则))/, weight: 2, desc: '重视逻辑' },
+                { pattern: / ( 不太 ( 在意 | 考虑) 别人 ( 感受 | 想法)|直接|坦率|直言不讳)/, weight: 2, desc: '直接表达' },
+                { pattern: / ( 感情用事|情绪化|太敏感|过于 ( 在意 | 考虑) 别人感受)/, weight: -2, desc: '回避情感（反向）' }
+            ],
+            F: [
+                { pattern: / ( 感性|情感|感受|情绪|共情|同理心|体贴|温柔|善良)/, weight: 3, desc: '感性决策' },
+                { pattern: / ( 在意|考虑|顾及) ( 别人|他人|大家) 的 ( 感受|想法|情绪)/, weight: 2, desc: '重视他人感受' },
+                { pattern: / ( 和谐|和睦|避免冲突|不想 ( 伤害 | 得罪) 别人)/, weight: 2, desc: '追求和谐' },
+                { pattern: / ( 冷漠|无情|理性至上|只讲道理|不在乎 ( 感受 | 情绪))/, weight: -2, desc: '回避情感表达（反向）' }
+            ],
+            
+            // J vs P: 生活方式
+            J: [
+                { pattern: /喜欢 ( 计划|安排|秩序|规律|条理|整洁|清单|时间表)/, weight: 3, desc: '偏好计划' },
+                { pattern: / ( 有条理|有计划|自律|按时|准时|提前|井井有条|按部就班)/, weight: 2, desc: '有序特质' },
+                { pattern: / ( 做决定|下定 ( 决心 | 结论)|确定|明确|完成|结束)/, weight: 2, desc: '追求确定性' },
+                { pattern: / ( 拖延|临时|随意|混乱|没计划|随性|看心情)/, weight: -2, desc: '回避无序（反向）' }
+            ],
+            P: [
+                { pattern: /喜欢 ( 自由|灵活|随意|随性|探索|新鲜感|可能性|开放)/, weight: 3, desc: '偏好灵活' },
+                { pattern: / ( 随性|随意|灵活|自由|不受约束|讨厌 ( 计划 | 束缚 | 限制))/, weight: 2, desc: '自由特质' },
+                { pattern: / ( 保持 ( 开放 | 灵活|弹性)|不喜欢 ( 被限制 | 被约束|太死板))/, weight: 2, desc: '保持开放' },
+                { pattern: / ( 计划|安排|规律|约束|限制|死板|太 ( 有条理 | 按部就班)) 感到 ( 束缚 | 压抑 | 不舒服)/, weight: 2, desc: '抗拒过度计划' }
+            ]
         };
-
-        // MBTI 类型与认知功能栈
+        
         const typeFunctionStacks = {
             'INTJ': ['Ni', 'Te', 'Fi', 'Se'],
             'INTP': ['Ti', 'Ne', 'Si', 'Fe'],
@@ -462,7 +468,6 @@
             'ESFP': ['Se', 'Fi', 'Te', 'Ni']
         };
 
-        // 类型名称和描述
         const typeDescriptions = {
             'INTJ': { name: '建筑师型', desc: '富有想象力和战略性的思想家，一切皆在计划之中' },
             'INTP': { name: '逻辑学家型', desc: '具有创造力的发明家，对知识有着止不住的渴望' },
@@ -482,13 +487,7 @@
             'ESFP': { name: '表演者型', desc: '自发的、精力充沛、热情的表演者——生活在他们周围永远不会无聊' }
         };
 
-        const loadingTexts = [
-            '执行者雨落正在读你的心……'
-        ];
-
-        // Neta 链接解析器 - 支持多种格式
         function parseNetaLink(text) {
-            // 格式 1: 完整句子 "我在捏 Ta 给你安利...（角色名）～ https://t.nieta.art/xxx"
             const sentencePattern = /(?:nieta|捏 Ta|捏捏).*?(https?:\/\/[^\s]+)/i;
             const sentenceMatch = text.match(sentencePattern);
             if (sentenceMatch) {
@@ -497,7 +496,6 @@
                 if (result) return result;
             }
             
-            // 格式 2: 直接 URL
             const urlPatterns = [
                 /https?:\/\/t\.nieta\.art\/([a-zA-Z0-9_-]+)/i,
                 /https?:\/\/nieta\.art\/character\/([a-f0-9-]+)/i,
@@ -510,16 +508,13 @@
                 const match = text.match(pattern);
                 if (match) {
                     const extracted = match[1].toLowerCase();
-                    // 如果是 UUID 格式（36 字符），直接返回
                     if (/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(extracted)) {
                         return extracted;
                     }
-                    // 如果是短链接 ID，返回标记
                     return { type: 'short', id: extracted };
                 }
             }
             
-            // 格式 3: 单独 UUID
             const uuidPattern = /([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/i;
             const uuidMatch = text.match(uuidPattern);
             if (uuidMatch) {
@@ -529,9 +524,7 @@
             return null;
         }
         
-        // 从 URL 中提取 UUID
         function extractUuidFromUrl(url) {
-            // 短链接：https://t.nieta.art/VlIVZA7l
             const shortPattern = /t\.nieta\.art\/([a-zA-Z0-9_-]+)/i;
             const shortMatch = url.match(shortPattern);
             if (shortMatch) {
@@ -542,12 +535,10 @@
                 return { type: 'short', id: id };
             }
             
-            // 标准链接：https://nieta.art/character/xxx
             const charPattern = /nieta\.art\/character\/([a-f0-9-]+)/i;
             const charMatch = url.match(charPattern);
             if (charMatch) return charMatch[1].toLowerCase();
             
-            // 带参数的链接：https://app.nieta.art/...?uuid=xxx
             const paramPattern = /uuid=([a-f0-9-]+)/i;
             const paramMatch = url.match(paramPattern);
             if (paramMatch) return paramMatch[1].toLowerCase();
@@ -555,12 +546,10 @@
             return null;
         }
 
-        // 从 Neta API 获取角色简介
         async function fetchNetaCharacter(uuid) {
             const apiUrl = `https://api.talesofai.com/v2/travel/parent/${uuid}/profile`;
             
             try {
-                // 尝试使用 CORS 代理
                 const corsProxies = [
                     `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`,
                     `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`,
@@ -572,249 +561,99 @@
                 
                 for (const proxyUrl of corsProxies) {
                     try {
-                        console.log('尝试代理:', proxyUrl);
                         const response = await fetch(proxyUrl, {
                             method: 'GET',
-                            headers: {
-                                'Accept': 'application/json'
-                            }
+                            headers: { 'Accept': 'application/json' }
                         });
-                        console.log('响应状态:', response.status);
                         if (response.ok) {
                             data = await response.json();
-                            console.log('成功获取数据:', data);
                             break;
                         }
                     } catch (e) {
                         lastError = e;
-                        console.log(`代理 ${proxyUrl} 失败:`, e.message);
                     }
                 }
                 
                 if (!data) {
-                    console.error('所有代理都失败，最后错误:', lastError);
-                    throw new Error('无法连接到 Neta API，可能是 CORS 限制或网络问题');
+                    throw new Error('无法连接到 Neta API');
                 }
                 
-                // 提取简介信息（按优先级）
                 const bio = data.oc_bio || {};
-                const description = bio.description || bio.persona || data.name || '';
-                
-                console.log('提取的简介:', description.substring(0, 50) + '...');
-                return description;
+                return bio.description || bio.persona || data.name || '';
             } catch (error) {
-                console.error('获取 Neta 角色失败:', error);
                 throw error;
             }
         }
 
-        async function analyzeMBTI() {
-            try {
-                const currentTab = document.querySelector('.tab-btn.active');
-                const isTextTab = currentTab.textContent.includes('粘贴简介');
-                
-                let input = '';
-                
-                if (isTextTab) {
-                    input = document.getElementById('textInput').value.trim();
-                    if (!input) { showToast('请输入人物描述～'); return; }
-                } else {
-                    const linkInput = document.getElementById('linkInput').value.trim();
-                    if (!linkInput) { showToast('请输入 Neta 链接～'); return; }
-                    
-                    const uuid = parseNetaLink(linkInput);
-                    if (!uuid) { showToast('无效的 Neta 链接格式～'); return; }
-                    
-                    // 获取角色信息
-                    const analyzeBtn = document.getElementById('analyzeBtn');
-                    const loadingSection = document.getElementById('loadingSection');
-                    const loadingText = document.getElementById('loadingText');
-                    
-                    analyzeBtn.classList.add('hidden');
-                    loadingSection.classList.remove('hidden');
-                    loadingText.textContent = '正在获取 Neta 角色信息...';
-                    
-                    try {
-                        // 处理短链接 ID
-                        let actualUuid = uuid;
-                        if (uuid && typeof uuid === 'object' && uuid.type === 'short') {
-                            console.log('检测到短链接 ID:', uuid.id);
-                            showToast('短链接需要重定向，请切换到「粘贴简介」手动输入简介～');
-                            analyzeBtn.classList.remove('hidden');
-                            loadingSection.classList.add('hidden');
-                            return;
-                        }
-                        
-                        input = await fetchNetaCharacter(actualUuid);
-                        if (!input || input.length < 30) {
-                            showToast('该角色简介太短或获取失败，请切换到「粘贴简介」手动输入～');
-                            analyzeBtn.classList.remove('hidden');
-                            loadingSection.classList.add('hidden');
-                            return;
-                        }
-                    } catch (error) {
-                        console.error('获取 Neta 角色失败:', error);
-                        showToast('无法获取角色信息，请切换到「粘贴简介」手动输入～');
-                        analyzeBtn.classList.remove('hidden');
-                        loadingSection.classList.add('hidden');
-                        return;
-                    }
-                }
-                
-                if (input.length < 30) { showToast('描述太短了，请提供更详细的信息（至少 30 字）～'); return; }
-                
-                // 开始分析流程
-                const analyzeBtn = document.getElementById('analyzeBtn');
-                const loadingSection = document.getElementById('loadingSection');
-                const loadingBar = document.getElementById('loadingBar');
-                const loadingText = document.getElementById('loadingText');
-                const resultSection = document.getElementById('mbtiResultSection');
-                
-                analyzeBtn.classList.add('hidden');
-                resultSection.classList.add('hidden');
-                loadingSection.classList.remove('hidden');
-                loadingText.textContent = '读取文本信息...';
-                loadingBar.style.width = '0%';
-                
-                let progress = 0;
-                const loadingInterval = setInterval(() => {
-                    progress += Math.random() * 15 + 5;
-                    if (progress > 100) progress = 100;
-                    loadingBar.style.width = progress + '%';
-                    if (progress >= 100) {
-                        clearInterval(loadingInterval);
-                        setTimeout(() => { showResult(input); }, 500);
-                    }
-                }, 400);
-            } catch (error) {
-                console.error('MBTI 分析失败:', error);
-                showToast('分析失败，请重试');
-                document.getElementById('analyzeBtn').classList.remove('hidden');
-                document.getElementById('loadingSection').classList.add('hidden');
-            }
-        }
-
-        function showResult(input) {
-            try {
-                // 分析认知功能
-                const functionScores = analyzeCognitiveFunctions(input);
-                
-                // 推导 MBTI 类型
-                const mbtiType = deriveMBTIType(functionScores);
-                
-                // 生成报告
-                const report = generateProfessionalReport(input, mbtiType, functionScores);
-                
-                // 显示结果
-                displayResult(mbtiType, report);
-            } catch (error) {
-                console.error('MBTI 分析失败:', error);
-                showToast('分析失败，请重试');
-            } finally {
-                document.getElementById('analyzeBtn').classList.remove('hidden');
-                document.getElementById('loadingSection').classList.add('hidden');
-            }
-        }
-
-        function analyzeCognitiveFunctions(text) {
-            const textLower = text.toLowerCase();
-            const scores = {};
-            const matchedKeywords = {};
+        // 语义分析核心函数
+        function analyzeSemantically(text) {
+            const scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+            const matchedPatterns = { E: [], I: [], S: [], N: [], T: [], F: [], J: [], P: [] };
             
-            // 预处理：识别否定词
-            const negations = ['不', '没', '无', '非', '别', '勿', '莫', 'never', 'not', 'no'];
-            const sentences = text.split(/[,.!?.,]/);
-            
-            for (const [func, data] of Object.entries(cognitiveFunctions)) {
-                scores[func] = 0;
-                matchedKeywords[func] = [];
-                
-                for (const keyword of data.keywords) {
-                    const kwLower = keyword.toLowerCase();
-                    const kwIndex = textLower.indexOf(kwLower);
-                    
-                    if (kwIndex !== -1) {
-                        // 检查是否有否定词在前面（5 个字以内）
-                        const contextStart = Math.max(0, kwIndex - 5);
-                        const context = textLower.substring(contextStart, kwIndex);
-                        const isNegated = negations.some(neg => context.includes(neg));
-                        
-                        if (!isNegated) {
-                            // 考虑句子权重（长句权重更高）
-                            const sentence = sentences.find(s => s.toLowerCase().includes(kwLower)) || '';
-                            const sentenceWeight = sentence.length > 20 ? 1.3 : 1.0;
-                            
-                            // 关键词长度奖励
-                            const lengthBonus = kwLower.length > 4 ? 1.5 : 1.0;
-                            
-                            scores[func] += data.weight * lengthBonus * sentenceWeight;
-                            
-                            if (!matchedKeywords[func].includes(keyword)) {
-                                matchedKeywords[func].push(keyword);
+            // 对每个维度进行语义匹配
+            for (const [dimension, patterns] of Object.entries(semanticPatterns)) {
+                for (const { pattern, weight, desc } of patterns) {
+                    const match = text.match(pattern);
+                    if (match) {
+                        // 正权重：加分给该维度
+                        // 负权重：加分给对立维度
+                        if (weight > 0) {
+                            scores[dimension] += weight;
+                            if (!matchedPatterns[dimension].includes(desc)) {
+                                matchedPatterns[dimension].push(desc);
+                            }
+                        } else {
+                            const opposite = getOppositeDimension(dimension);
+                            scores[opposite] += Math.abs(weight);
+                            if (!matchedPatterns[opposite].includes(desc)) {
+                                matchedPatterns[opposite].push(desc);
                             }
                         }
                     }
                 }
             }
             
-            return { scores, matchedKeywords };
+            return { scores, matchedPatterns };
+        }
+        
+        function getOppositeDimension(dim) {
+            const opposites = { E: 'I', I: 'E', S: 'N', N: 'S', T: 'F', F: 'T', J: 'P', P: 'J' };
+            return opposites[dim];
         }
 
         function deriveMBTIType(functionScores) {
             const { scores } = functionScores;
             
-            const E_score = scores.Ne + scores.Se + scores.Te + scores.Fe;
-            const I_score = scores.Ni + scores.Si + scores.Ti + scores.Fi;
-            const EI = E_score >= I_score ? 'E' : 'I';
-            
-            const S_score = scores.Se + scores.Si;
-            const N_score = scores.Ne + scores.Ni;
-            const SN = S_score >= N_score ? 'S' : 'N';
-            
-            const T_score = scores.Te + scores.Ti;
-            const F_score = scores.Fe + scores.Fi;
-            const TF = T_score >= F_score ? 'T' : 'F';
-            
-            const J_score = scores.Te + scores.Fe + scores.Si + scores.Ni;
-            const P_score = scores.Ti + scores.Fi + scores.Se + scores.Ne;
-            const JP = J_score >= P_score ? 'J' : 'P';
+            const EI = scores.E >= scores.I ? 'E' : 'I';
+            const SN = scores.S >= scores.N ? 'S' : 'N';
+            const TF = scores.T >= scores.F ? 'T' : 'F';
+            const JP = scores.J >= scores.P ? 'J' : 'P';
             
             return EI + SN + TF + JP;
         }
 
         function generateProfessionalReport(text, mbtiType, functionScores) {
-            const { scores, matchedKeywords } = functionScores;
+            const { scores, matchedPatterns } = functionScores;
             const stack = typeFunctionStacks[mbtiType];
             const typeInfo = typeDescriptions[mbtiType];
             
             const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
-            const confidence = totalScore > 100 ? '非常高' : totalScore > 60 ? '较高' : totalScore > 30 ? '中等' : '仅供参考';
+            const confidence = totalScore > 15 ? '较高' : totalScore > 8 ? '中等' : '仅供参考';
             
-            const E_score = scores.Ne + scores.Se + scores.Te + scores.Fe;
-            const I_score = scores.Ni + scores.Si + scores.Ti + scores.Fi;
-            const EI_total = E_score + I_score || 1;
-            
-            const S_score = scores.Se + scores.Si;
-            const N_score = scores.Ne + scores.Ni;
-            const SN_total = S_score + N_score || 1;
-            
-            const T_score = scores.Te + scores.Ti;
-            const F_score = scores.Fe + scores.Fi;
-            const TF_total = T_score + F_score || 1;
-            
-            const J_score = scores.Te + scores.Fe + scores.Si + scores.Ni;
-            const P_score = scores.Ti + scores.Fi + scores.Se + scores.Ne;
-            const JP_total = J_score + P_score || 1;
+            const EI_total = scores.E + scores.I || 1;
+            const SN_total = scores.S + scores.N || 1;
+            const TF_total = scores.T + scores.F || 1;
+            const JP_total = scores.J + scores.P || 1;
             
             const percents = {
-                E: Math.round((E_score / EI_total) * 100),
-                I: Math.round((I_score / EI_total) * 100),
-                S: Math.round((S_score / SN_total) * 100),
-                N: Math.round((N_score / SN_total) * 100),
-                T: Math.round((T_score / TF_total) * 100),
-                F: Math.round((F_score / TF_total) * 100),
-                J: Math.round((J_score / JP_total) * 100),
-                P: Math.round((P_score / JP_total) * 100)
+                E: Math.round((scores.E / EI_total) * 100),
+                I: Math.round((scores.I / EI_total) * 100),
+                S: Math.round((scores.S / SN_total) * 100),
+                N: Math.round((scores.N / SN_total) * 100),
+                T: Math.round((scores.T / TF_total) * 100),
+                F: Math.round((scores.F / TF_total) * 100),
+                J: Math.round((scores.J / JP_total) * 100),
+                P: Math.round((scores.P / JP_total) * 100)
             };
             
             return {
@@ -823,14 +662,13 @@
                 desc: typeInfo.desc,
                 confidence,
                 percents,
-                stack,
                 scores,
-                matchedKeywords,
-                suggestions: generateSuggestions(mbtiType, functionScores)
+                matchedPatterns,
+                suggestions: generateSuggestions(mbtiType)
             };
         }
 
-        function generateSuggestions(mbtiType, functionScores) {
+        function generateSuggestions(mbtiType) {
             const suggestions = {
                 'INTJ': ['适当放松对完美的追求', '多关注当下和身边人的感受', '学会表达情感', '在行动前多听取他人意见'],
                 'INTP': ['将想法付诸实践', '学会做决定并坚持执行', '多参与社交活动', '关注他人的情感需求'],
@@ -852,6 +690,97 @@
             return suggestions[mbtiType] || [];
         }
 
+        async function analyzeMBTI() {
+            try {
+                const currentTab = document.querySelector('.tab-btn.active');
+                const isTextTab = currentTab.textContent.includes('粘贴简介');
+                
+                let input = '';
+                
+                if (isTextTab) {
+                    input = document.getElementById('textInput').value.trim();
+                    if (!input) { showToast('请输入人物描述～'); return; }
+                } else {
+                    const linkInput = document.getElementById('linkInput').value.trim();
+                    if (!linkInput) { showToast('请输入 Neta 链接～'); return; }
+                    
+                    const uuid = parseNetaLink(linkInput);
+                    if (!uuid) { showToast('无效的 Neta 链接格式～'); return; }
+                    
+                    const analyzeBtn = document.getElementById('analyzeBtn');
+                    const loadingSection = document.getElementById('loadingSection');
+                    const loadingText = document.getElementById('loadingText');
+                    
+                    analyzeBtn.classList.add('hidden');
+                    loadingSection.classList.remove('hidden');
+                    loadingText.textContent = '正在获取 Neta 角色信息...';
+                    
+                    try {
+                        if (uuid && typeof uuid === 'object' && uuid.type === 'short') {
+                            showToast('短链接需要重定向，请切换到「粘贴简介」手动输入～');
+                            analyzeBtn.classList.remove('hidden');
+                            loadingSection.classList.add('hidden');
+                            return;
+                        }
+                        
+                        input = await fetchNetaCharacter(uuid);
+                        if (!input || input.length < 30) {
+                            showToast('该角色简介太短，请切换到「粘贴简介」手动输入～');
+                            analyzeBtn.classList.remove('hidden');
+                            loadingSection.classList.add('hidden');
+                            return;
+                        }
+                    } catch (error) {
+                        showToast('无法获取角色信息，请切换到「粘贴简介」手动输入～');
+                        analyzeBtn.classList.remove('hidden');
+                        loadingSection.classList.add('hidden');
+                        return;
+                    }
+                }
+                
+                if (input.length < 30) { showToast('描述太短了，请提供更详细的信息～'); return; }
+                
+                const analyzeBtn = document.getElementById('analyzeBtn');
+                const loadingSection = document.getElementById('loadingSection');
+                const loadingBar = document.getElementById('loadingBar');
+                const resultSection = document.getElementById('mbtiResultSection');
+                
+                analyzeBtn.classList.add('hidden');
+                resultSection.classList.add('hidden');
+                loadingSection.classList.remove('hidden');
+                loadingBar.style.width = '0%';
+                
+                let progress = 0;
+                const loadingInterval = setInterval(() => {
+                    progress += Math.random() * 15 + 5;
+                    if (progress > 100) progress = 100;
+                    loadingBar.style.width = progress + '%';
+                    if (progress >= 100) {
+                        clearInterval(loadingInterval);
+                        setTimeout(() => { showResult(input); }, 500);
+                    }
+                }, 400);
+            } catch (error) {
+                showToast('分析失败，请重试');
+                document.getElementById('analyzeBtn').classList.remove('hidden');
+                document.getElementById('loadingSection').classList.add('hidden');
+            }
+        }
+
+        function showResult(input) {
+            try {
+                const functionScores = analyzeSemantically(input);
+                const mbtiType = deriveMBTIType(functionScores);
+                const report = generateProfessionalReport(input, mbtiType, functionScores);
+                displayResult(mbtiType, report);
+            } catch (error) {
+                showToast('分析失败，请重试');
+            } finally {
+                document.getElementById('analyzeBtn').classList.remove('hidden');
+                document.getElementById('loadingSection').classList.add('hidden');
+            }
+        }
+
         function displayResult(mbtiType, report) {
             const resultSection = document.getElementById('mbtiResultSection');
             const resultDiv = document.getElementById('mbtiResult');
@@ -870,7 +799,7 @@
                     <div class="mbti-type">${report.type}</div>
                     <div class="mbti-name">${report.name} · ${report.desc}</div>
                     <div class="confidence-badge">分析置信度：${report.confidence}</div>
-                    <div style="margin-top: 10px; font-size: 0.8em; color: #999;">分析模式：关键词匹配（简化版）</div>
+                    <div style="margin-top: 10px; font-size: 0.8em; color: #999;">分析模式：语义分析（简化版）</div>
                 </div>
                 
                 <div class="dimensions-section">
@@ -916,18 +845,18 @@
                             <div class="function-card">
                                 <div class="function-name">${func} · ${stackNames[func]}</div>
                                 <div class="function-role">${roleNames[i]}</div>
-                                <div class="function-desc">${cognitiveFunctions[func].description}</div>
+                                <div class="function-desc">${stackNames[func]}——${getFunctionDesc(func)}</div>
                             </div>
                         `).join('')}
                     </div>
                 </div>
                 
                 <div class="analysis-section">
-                    <div class="section-title">📝 匹配关键词分析</div>
-                    ${Object.entries(report.matchedKeywords).filter(([_, kws]) => kws.length > 0).map(([func, kws]) => `
+                    <div class="section-title">📝 语义模式识别</div>
+                    ${Object.entries(report.matchedPatterns).filter(([_, pats]) => pats.length > 0).map(([dim, pats]) => `
                         <div class="analysis-item">
-                            <div class="analysis-label">${func} · ${stackNames[func]}（得分：${report.scores[func].toFixed(1)}）</div>
-                            <div class="analysis-content">匹配到：${kws.slice(0, 10).join('、')}${kws.length > 10 ? '...' : ''}</div>
+                            <div class="analysis-label">${getDimensionName(dim)}（得分：${report.scores[dim]}）</div>
+                            <div class="analysis-content">识别到：${pats.join('、')}</div>
                         </div>
                     `).join('')}
                 </div>
@@ -942,12 +871,36 @@
                 </div>
                 
                 <div style="margin-top: 20px; padding: 15px; background: rgba(102, 126, 234, 0.05); border-radius: 10px; font-size: 0.85em; color: #888; text-align: center;">
-                    ⚠️ 本分析基于文本关键词匹配和荣格认知功能理论，仅供参考。专业人格评估需要结合面谈、量表等多种方法。
+                    ⚠️ 本分析基于语义模式识别，仅供参考。专业人格评估需要结合面谈、量表等多种方法。
                 </div>
             `;
             
             resultSection.classList.remove('hidden');
             showToast('分析完成！');
+        }
+        
+        function getFunctionDesc(func) {
+            const descs = {
+                'Ni': '洞察事物的本质和深层规律，能够预见未来发展趋势',
+                'Ne': '探索外部世界的无限可能性，善于发现事物之间的联系',
+                'Si': '依赖过去的经验和记忆，注重稳定性、传统和细节',
+                'Se': '敏锐感知当下的外部世界，注重实际体验和即时反应',
+                'Ti': '构建内在的逻辑框架和理论体系，追求精确和一致性',
+                'Te': '运用外部逻辑和客观标准进行分析和决策，注重效率',
+                'Fi': '忠于内心的价值观和真实感受，追求自我一致性',
+                'Fe': '关注他人的情感需求和群体和谐，重视人际关系'
+            };
+            return descs[func];
+        }
+        
+        function getDimensionName(dim) {
+            const names = {
+                'E': '外向', 'I': '内向',
+                'S': '实感', 'N': '直觉',
+                'T': '理性', 'F': '感性',
+                'J': '判断', 'P': '感知'
+            };
+            return names[dim];
         }
 
         function copyMBTIResult() {
