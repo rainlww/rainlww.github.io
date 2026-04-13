@@ -160,11 +160,11 @@
         }
         .section-title {
             font-size: 1.2em;
-            color: #667eea;
+            color: #5a8a5a;
             font-weight: bold;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+            border-bottom: 2px solid rgba(90, 138, 90, 0.2);
         }
         .dimension-row {
             display: grid;
@@ -180,7 +180,7 @@
         }
         .dimension-bar-container {
             height: 10px;
-            background: rgba(102, 126, 234, 0.15);
+            background: rgba(90, 138, 90, 0.15);
             border-radius: 5px;
             overflow: hidden;
             position: relative;
@@ -239,7 +239,7 @@
         .analysis-item {
             margin-bottom: 20px;
             padding-bottom: 20px;
-            border-bottom: 1px dashed rgba(102, 126, 234, 0.2);
+            border-bottom: 1px dashed rgba(90, 138, 90, 0.2);
         }
         .analysis-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .analysis-label {
@@ -296,10 +296,6 @@
         
         .loading-section { text-align: center; padding: 50px 30px; }
         #loadingText { font-size: 0.9em; color: #5a8a5a; margin-bottom: 12px; font-style: italic; }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
         
         @media (max-width: 600px) {
             .card { padding: 30px 20px; }
@@ -345,7 +341,7 @@
             <button class="btn btn-primary" onclick="analyzeMBTI()" id="analyzeBtn">🔬 开始专业分析</button>
             
             <div class="loading-section hidden" id="loadingSection">
-                <div id="loadingText" style="font-size: 0.9em; color: #667eea; margin-bottom: 12px; font-style: italic;">执行者雨落正在读你的心……</div>
+                <div id="loadingText" style="font-size: 0.9em; color: #5a8a5a; margin-bottom: 12px; font-style: italic;">执行者雨落正在读你的心……</div>
                 <div style="width: 250px; height: 8px; background: rgba(90, 138, 90, 0.2); border-radius: 4px; margin: 0 auto; overflow: hidden;">
                     <div id="loadingBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #5a8a5a, #6a9a6a, #7aaa7a); border-radius: 4px; transition: width 0.3s ease;"></div>
                 </div>
@@ -386,66 +382,83 @@
         }
 
         // ========== 语义分析引擎 ==========
-        // 基于整体文本理解，不是单个词匹配
+        // 简单关键词匹配，确保能正常工作
         
-        // 语义模式库（按维度分类）
         const semanticPatterns = {
-            // E vs I: 能量来源
             E: [
-                { pattern: /喜欢 ( 和人|社交 | 聚会 | 热闹 | 朋友 | 群体|交流|聊天)/, weight: 3, desc: '偏好社交互动' },
-                { pattern: / (外向|活泼 | 开朗 | 热情|善于表达|乐于分享)/, weight: 2, desc: '外向特质' },
-                { pattern: / ( 人多的地方 | 人群中 | 社交场合)/, weight: 2, desc: '享受人群' },
-                { pattern: / ( 主动 ( 交流 | 搭话 | 接触|认识)|喜欢 ( 认识|结交) 新朋友)/, weight: 2, desc: '主动社交' },
-                { pattern: / ( 一个人|独处|独自|安静|内向|宅|不想 ( 说话 | 交流|见人)|害怕 ( 社交 | 陌生人)|社恐)/, weight: -3, desc: '回避社交（反向）' }
+                { pattern: /喜欢社交/g, weight: 3, desc: '偏好社交' },
+                { pattern: /外向/g, weight: 2, desc: '外向' },
+                { pattern: /活泼/g, weight: 2, desc: '活泼' },
+                { pattern: /朋友多/g, weight: 2, desc: '朋友多' },
+                { pattern: /热闹/g, weight: 2, desc: '喜欢热闹' },
+                { pattern: /一个人/g, weight: -3, desc: '不喜欢一个人（反向）' },
+                { pattern: /独处/g, weight: -3, desc: '不喜欢独处（反向）' }
             ],
             I: [
-                { pattern: /喜欢 ( 一个人|独处|独自|安静|宅|思考|阅读|写作)/, weight: 3, desc: '偏好独处' },
-                { pattern: / (内向|安静|慢热|不善言辞|害羞|腼腆)/, weight: 2, desc: '内向特质' },
-                { pattern: / ( 需要 ( 独处|个人空间|自己的时间)|在 ( 安静|独自) 环境中)/, weight: 2, desc: '需要个人空间' },
-                { pattern: / ( 人多的地方 | 社交 | 聚会 | 热闹|群体活动) 感到 ( 累|疲惫 | 消耗 | 不适|想逃)/, weight: 2, desc: '社交消耗能量' },
-                { pattern: / ( 朋友不多 | 几个知心朋友 | 深度交流 | 一对一)/, weight: 2, desc: '偏好深度关系' }
+                { pattern: /喜欢一个人/g, weight: 3, desc: '偏好独处' },
+                { pattern: /喜欢独处/g, weight: 3, desc: '偏好独处' },
+                { pattern: /内向/g, weight: 2, desc: '内向' },
+                { pattern: /安静/g, weight: 2, desc: '安静' },
+                { pattern: /宅/g, weight: 2, desc: '宅' },
+                { pattern: /社交/g, weight: -2, desc: '不喜欢社交（反向）' },
+                { pattern: /累/g, weight: -2, desc: '社交累（反向）' }
             ],
-            
-            // S vs N: 信息获取方式
             S: [
-                { pattern: / ( 注重|关注|重视|在意) ( 细节|实际|现实|具体|当下|眼前|事实|数据|经验)/, weight: 3, desc: '关注具体现实' },
-                { pattern: / ( 脚踏实地|实事求是 | 按部就班|循规蹈矩|一步一步)/, weight: 2, desc: '务实特质' },
-                { pattern: / ( 相信 ( 经验 | 事实 | 数据|证据)|根据 ( 过去|经验 | 实际) )/, weight: 2, desc: '依赖经验' },
-                { pattern: / ( 抽象|理论|概念|想象|未来|可能性|脑洞|天马行空|不切实际)/, weight: -2, desc: '回避抽象（反向）' }
+                { pattern: /注重细节/g, weight: 3, desc: '注重细节' },
+                { pattern: /实际/g, weight: 2, desc: '实际' },
+                { pattern: /现实/g, weight: 2, desc: '现实' },
+                { pattern: /经验/g, weight: 2, desc: '依赖经验' },
+                { pattern: /脚踏实地/g, weight: 2, desc: '脚踏实地' },
+                { pattern: /想象/g, weight: -2, desc: '不喜欢想象（反向）' },
+                { pattern: /抽象/g, weight: -2, desc: '不喜欢抽象（反向）' }
             ],
             N: [
-                { pattern: /喜欢 ( 想象|幻想|脑洞|抽象|理论|概念|思考 ( 未来 | 可能性))/, weight: 3, desc: '偏好抽象概念' },
-                { pattern: / ( 天马行空|富有想象力 | 创意|创新|独特|新颖|未来|可能性)/, weight: 2, desc: '直觉特质' },
-                { pattern: / ( 看到 ( 本质 | 规律 | 趋势|大局|整体)|洞察|预见|直觉)/, weight: 2, desc: '洞察本质' },
-                { pattern: / ( 细节|琐碎|重复|枯燥|实际|现实|当下) 感到 ( 无聊|厌倦 | 没耐心)/, weight: 2, desc: '厌倦细节' }
+                { pattern: /喜欢想象/g, weight: 3, desc: '偏好想象' },
+                { pattern: /抽象/g, weight: 2, desc: '抽象思维' },
+                { pattern: /理论/g, weight: 2, desc: '理论' },
+                { pattern: /未来/g, weight: 2, desc: '未来导向' },
+                { pattern: /创意/g, weight: 2, desc: '创意' },
+                { pattern: /细节/g, weight: -2, desc: '不喜欢细节（反向）' },
+                { pattern: /无聊/g, weight: -2, desc: '觉得无聊（反向）' }
             ],
-            
-            // T vs F: 决策方式
             T: [
-                { pattern: / ( 理性|逻辑|分析|推理|客观|公平|原则|道理|对错)/, weight: 3, desc: '理性决策' },
-                { pattern: / ( 讲道理|论对错|追求 ( 真理 | 真相|公正)|重视 ( 逻辑 | 原则))/, weight: 2, desc: '重视逻辑' },
-                { pattern: / ( 不太 ( 在意 | 考虑) 别人 ( 感受 | 想法)|直接|坦率|直言不讳)/, weight: 2, desc: '直接表达' },
-                { pattern: / ( 感情用事|情绪化|太敏感|过于 ( 在意 | 考虑) 别人感受)/, weight: -2, desc: '回避情感（反向）' }
+                { pattern: /理性/g, weight: 3, desc: '理性' },
+                { pattern: /逻辑/g, weight: 3, desc: '逻辑' },
+                { pattern: /分析/g, weight: 2, desc: '分析' },
+                { pattern: /客观/g, weight: 2, desc: '客观' },
+                { pattern: /公平/g, weight: 2, desc: '公平' },
+                { pattern: /原则/g, weight: 2, desc: '原则' },
+                { pattern: /感情用事/g, weight: -2, desc: '不感情用事（反向）' }
             ],
             F: [
-                { pattern: / ( 感性|情感|感受|情绪|共情|同理心|体贴|温柔|善良)/, weight: 3, desc: '感性决策' },
-                { pattern: / ( 在意|考虑|顾及) ( 别人|他人|大家) 的 ( 感受|想法|情绪)/, weight: 2, desc: '重视他人感受' },
-                { pattern: / ( 和谐|和睦|避免冲突|不想 ( 伤害 | 得罪) 别人)/, weight: 2, desc: '追求和谐' },
-                { pattern: / ( 冷漠|无情|理性至上|只讲道理|不在乎 ( 感受 | 情绪))/, weight: -2, desc: '回避情感表达（反向）' }
+                { pattern: /感性/g, weight: 3, desc: '感性' },
+                { pattern: /情感/g, weight: 2, desc: '情感' },
+                { pattern: /感受/g, weight: 2, desc: '感受' },
+                { pattern: /共情/g, weight: 2, desc: '共情' },
+                { pattern: /体贴/g, weight: 2, desc: '体贴' },
+                { pattern: /善良/g, weight: 2, desc: '善良' },
+                { pattern: /和谐/g, weight: 2, desc: '和谐' },
+                { pattern: /冷漠/g, weight: -2, desc: '不冷漠（反向）' }
             ],
-            
-            // J vs P: 生活方式
             J: [
-                { pattern: /喜欢 ( 计划|安排|秩序|规律|条理|整洁|清单|时间表)/, weight: 3, desc: '偏好计划' },
-                { pattern: / ( 有条理|有计划|自律|按时|准时|提前|井井有条|按部就班)/, weight: 2, desc: '有序特质' },
-                { pattern: / ( 做决定|下定 ( 决心 | 结论)|确定|明确|完成|结束)/, weight: 2, desc: '追求确定性' },
-                { pattern: / ( 拖延|临时|随意|混乱|没计划|随性|看心情)/, weight: -2, desc: '回避无序（反向）' }
+                { pattern: /喜欢计划/g, weight: 3, desc: '喜欢计划' },
+                { pattern: /计划/g, weight: 2, desc: '计划' },
+                { pattern: /安排/g, weight: 2, desc: '安排' },
+                { pattern: /秩序/g, weight: 2, desc: '秩序' },
+                { pattern: /条理/g, weight: 2, desc: '条理' },
+                { pattern: /自律/g, weight: 2, desc: '自律' },
+                { pattern: /按时/g, weight: 2, desc: '按时' },
+                { pattern: /拖延/g, weight: -2, desc: '不拖延（反向）' }
             ],
             P: [
-                { pattern: /喜欢 ( 自由|灵活|随意|随性|探索|新鲜感|可能性|开放)/, weight: 3, desc: '偏好灵活' },
-                { pattern: / ( 随性|随意|灵活|自由|不受约束|讨厌 ( 计划 | 束缚 | 限制))/, weight: 2, desc: '自由特质' },
-                { pattern: / ( 保持 ( 开放 | 灵活|弹性)|不喜欢 ( 被限制 | 被约束|太死板))/, weight: 2, desc: '保持开放' },
-                { pattern: / ( 计划|安排|规律|约束|限制|死板|太 ( 有条理 | 按部就班)) 感到 ( 束缚 | 压抑 | 不舒服)/, weight: 2, desc: '抗拒过度计划' }
+                { pattern: /喜欢自由/g, weight: 3, desc: '喜欢自由' },
+                { pattern: /自由/g, weight: 2, desc: '自由' },
+                { pattern: /灵活/g, weight: 2, desc: '灵活' },
+                { pattern: /随意/g, weight: 2, desc: '随意' },
+                { pattern: /随性/g, weight: 2, desc: '随性' },
+                { pattern: /探索/g, weight: 2, desc: '探索' },
+                { pattern: /束缚/g, weight: 2, desc: '讨厌束缚' },
+                { pattern: /限制/g, weight: 2, desc: '讨厌限制' }
             ]
         };
         
@@ -487,111 +500,16 @@
             'ESFP': { name: '表演者型', desc: '自发的、精力充沛、热情的表演者——生活在他们周围永远不会无聊' }
         };
 
-        function parseNetaLink(text) {
-            const sentencePattern = /(?:nieta|捏 Ta|捏捏).*?(https?:\/\/[^\s]+)/i;
-            const sentenceMatch = text.match(sentencePattern);
-            if (sentenceMatch) {
-                const url = sentenceMatch[1];
-                const result = extractUuidFromUrl(url);
-                if (result) return result;
-            }
-            
-            const urlPatterns = [
-                /https?:\/\/t\.nieta\.art\/([a-zA-Z0-9_-]+)/i,
-                /https?:\/\/nieta\.art\/character\/([a-f0-9-]+)/i,
-                /https?:\/\/nieta\.art\/([a-f0-9-]+)/i,
-                /https?:\/\/app\.nieta\.art\/[^\s]*uuid=([a-f0-9-]+)/i,
-                /https?:\/\/[^\s]*uuid=([a-f0-9-]+)/i
-            ];
-            
-            for (const pattern of urlPatterns) {
-                const match = text.match(pattern);
-                if (match) {
-                    const extracted = match[1].toLowerCase();
-                    if (/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(extracted)) {
-                        return extracted;
-                    }
-                    return { type: 'short', id: extracted };
-                }
-            }
-            
-            const uuidPattern = /([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/i;
-            const uuidMatch = text.match(uuidPattern);
-            if (uuidMatch) {
-                return uuidMatch[1].toLowerCase();
-            }
-            
-            return null;
-        }
-        
-        function extractUuidFromUrl(url) {
-            const shortPattern = /t\.nieta\.art\/([a-zA-Z0-9_-]+)/i;
-            const shortMatch = url.match(shortPattern);
-            if (shortMatch) {
-                const id = shortMatch[1].toLowerCase();
-                if (/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id)) {
-                    return id;
-                }
-                return { type: 'short', id: id };
-            }
-            
-            const charPattern = /nieta\.art\/character\/([a-f0-9-]+)/i;
-            const charMatch = url.match(charPattern);
-            if (charMatch) return charMatch[1].toLowerCase();
-            
-            const paramPattern = /uuid=([a-f0-9-]+)/i;
-            const paramMatch = url.match(paramPattern);
-            if (paramMatch) return paramMatch[1].toLowerCase();
-            
-            return null;
+        function getOppositeDimension(dim) {
+            const opposites = { E: 'I', I: 'E', S: 'N', N: 'S', T: 'F', F: 'T', J: 'P', P: 'J' };
+            return opposites[dim];
         }
 
-        async function fetchNetaCharacter(uuid) {
-            const apiUrl = `https://api.talesofai.com/v2/travel/parent/${uuid}/profile`;
-            
-            try {
-                const corsProxies = [
-                    `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`,
-                    `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`,
-                    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`
-                ];
-                
-                let data = null;
-                let lastError = null;
-                
-                for (const proxyUrl of corsProxies) {
-                    try {
-                        const response = await fetch(proxyUrl, {
-                            method: 'GET',
-                            headers: { 'Accept': 'application/json' }
-                        });
-                        if (response.ok) {
-                            data = await response.json();
-                            break;
-                        }
-                    } catch (e) {
-                        lastError = e;
-                    }
-                }
-                
-                if (!data) {
-                    throw new Error('无法连接到 Neta API');
-                }
-                
-                const bio = data.oc_bio || {};
-                return bio.description || bio.persona || data.name || '';
-            } catch (error) {
-                throw error;
-            }
-        }
-
-        // 语义分析核心函数
         function analyzeSemantically(text) {
             console.log('开始分析文本，长度:', text.length);
             const scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
             const matchedPatterns = { E: [], I: [], S: [], N: [], T: [], F: [], J: [], P: [] };
             
-            // 对每个维度进行语义匹配
             for (const [dimension, patterns] of Object.entries(semanticPatterns)) {
                 for (const { pattern, weight, desc } of patterns) {
                     const match = text.match(pattern);
@@ -603,7 +521,6 @@
                                 matchedPatterns[dimension].push(desc);
                             }
                         } else if (weight < 0) {
-                            // 负权重：加分给对立维度
                             const opposite = getOppositeDimension(dimension);
                             scores[opposite] += Math.abs(weight);
                             if (!matchedPatterns[opposite].includes(desc)) {
@@ -615,30 +532,15 @@
             }
             
             console.log('分析结果:', scores);
-            
-            // 确保每个维度至少有 1 分，避免除以 0
-            for (const dim of ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P']) {
-                if (scores[dim] === 0) {
-                    scores[dim] = 0.1;  // 给一个很小的基础分
-                }
-            }
-            
             return { scores, matchedPatterns };
-        }
-        
-        function getOppositeDimension(dim) {
-            const opposites = { E: 'I', I: 'E', S: 'N', N: 'S', T: 'F', F: 'T', J: 'P', P: 'J' };
-            return opposites[dim];
         }
 
         function deriveMBTIType(functionScores) {
             const { scores } = functionScores;
-            
             const EI = scores.E >= scores.I ? 'E' : 'I';
             const SN = scores.S >= scores.N ? 'S' : 'N';
             const TF = scores.T >= scores.F ? 'T' : 'F';
             const JP = scores.J >= scores.P ? 'J' : 'P';
-            
             return EI + SN + TF + JP;
         }
 
@@ -650,7 +552,6 @@
             const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
             const confidence = totalScore > 15 ? '较高' : totalScore > 8 ? '中等' : '仅供参考';
             
-            // 计算百分比（确保每对维度加起来是 100%）
             const EI_total = scores.E + scores.I;
             const SN_total = scores.S + scores.N;
             const TF_total = scores.T + scores.F;
@@ -713,44 +614,11 @@
                     input = document.getElementById('textInput').value.trim();
                     if (!input) { showToast('请输入人物描述～'); return; }
                 } else {
-                    const linkInput = document.getElementById('linkInput').value.trim();
-                    if (!linkInput) { showToast('请输入 Neta 链接～'); return; }
-                    
-                    const uuid = parseNetaLink(linkInput);
-                    if (!uuid) { showToast('无效的 Neta 链接格式～'); return; }
-                    
-                    const analyzeBtn = document.getElementById('analyzeBtn');
-                    const loadingSection = document.getElementById('loadingSection');
-                    const loadingText = document.getElementById('loadingText');
-                    
-                    analyzeBtn.classList.add('hidden');
-                    loadingSection.classList.remove('hidden');
-                    loadingText.textContent = '正在获取 Neta 角色信息...';
-                    
-                    try {
-                        if (uuid && typeof uuid === 'object' && uuid.type === 'short') {
-                            showToast('短链接需要重定向，请切换到「粘贴简介」手动输入～');
-                            analyzeBtn.classList.remove('hidden');
-                            loadingSection.classList.add('hidden');
-                            return;
-                        }
-                        
-                        input = await fetchNetaCharacter(uuid);
-                        if (!input || input.length < 30) {
-                            showToast('该角色简介太短，请切换到「粘贴简介」手动输入～');
-                            analyzeBtn.classList.remove('hidden');
-                            loadingSection.classList.add('hidden');
-                            return;
-                        }
-                    } catch (error) {
-                        showToast('无法获取角色信息，请切换到「粘贴简介」手动输入～');
-                        analyzeBtn.classList.remove('hidden');
-                        loadingSection.classList.add('hidden');
-                        return;
-                    }
+                    showToast('链接功能维护中，请使用文本输入～');
+                    return;
                 }
                 
-                if (input.length < 30) { showToast('描述太短了，请提供更详细的信息～'); return; }
+                if (input.length < 10) { showToast('描述太短了，请提供更详细的信息～'); return; }
                 
                 const analyzeBtn = document.getElementById('analyzeBtn');
                 const loadingSection = document.getElementById('loadingSection');
@@ -783,8 +651,6 @@
         function showResult(input) {
             try {
                 console.log('=== 开始分析 ===');
-                console.log('输入文本长度:', input.length);
-                
                 const functionScores = analyzeSemantically(input);
                 console.log('分析得分:', functionScores);
                 
@@ -805,7 +671,6 @@
             }
         }
 
-        // 辅助函数（必须在 displayResult 之前定义）
         function getFunctionDesc(func) {
             const descs = {
                 'Ni': '洞察事物的本质和深层规律，能够预见未来发展趋势',
@@ -829,7 +694,7 @@
             };
             return names[dim];
         }
-        
+
         function displayResult(mbtiType, report) {
             console.log('显示结果，类型:', mbtiType);
             const resultSection = document.getElementById('mbtiResultSection');
