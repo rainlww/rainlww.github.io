@@ -34,11 +34,22 @@
             font-size: 0.9em;
             color: #666;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             padding: 15px;
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(240, 147, 251, 0.08));
             border-radius: 10px;
             border-left: 4px solid #667eea;
+        }
+        
+        .accuracy-notice {
+            font-size: 0.8em;
+            color: #ff9800;
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.08), rgba(255, 193, 7, 0.08));
+            border-radius: 10px;
+            border: 1px dashed rgba(255, 152, 0, 0.4);
         }
         
         /* 选项卡 */
@@ -310,8 +321,9 @@
 <body>
     <div class="container">
         <div class="card">
-            <h1 class="title">🧠 MBTI 人格类型检测</h1>
+            <h1 class="title">MBTI 人格类型检测</h1>
             <p class="subtitle">基于荣格八维认知功能理论的专业人格分析</p>
+            <p class="accuracy-notice">⚠️ 当前使用关键词匹配模式（简化版），精确度有限，仅供参考～ AI 精准分析功能开发中...</p>
             
             <!-- 选项卡 -->
             <div class="tabs">
@@ -709,17 +721,37 @@
             const scores = {};
             const matchedKeywords = {};
             
+            // 预处理：识别否定词
+            const negations = ['不', '没', '无', '非', '别', '勿', '莫', 'never', 'not', 'no'];
+            const sentences = text.split(/[,.!?.,]/);
+            
             for (const [func, data] of Object.entries(cognitiveFunctions)) {
                 scores[func] = 0;
                 matchedKeywords[func] = [];
                 
                 for (const keyword of data.keywords) {
                     const kwLower = keyword.toLowerCase();
-                    if (textLower.includes(kwLower)) {
-                        const lengthBonus = kwLower.length > 4 ? 1.5 : 1;
-                        scores[func] += data.weight * lengthBonus;
-                        if (!matchedKeywords[func].includes(keyword)) {
-                            matchedKeywords[func].push(keyword);
+                    const kwIndex = textLower.indexOf(kwLower);
+                    
+                    if (kwIndex !== -1) {
+                        // 检查是否有否定词在前面（5 个字以内）
+                        const contextStart = Math.max(0, kwIndex - 5);
+                        const context = textLower.substring(contextStart, kwIndex);
+                        const isNegated = negations.some(neg => context.includes(neg));
+                        
+                        if (!isNegated) {
+                            // 考虑句子权重（长句权重更高）
+                            const sentence = sentences.find(s => s.toLowerCase().includes(kwLower)) || '';
+                            const sentenceWeight = sentence.length > 20 ? 1.3 : 1.0;
+                            
+                            // 关键词长度奖励
+                            const lengthBonus = kwLower.length > 4 ? 1.5 : 1.0;
+                            
+                            scores[func] += data.weight * lengthBonus * sentenceWeight;
+                            
+                            if (!matchedKeywords[func].includes(keyword)) {
+                                matchedKeywords[func].push(keyword);
+                            }
                         }
                     }
                 }
@@ -838,6 +870,7 @@
                     <div class="mbti-type">${report.type}</div>
                     <div class="mbti-name">${report.name} · ${report.desc}</div>
                     <div class="confidence-badge">分析置信度：${report.confidence}</div>
+                    <div style="margin-top: 10px; font-size: 0.8em; color: #999;">分析模式：关键词匹配（简化版）</div>
                 </div>
                 
                 <div class="dimensions-section">
