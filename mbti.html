@@ -328,7 +328,15 @@
             <!-- 链接输入区 -->
             <div id="linkSection" class="input-section hidden">
                 <label class="input-label">请输入 Neta 人物链接或安利语</label>
-                <textarea class="input-box" id="linkInput"></textarea>
+                <div style="padding: 20px; background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.1)); border: 2px dashed rgba(255, 152, 0, 0.4); border-radius: 12px; text-align: center; margin-bottom: 15px;">
+                    <div style="font-size: 1.1em; color: #ff9800; font-weight: bold; margin-bottom: 8px;">🔧 维护中……</div>
+                    <div style="font-size: 0.85em; color: #888; line-height: 1.6;">
+                        由于 API 接口升级，链接自动获取功能暂时不可用<br>
+                        请切换到「📝 粘贴简介」标签页手动输入～<br>
+                        <span style="color: #aaa; font-size: 0.8em;">（恢复时间待定）</span>
+                    </div>
+                </div>
+                <textarea class="input-box" id="linkInput" disabled style="opacity: 0.5; background: #f5f5f5;"></textarea>
             </div>
             
             <button class="btn btn-primary" onclick="analyzeMBTI()" id="analyzeBtn">🔬 开始专业分析</button>
