@@ -782,7 +782,33 @@
             }
         }
 
+        // 辅助函数（必须在 displayResult 之前定义）
+        function getFunctionDesc(func) {
+            const descs = {
+                'Ni': '洞察事物的本质和深层规律，能够预见未来发展趋势',
+                'Ne': '探索外部世界的无限可能性，善于发现事物之间的联系',
+                'Si': '依赖过去的经验和记忆，注重稳定性、传统和细节',
+                'Se': '敏锐感知当下的外部世界，注重实际体验和即时反应',
+                'Ti': '构建内在的逻辑框架和理论体系，追求精确和一致性',
+                'Te': '运用外部逻辑和客观标准进行分析和决策，注重效率',
+                'Fi': '忠于内心的价值观和真实感受，追求自我一致性',
+                'Fe': '关注他人的情感需求和群体和谐，重视人际关系'
+            };
+            return descs[func];
+        }
+        
+        function getDimensionName(dim) {
+            const names = {
+                'E': '外向', 'I': '内向',
+                'S': '实感', 'N': '直觉',
+                'T': '理性', 'F': '感性',
+                'J': '判断', 'P': '感知'
+            };
+            return names[dim];
+        }
+        
         function displayResult(mbtiType, report) {
+            console.log('显示结果，类型:', mbtiType);
             const resultSection = document.getElementById('mbtiResultSection');
             const resultDiv = document.getElementById('mbtiResult');
             
@@ -878,30 +904,6 @@
             
             resultSection.classList.remove('hidden');
             showToast('分析完成！');
-        }
-        
-        function getFunctionDesc(func) {
-            const descs = {
-                'Ni': '洞察事物的本质和深层规律，能够预见未来发展趋势',
-                'Ne': '探索外部世界的无限可能性，善于发现事物之间的联系',
-                'Si': '依赖过去的经验和记忆，注重稳定性、传统和细节',
-                'Se': '敏锐感知当下的外部世界，注重实际体验和即时反应',
-                'Ti': '构建内在的逻辑框架和理论体系，追求精确和一致性',
-                'Te': '运用外部逻辑和客观标准进行分析和决策，注重效率',
-                'Fi': '忠于内心的价值观和真实感受，追求自我一致性',
-                'Fe': '关注他人的情感需求和群体和谐，重视人际关系'
-            };
-            return descs[func];
-        }
-        
-        function getDimensionName(dim) {
-            const names = {
-                'E': '外向', 'I': '内向',
-                'S': '实感', 'N': '直觉',
-                'T': '理性', 'F': '感性',
-                'J': '判断', 'P': '感知'
-            };
-            return names[dim];
         }
 
         function copyMBTIResult() {
