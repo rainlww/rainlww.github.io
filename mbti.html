@@ -762,7 +762,8 @@
                     }
                 }, 400);
             } catch (error) {
-                showToast('分析失败，请重试');
+                console.error('analyzeMBTI 出错:', error);
+                showToast('分析失败：' + error.message);
                 document.getElementById('analyzeBtn').classList.remove('hidden');
                 document.getElementById('loadingSection').classList.add('hidden');
             }
@@ -770,12 +771,23 @@
 
         function showResult(input) {
             try {
+                console.log('=== 开始分析 ===');
+                console.log('输入文本长度:', input.length);
+                
                 const functionScores = analyzeSemantically(input);
+                console.log('分析得分:', functionScores);
+                
                 const mbtiType = deriveMBTIType(functionScores);
+                console.log('MBTI 类型:', mbtiType);
+                
                 const report = generateProfessionalReport(input, mbtiType, functionScores);
+                console.log('生成报告:', report);
+                
                 displayResult(mbtiType, report);
+                console.log('=== 分析完成 ===');
             } catch (error) {
-                showToast('分析失败，请重试');
+                console.error('分析过程出错:', error);
+                showToast('分析失败：' + error.message);
             } finally {
                 document.getElementById('analyzeBtn').classList.remove('hidden');
                 document.getElementById('loadingSection').classList.add('hidden');
