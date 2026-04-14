@@ -292,7 +292,7 @@
         <div class="container">
             <h1 class="title">欢迎来到雨落的世界！</h1>
             <div class="banner-container" onclick="changeBanner()">
-                <img src="" alt="雨落的世界" class="banner-image" id="banner">
+                <img src="banner.jpg" alt="雨落的世界" class="banner-image" id="banner">
                 <p class="banner-tip">点击图片切换</p>
             </div>
 
@@ -356,11 +356,13 @@
     <script>
         // 图片数组
         const banners = ['banner.jpg', 'banner2.jpg'];
-        let currentBannerIndex = 0;
+        let currentBannerIndex = Math.floor(Math.random() * banners.length);
+
+        // 页面加载时立即设置随机图片
+        document.getElementById('banner').src = banners[currentBannerIndex];
 
         // 随机显示一张图片（确保每次刷新都随机）
         function initBanner() {
-            currentBannerIndex = Math.floor(Math.random() * banners.length);
             const banner = document.getElementById('banner');
             banner.src = banners[currentBannerIndex];
             return banner;
