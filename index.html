@@ -30,7 +30,7 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.3s ease;
         }
 
         #loading-screen.hidden {
@@ -104,12 +104,25 @@
 
         #main-screen.visible {
             display: block;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+
+        /* 背景模糊层 */
+        #bgOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(3px);
+            z-index: 0;
+            pointer-events: none;
         }
 
         .container {
@@ -234,12 +247,116 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
 
+        /* 开始播放按钮 */
+        .play-btn {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 50px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+            color: #5a7d8a;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            letter-spacing: 3px;
+        }
+
+        .play-btn:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #fff, rgba(255, 255, 255, 0.9));
+        }
+
+        /* 弹窗 */
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        #modal.show {
+            display: flex;
+            animation: modalFadeIn 0.4s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92));
+            padding: 60px 50px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            max-width: 500px;
+            margin: 20px;
+            position: relative;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .modal-text {
+            font-size: 1.3em;
+            color: #5a7d8a;
+            line-height: 2.2;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .modal-signature {
+            font-size: 1.1em;
+            color: #8a9a9f;
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2em;
+            color: #8a9a9f;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #5a7d8a;
+            transform: scale(1.2);
+        }
+
         @media (max-width: 600px) {
             .switch-bg-btn {
                 bottom: 20px;
                 right: 20px;
                 padding: 10px 18px;
                 font-size: 0.85em;
+            }
+            .play-btn {
+                padding: 15px 35px;
+                font-size: 1em;
+            }
+            .modal-content {
+                padding: 40px 25px;
+            }
+            .modal-text {
+                font-size: 1.1em;
             }
         }
 
@@ -262,6 +379,9 @@
 
     <!-- 主页 -->
     <div id="main-screen">
+        <!-- 背景模糊层 -->
+        <div id="bgOverlay"></div>
+        
         <div class="container">
             <h1 class="title">欢迎来到雨落的世界！</h1>
 
@@ -313,11 +433,22 @@
             </div>
         </div>
         
+        <!-- 开始播放按钮 -->
+        <button class="play-btn" id="playBtn" onclick="showModal()">🎵 开始播放</button>
+        
         <!-- 切换背景按钮 -->
         <button class="switch-bg-btn" onclick="switchBackground()">🖼️ 切换背景</button>
-        
-        <!-- 调试信息 -->
-        <div id="debugInfo" style="position: fixed; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #0f0; padding: 10px; font-size: 12px; border-radius: 5px; z-index: 9999; max-width: 300px; white-space: pre-wrap;"></div>
+    </div>
+
+    <!-- 弹窗 -->
+    <div id="modal" onclick="closeModal(event)">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal(event)">×</span>
+            <div class="modal-text">
+                谨以此音乐献给小椰果<br>
+                ——一直在等你回家的雨落
+            </div>
+        </div>
     </div>
 
     <!-- 背景音乐 -->
@@ -329,31 +460,58 @@
         // 背景图片数组
         const backgrounds = ['banner.jpg', 'banner2.jpg'];
         let currentBgIndex = 0;
+        let musicStarted = false;
 
         // 设置背景图片
         function setBackground(index) {
             const mainScreen = document.getElementById('main-screen');
-            const debugDiv = document.getElementById('debugInfo');
             const bgUrl = "url('" + backgrounds[index] + "')";
             mainScreen.style.backgroundImage = bgUrl;
-            
-            const msg = '背景：' + backgrounds[index] + '\n样式：' + bgUrl;
-            if (debugDiv) debugDiv.textContent = msg;
-            console.log(msg);
         }
 
         // 切换背景
         function switchBackground() {
             currentBgIndex = (currentBgIndex + 1) % backgrounds.length;
-            setBackground(currentBgIndex);
-            console.log('切换背景到：' + backgrounds[currentBgIndex]);
+            const mainScreen = document.getElementById('main-screen');
+            
+            // 快速切换效果
+            mainScreen.style.opacity = '0.7';
+            setTimeout(function() {
+                setBackground(currentBgIndex);
+                mainScreen.style.opacity = '1';
+            }, 150);
+        }
+
+        // 显示弹窗
+        function showModal() {
+            const modal = document.getElementById('modal');
+            const playBtn = document.getElementById('playBtn');
+            
+            modal.classList.add('show');
+            playBtn.style.display = 'none';
+            
+            // 播放音乐
+            const bgMusic = document.getElementById('bgMusic');
+            bgMusic.volume = 0.6;
+            bgMusic.play().catch(function(e) {
+                console.log('音乐播放失败：', e);
+            });
+            
+            musicStarted = true;
+        }
+
+        // 关闭弹窗
+        function closeModal(event) {
+            if (event.target.id === 'modal' || event.target.className === 'modal-close') {
+                const modal = document.getElementById('modal');
+                modal.classList.remove('show');
+            }
         }
 
         // 真实加载进度
         const loadingBar = document.querySelector('.loading-bar');
         const loadingScreen = document.getElementById('loading-screen');
         const mainScreen = document.getElementById('main-screen');
-        const bgMusic = document.getElementById('bgMusic');
 
         // 统计资源加载
         let loadedCount = 0;
@@ -371,39 +529,20 @@
                 setTimeout(function() {
                     loadingScreen.classList.add('hidden');
                     mainScreen.classList.add('visible');
-                    
-                    // 播放背景音乐
-                    bgMusic.volume = 0.6;
-                    bgMusic.play().catch(function(e) {
-                        console.log('音乐自动播放被阻止');
-                    });
-                }, 2000);
+                }, 1000);
             }
         }
 
         // 页面加载
         window.addEventListener('DOMContentLoaded', function() {
-            const debugDiv = document.getElementById('debugInfo');
-            if (debugDiv) debugDiv.textContent = '页面加载中...';
-            console.log('页面加载完成');
-            
             // 随机选择背景
             currentBgIndex = Math.floor(Math.random() * backgrounds.length);
-            const bgMsg = '随机索引：' + currentBgIndex + ' → ' + backgrounds[currentBgIndex];
-            console.log(bgMsg);
-            
-            // 立即设置背景
             setBackground(currentBgIndex);
-            
-            if (debugDiv) debugDiv.textContent += '\n' + bgMsg;
 
             // 预加载背景图片
             backgrounds.forEach(function(src) {
                 const img = new Image();
                 img.src = src;
-                img.onload = function() {
-                    console.log('图片加载成功：' + src);
-                };
             });
 
             // 统计图片资源
@@ -424,7 +563,7 @@
                 updateProgress();
             }
 
-            // 最少等待 2 秒
+            // 最少等待 1 秒（加快加载）
             setTimeout(function() {
                 if (!isLoadingComplete) {
                     isLoadingComplete = true;
@@ -432,21 +571,9 @@
                     setTimeout(function() {
                         loadingScreen.classList.add('hidden');
                         mainScreen.classList.add('visible');
-                        
-                        bgMusic.volume = 0.6;
-                        bgMusic.play().catch(function(e) {
-                            console.log('音乐自动播放被阻止');
-                        });
-                    }, 300);
+                    }, 200);
                 }
-            }, 2000);
-            
-            // 点击任意位置播放音乐
-            document.addEventListener('click', function() {
-                if (bgMusic.paused) {
-                    bgMusic.play().catch(function(e) {});
-                }
-            }, { once: true });
+            }, 1000);
         });
 
         // 导航函数
@@ -461,16 +588,16 @@
 
             let progress = 0;
             const interval = setInterval(function() {
-                progress += 5;
+                progress += 8;
                 loadingBar.style.width = progress + '%';
 
                 if (progress >= 100) {
                     clearInterval(interval);
                     setTimeout(function() {
                         window.location.href = url;
-                    }, 800);
+                    }, 500);
                 }
-            }, 100);
+            }, 50);
         }
     </script>
 </body>
