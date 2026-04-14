@@ -17,7 +17,7 @@
             overflow-x: hidden;
         }
 
-        /* Loading 页面 */
+        /* Loading 页面 - 简化版，加快加载 */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -26,11 +26,10 @@
             height: 100%;
             background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #ADD8E6 100%);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.2s ease;
         }
 
         #loading-screen.hidden {
@@ -39,55 +38,16 @@
         }
 
         .loading-text {
-            font-size: 2.8em;
+            font-size: 2em;
             color: #fff;
             font-weight: bold;
-            font-family: 'Comic Sans MS', 'Chalkboard', 'YouYuan', 'Microsoft YaHei', cursive;
-            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.5);
-            margin-bottom: 30px;
-            letter-spacing: 5px;
-            animation: bounce 4s ease-in-out infinite;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            animation: pulse 1s ease-in-out infinite;
         }
 
-        @keyframes bounce {
-            0%, 100% { 
-                opacity: 1; 
-                transform: translateY(0) scale(1);
-            }
-            25% {
-                transform: translateY(-10px) scale(1.05);
-            }
-            50% { 
-                opacity: 0.8; 
-                transform: translateY(-5px) scale(1);
-            }
-            75% {
-                transform: translateY(-10px) scale(1.05);
-            }
-        }
-
-        .loading-bar-container {
-            width: 300px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .loading-bar {
-            width: 0%;
-            height: 100%;
-            background: #fff;
-            border-radius: 10px;
-            transition: width 0.3s ease;
-            animation: loading 2s ease-in-out infinite;
-        }
-
-        @keyframes loading {
-            0% { width: 0%; }
-            50% { width: 70%; }
-            100% { width: 100%; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         /* 主页 */
@@ -250,27 +210,35 @@
         /* 开始播放按钮 */
         .play-btn {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px 50px;
+            bottom: 30px;
+            left: 30px;
+            padding: 12px 30px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
             color: #5a7d8a;
-            border: 3px solid rgba(255, 255, 255, 0.8);
-            border-radius: 50px;
-            font-size: 1.2em;
-            font-weight: bold;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 30px;
+            font-size: 0.9em;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            z-index: 2000;
-            letter-spacing: 3px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            letter-spacing: 1px;
         }
 
         .play-btn:hover {
-            transform: translate(-50%, -50%) scale(1.05);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
             background: linear-gradient(135deg, #fff, rgba(255, 255, 255, 0.9));
+        }
+
+        @media (max-width: 600px) {
+            .play-btn {
+                bottom: 80px;
+                left: 20px;
+                padding: 10px 20px;
+                font-size: 0.85em;
+            }
         }
 
         /* 弹窗 */
@@ -369,12 +337,9 @@
     </style>
 </head>
 <body>
-    <!-- Loading 页面 -->
+    <!-- Loading 页面 - 简化版 -->
     <div id="loading-screen">
         <div class="loading-text">Loading...</div>
-        <div class="loading-bar-container">
-            <div class="loading-bar"></div>
-        </div>
     </div>
 
     <!-- 主页 -->
@@ -508,34 +473,12 @@
             }
         }
 
-        // 真实加载进度
-        const loadingBar = document.querySelector('.loading-bar');
-        const loadingScreen = document.getElementById('loading-screen');
-        const mainScreen = document.getElementById('main-screen');
-
-        // 统计资源加载
-        let loadedCount = 0;
-        let totalCount = 0;
-        let isLoadingComplete = false;
-
-        // 更新进度
-        function updateProgress() {
-            loadedCount++;
-            const progress = Math.min(100, Math.floor((loadedCount / totalCount) * 100));
-            loadingBar.style.width = progress + '%';
-
-            if (loadedCount >= totalCount && !isLoadingComplete) {
-                isLoadingComplete = true;
-                setTimeout(function() {
-                    loadingScreen.classList.add('hidden');
-                    mainScreen.classList.add('visible');
-                }, 1000);
-            }
-        }
-
         // 页面加载
         window.addEventListener('DOMContentLoaded', function() {
-            // 随机选择背景
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainScreen = document.getElementById('main-screen');
+            
+            // 立即随机选择背景
             currentBgIndex = Math.floor(Math.random() * backgrounds.length);
             setBackground(currentBgIndex);
 
@@ -545,59 +488,22 @@
                 img.src = src;
             });
 
-            // 统计图片资源
-            const images = document.querySelectorAll('img');
-            totalCount = images.length > 0 ? images.length : 1;
-
-            // 为每张图片添加加载监听
-            if (images.length > 0) {
-                images.forEach(function(img) {
-                    if (img.complete) {
-                        updateProgress();
-                    } else {
-                        img.addEventListener('load', updateProgress);
-                        img.addEventListener('error', updateProgress);
-                    }
-                });
-            } else {
-                updateProgress();
-            }
-
-            // 最少等待 1 秒（加快加载）
+            // 500ms 后直接显示页面（超快加载）
             setTimeout(function() {
-                if (!isLoadingComplete) {
-                    isLoadingComplete = true;
-                    loadingBar.style.width = '100%';
-                    setTimeout(function() {
-                        loadingScreen.classList.add('hidden');
-                        mainScreen.classList.add('visible');
-                    }, 200);
-                }
-            }, 1000);
+                loadingScreen.classList.add('hidden');
+                mainScreen.classList.add('visible');
+            }, 500);
         });
 
-        // 导航函数
+        // 导航函数 - 简化版
         function navigateTo(url) {
             const loadingScreen = document.getElementById('loading-screen');
-            const mainScreen = document.getElementById('main-screen');
-            const loadingBar = document.querySelector('.loading-bar');
-
             loadingScreen.classList.remove('hidden');
-            mainScreen.classList.remove('visible');
-            loadingBar.style.width = '0%';
-
-            let progress = 0;
-            const interval = setInterval(function() {
-                progress += 8;
-                loadingBar.style.width = progress + '%';
-
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    setTimeout(function() {
-                        window.location.href = url;
-                    }, 500);
-                }
-            }, 50);
+            
+            // 300ms 后跳转
+            setTimeout(function() {
+                window.location.href = url;
+            }, 300);
         }
     </script>
 </body>
