@@ -94,10 +94,11 @@
         #main-screen {
             display: none;
             min-height: 100vh;
-            background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #ADD8E6 100%);
+            background-color: #87CEEB;
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+            background-repeat: no-repeat;
             padding: 40px 20px;
             position: relative;
         }
@@ -261,7 +262,7 @@
     </div>
 
     <!-- 主页 -->
-    <div id="main-screen">
+    <div id="main-screen" style="background-image: url('banner.jpg');">
         <div class="container">
             <h1 class="title">欢迎来到雨落的世界！</h1>
 
@@ -384,6 +385,8 @@
         window.addEventListener('DOMContentLoaded', function() {
             // 随机选择背景（确保每次刷新都随机）
             currentBgIndex = Math.floor(Math.random() * backgrounds.length);
+            
+            // 立即设置背景（在显示之前）
             setBackground(currentBgIndex);
 
             // 统计需要加载的资源
