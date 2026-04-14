@@ -94,7 +94,6 @@
         #main-screen {
             display: none;
             min-height: 100vh;
-            background-color: #87CEEB;
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -262,7 +261,7 @@
     </div>
 
     <!-- 主页 -->
-    <div id="main-screen" style="background-image: url('banner.jpg');">
+    <div id="main-screen">
         <div class="container">
             <h1 class="title">欢迎来到雨落的世界！</h1>
 
@@ -331,20 +330,15 @@
         // 设置背景图片
         function setBackground(index) {
             const mainScreen = document.getElementById('main-screen');
-            mainScreen.style.backgroundImage = `url('${backgrounds[index]}')`;
+            mainScreen.style.backgroundImage = "url('" + backgrounds[index] + "')";
+            console.log('设置背景为：' + backgrounds[index]);
         }
 
         // 切换背景
         function switchBackground() {
             currentBgIndex = (currentBgIndex + 1) % backgrounds.length;
-            const mainScreen = document.getElementById('main-screen');
-            
-            // 淡入淡出效果
-            mainScreen.style.opacity = '0.5';
-            setTimeout(function() {
-                setBackground(currentBgIndex);
-                mainScreen.style.opacity = '1';
-            }, 300);
+            setBackground(currentBgIndex);
+            console.log('切换背景到：' + backgrounds[currentBgIndex]);
         }
 
         // 真实加载进度
@@ -364,10 +358,8 @@
             const progress = Math.min(100, Math.floor((loadedCount / totalCount) * 100));
             loadingBar.style.width = progress + '%';
 
-            // 检查是否完成
             if (loadedCount >= totalCount && !isLoadingComplete) {
                 isLoadingComplete = true;
-                // 确保至少显示 2 秒
                 setTimeout(function() {
                     loadingScreen.classList.add('hidden');
                     mainScreen.classList.add('visible');
@@ -375,51 +367,51 @@
                     // 播放背景音乐
                     bgMusic.volume = 0.6;
                     bgMusic.play().catch(function(e) {
-                        console.log('音乐自动播放被阻止，等待用户交互');
+                        console.log('音乐自动播放被阻止');
                     });
                 }, 2000);
             }
         }
 
-        // 页面加载 - 只执行一次
+        // 页面加载
         window.addEventListener('DOMContentLoaded', function() {
-            // 随机选择背景（确保每次刷新都随机）
-            currentBgIndex = Math.floor(Math.random() * backgrounds.length);
+            console.log('页面加载完成');
             
-            // 立即设置背景（在显示之前）
+            // 随机选择背景
+            currentBgIndex = Math.floor(Math.random() * backgrounds.length);
+            console.log('随机选择背景索引：' + currentBgIndex);
+            
+            // 立即设置背景
             setBackground(currentBgIndex);
 
-            // 统计需要加载的资源
-            const images = document.querySelectorAll('img');
-            totalCount = images.length;
-
-            if (totalCount === 0) {
-                // 没有图片，直接完成
-                loadingBar.style.width = '100%';
-                setTimeout(function() {
-                    loadingScreen.classList.add('hidden');
-                    mainScreen.classList.add('visible');
-                    
-                    // 播放背景音乐
-                    bgMusic.volume = 0.6;
-                    bgMusic.play().catch(function(e) {
-                        console.log('音乐自动播放被阻止，等待用户交互');
-                    });
-                }, 2000);
-                return;
-            }
-
-            // 为每张图片添加加载监听
-            images.forEach(function(img) {
-                if (img.complete) {
-                    updateProgress();
-                } else {
-                    img.addEventListener('load', updateProgress);
-                    img.addEventListener('error', updateProgress);
-                }
+            // 预加载背景图片
+            backgrounds.forEach(function(src) {
+                const img = new Image();
+                img.src = src;
+                img.onload = function() {
+                    console.log('图片加载成功：' + src);
+                };
             });
 
-            // 最少等待 2 秒，确保用户看到 Loading 动画
+            // 统计图片资源
+            const images = document.querySelectorAll('img');
+            totalCount = images.length > 0 ? images.length : 1;
+
+            // 为每张图片添加加载监听
+            if (images.length > 0) {
+                images.forEach(function(img) {
+                    if (img.complete) {
+                        updateProgress();
+                    } else {
+                        img.addEventListener('load', updateProgress);
+                        img.addEventListener('error', updateProgress);
+                    }
+                });
+            } else {
+                updateProgress();
+            }
+
+            // 最少等待 2 秒
             setTimeout(function() {
                 if (!isLoadingComplete) {
                     isLoadingComplete = true;
@@ -428,30 +420,23 @@
                         loadingScreen.classList.add('hidden');
                         mainScreen.classList.add('visible');
                         
-                        // 播放背景音乐
                         bgMusic.volume = 0.6;
                         bgMusic.play().catch(function(e) {
-                            console.log('音乐自动播放被阻止，等待用户交互');
+                            console.log('音乐自动播放被阻止');
                         });
                     }, 300);
                 }
             }, 2000);
             
-            // 点击任意位置尝试播放音乐（解决浏览器自动播放限制）
+            // 点击任意位置播放音乐
             document.addEventListener('click', function() {
                 if (bgMusic.paused) {
                     bgMusic.play().catch(function(e) {});
                 }
             }, { once: true });
-            
-            // 预加载背景图片
-            backgrounds.forEach(function(src) {
-                const img = new Image();
-                img.src = src;
-            });
         });
 
-        // 导航函数（带 Loading）
+        // 导航函数
         function navigateTo(url) {
             const loadingScreen = document.getElementById('loading-screen');
             const mainScreen = document.getElementById('main-screen');
@@ -459,11 +444,8 @@
 
             loadingScreen.classList.remove('hidden');
             mainScreen.classList.remove('visible');
-
-            // 重置加载条
             loadingBar.style.width = '0%';
 
-            // 模拟加载
             let progress = 0;
             const interval = setInterval(function() {
                 progress += 5;
