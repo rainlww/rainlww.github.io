@@ -315,6 +315,9 @@
         
         <!-- 切换背景按钮 -->
         <button class="switch-bg-btn" onclick="switchBackground()">🖼️ 切换背景</button>
+        
+        <!-- 调试信息 -->
+        <div id="debugInfo" style="position: fixed; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #0f0; padding: 10px; font-size: 12px; border-radius: 5px; z-index: 9999; max-width: 300px; white-space: pre-wrap;"></div>
     </div>
 
     <!-- 背景音乐 -->
@@ -330,8 +333,13 @@
         // 设置背景图片
         function setBackground(index) {
             const mainScreen = document.getElementById('main-screen');
-            mainScreen.style.backgroundImage = "url('" + backgrounds[index] + "')";
-            console.log('设置背景为：' + backgrounds[index]);
+            const debugDiv = document.getElementById('debugInfo');
+            const bgUrl = "url('" + backgrounds[index] + "')";
+            mainScreen.style.backgroundImage = bgUrl;
+            
+            const msg = '背景：' + backgrounds[index] + '\n样式：' + bgUrl;
+            if (debugDiv) debugDiv.textContent = msg;
+            console.log(msg);
         }
 
         // 切换背景
@@ -375,14 +383,19 @@
 
         // 页面加载
         window.addEventListener('DOMContentLoaded', function() {
+            const debugDiv = document.getElementById('debugInfo');
+            if (debugDiv) debugDiv.textContent = '页面加载中...';
             console.log('页面加载完成');
             
             // 随机选择背景
             currentBgIndex = Math.floor(Math.random() * backgrounds.length);
-            console.log('随机选择背景索引：' + currentBgIndex);
+            const bgMsg = '随机索引：' + currentBgIndex + ' → ' + backgrounds[currentBgIndex];
+            console.log(bgMsg);
             
             // 立即设置背景
             setBackground(currentBgIndex);
+            
+            if (debugDiv) debugDiv.textContent += '\n' + bgMsg;
 
             // 预加载背景图片
             backgrounds.forEach(function(src) {
