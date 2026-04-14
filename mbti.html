@@ -803,6 +803,29 @@
             toast.style.opacity = '1';
             setTimeout(() => { toast.style.opacity = '0'; }, 2000);
         }
+
+        // 页面加载后播放背景音乐
+        window.addEventListener('DOMContentLoaded', function() {
+            const bgMusic = document.createElement('audio');
+            bgMusic.id = 'bgMusic';
+            bgMusic.loop = true;
+            bgMusic.innerHTML = '<source src="bgm.mp3" type="audio/mpeg">';
+            document.body.appendChild(bgMusic);
+            
+            bgMusic.volume = 0.5;
+            
+            // 尝试播放（可能需要用户交互）
+            bgMusic.play().catch(function(e) {
+                console.log('音乐需要用户交互才能播放');
+            });
+            
+            // 点击任意位置尝试播放音乐
+            document.addEventListener('click', function() {
+                if (bgMusic.paused) {
+                    bgMusic.play().catch(function(e) {});
+                }
+            }, { once: true });
+        });
     </script>
 </body>
 </html>

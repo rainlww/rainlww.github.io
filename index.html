@@ -24,7 +24,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #FFF9C4 0%, #FFF59D 50%, #FFEE58 100%);
+            background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #ADD8E6 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -40,10 +40,10 @@
 
         .loading-text {
             font-size: 2.8em;
-            color: #F57F17;
+            color: #fff;
             font-weight: bold;
             font-family: 'Comic Sans MS', 'Chalkboard', 'YouYuan', 'Microsoft YaHei', cursive;
-            text-shadow: 0 3px 15px rgba(245, 127, 23, 0.3), 0 0 20px rgba(255, 255, 255, 0.8);
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.5);
             margin-bottom: 30px;
             letter-spacing: 5px;
             animation: bounce 4s ease-in-out infinite;
@@ -69,7 +69,7 @@
         .loading-bar-container {
             width: 300px;
             height: 8px;
-            background: rgba(245, 127, 23, 0.3);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -78,7 +78,7 @@
         .loading-bar {
             width: 0%;
             height: 100%;
-            background: #F57F17;
+            background: #fff;
             border-radius: 10px;
             transition: width 0.3s ease;
             animation: loading 2s ease-in-out infinite;
@@ -94,8 +94,9 @@
         #main-screen {
             display: none;
             min-height: 100vh;
-            background: linear-gradient(135deg, #FFF9C4 0%, #FFF59D 50%, #FFEE58 100%);
+            background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #ADD8E6 100%);
             padding: 40px 20px;
+            position: relative;
         }
 
         #main-screen.visible {
@@ -136,7 +137,7 @@
 
         .banner-tip {
             text-align: center;
-            color: rgba(245, 127, 23, 0.7);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 0.85em;
             margin-top: 10px;
             font-style: italic;
@@ -144,19 +145,19 @@
 
         .title {
             font-size: 3.5em;
-            color: #F57F17;
+            color: #fff;
             font-weight: bold;
-            text-shadow: 0 3px 15px rgba(245, 127, 23, 0.3);
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
             margin-bottom: 15px;
             letter-spacing: 8px;
         }
 
         .subtitle {
             font-size: 1.4em;
-            color: rgba(245, 127, 23, 0.95);
+            color: rgba(255, 255, 255, 0.95);
             font-style: italic;
             margin-bottom: 60px;
-            text-shadow: 0 2px 10px rgba(245, 127, 23, 0.2);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             letter-spacing: 2px;
         }
 
@@ -172,19 +173,19 @@
         }
 
         .entry-card {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.5);
             border-radius: 12px;
             padding: 20px 15px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             text-align: left;
         }
 
         .entry-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
             background: #fff;
         }
 
@@ -195,7 +196,7 @@
 
         .entry-title {
             font-size: 1.2em;
-            color: #F57F17;
+            color: #5a7d8a;
             font-weight: bold;
             margin-bottom: 8px;
             letter-spacing: 1px;
@@ -203,13 +204,13 @@
 
         .entry-desc {
             font-size: 0.85em;
-            color: #F9A825;
+            color: #8a9a9f;
             line-height: 1.5;
             margin-bottom: 15px;
         }
 
         .entry-btn {
-            background: linear-gradient(135deg, #F57F17, #F9A825);
+            background: linear-gradient(135deg, #5a7d8a, #7a9da8);
             color: #fff;
             border: none;
             padding: 8px 25px;
@@ -217,22 +218,56 @@
             border-radius: 35px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 3px 12px rgba(245, 127, 23, 0.4);
+            box-shadow: 0 3px 12px rgba(90, 125, 138, 0.3);
             letter-spacing: 1px;
         }
 
         .entry-btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(245, 127, 23, 0.5);
-            background: linear-gradient(135deg, #F9A825, #FBC02D);
+            box-shadow: 0 5px 20px rgba(90, 125, 138, 0.45);
+            background: linear-gradient(135deg, #6a8d9a, #8aada8);
         }
 
         .footer {
             margin-top: 40px;
-            color: rgba(245, 127, 23, 0.85);
+            color: rgba(255, 255, 255, 0.85);
             font-size: 0.95em;
-            text-shadow: 0 1px 5px rgba(245, 127, 23, 0.2);
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
             line-height: 1.8;
+        }
+
+        /* 切换背景按钮 */
+        .switch-bg-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #5a7d8a;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 30px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            letter-spacing: 1px;
+        }
+
+        .switch-bg-btn:hover {
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 600px) {
+            .switch-bg-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 18px;
+                font-size: 0.85em;
+            }
         }
 
         /* 响应式 */
@@ -257,7 +292,7 @@
         <div class="container">
             <h1 class="title">欢迎来到雨落的世界！</h1>
             <div class="banner-container" onclick="changeBanner()">
-                <img src="banner.jpg" alt="雨落的世界" class="banner-image" id="banner">
+                <img src="" alt="雨落的世界" class="banner-image" id="banner">
                 <p class="banner-tip">点击图片切换</p>
             </div>
 
@@ -308,34 +343,34 @@
                 <p style="margin-top: 8px;">每一个世界，都是一段独特的旅程</p>
             </div>
         </div>
+        
+        <!-- 切换背景按钮 -->
+        <button class="switch-bg-btn" onclick="changeBanner()">🖼️ 切换背景</button>
     </div>
+
+    <!-- 背景音乐 -->
+    <audio id="bgMusic" loop>
+        <source src="bgm.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
         // 图片数组
         const banners = ['banner.jpg', 'banner2.jpg'];
         let currentBannerIndex = 0;
-        let lastBannerIndex = -1;
 
-        // 随机显示一张图片（不重复）
+        // 随机显示一张图片（确保每次刷新都随机）
         function initBanner() {
             currentBannerIndex = Math.floor(Math.random() * banners.length);
             const banner = document.getElementById('banner');
             banner.src = banners[currentBannerIndex];
-            lastBannerIndex = currentBannerIndex;
             return banner;
         }
 
-        // 切换图片（不重复）
+        // 切换图片（确保切换到另一张）
         function changeBanner() {
             const banner = document.getElementById('banner');
-            // 选择一个与当前不同的图片
-            let newIndex;
-            do {
-                newIndex = Math.floor(Math.random() * banners.length);
-            } while (newIndex === currentBannerIndex && banners.length > 1);
-            
-            lastBannerIndex = currentBannerIndex;
-            currentBannerIndex = newIndex;
+            // 切换到另一张图片
+            currentBannerIndex = (currentBannerIndex + 1) % banners.length;
             
             banner.style.opacity = '0';
             setTimeout(function() {
@@ -348,6 +383,7 @@
         const loadingBar = document.querySelector('.loading-bar');
         const loadingScreen = document.getElementById('loading-screen');
         const mainScreen = document.getElementById('main-screen');
+        const bgMusic = document.getElementById('bgMusic');
 
         // 统计资源加载
         let loadedCount = 0;
@@ -367,14 +403,20 @@
                 setTimeout(function() {
                     loadingScreen.classList.add('hidden');
                     mainScreen.classList.add('visible');
+                    
+                    // 播放背景音乐（用户交互后才能播放）
+                    bgMusic.volume = 0.5;
+                    bgMusic.play().catch(function(e) {
+                        console.log('音乐需要用户交互才能播放');
+                    });
                 }, 2000);
             }
         }
 
         // 页面加载 - 只执行一次
         window.addEventListener('DOMContentLoaded', function() {
-            // 初始化随机图片
-            const banner = initBanner();
+            // 初始化随机图片（确保每次刷新都随机）
+            initBanner();
 
             // 统计需要加载的资源
             const images = document.querySelectorAll('img');
@@ -386,6 +428,12 @@
                 setTimeout(function() {
                     loadingScreen.classList.add('hidden');
                     mainScreen.classList.add('visible');
+                    
+                    // 播放背景音乐
+                    bgMusic.volume = 0.5;
+                    bgMusic.play().catch(function(e) {
+                        console.log('音乐需要用户交互才能播放');
+                    });
                 }, 2000);
                 return;
             }
@@ -409,9 +457,22 @@
                     setTimeout(function() {
                         loadingScreen.classList.add('hidden');
                         mainScreen.classList.add('visible');
+                        
+                        // 播放背景音乐
+                        bgMusic.volume = 0.5;
+                        bgMusic.play().catch(function(e) {
+                            console.log('音乐需要用户交互才能播放');
+                        });
                     }, 300);
                 }
             }, 2000);
+            
+            // 点击任意位置尝试播放音乐（解决浏览器自动播放限制）
+            document.addEventListener('click', function() {
+                if (bgMusic.paused) {
+                    bgMusic.play().catch(function(e) {});
+                }
+            }, { once: true });
         });
 
         // 导航函数（带 Loading）
@@ -441,8 +502,6 @@
                 }
             }, 100);
         }
-
-
     </script>
 </body>
 </html>

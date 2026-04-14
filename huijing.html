@@ -242,7 +242,30 @@
 
     <div class="toast" id="toast">已复制到剪贴板！</div>
 
+    <!-- 背景音乐 -->
+    <audio id="bgMusic" loop>
+        <source src="bgm.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
+        // 页面加载后播放背景音乐
+        window.addEventListener('DOMContentLoaded', function() {
+            const bgMusic = document.getElementById('bgMusic');
+            bgMusic.volume = 0.5;
+            
+            // 尝试播放（可能需要用户交互）
+            bgMusic.play().catch(function(e) {
+                console.log('音乐需要用户交互才能播放');
+            });
+            
+            // 点击任意位置尝试播放音乐
+            document.addEventListener('click', function() {
+                if (bgMusic.paused) {
+                    bgMusic.play().catch(function(e) {});
+                }
+            }, { once: true });
+        });
+
         // ==================== 基础标签库（按【绘境】skill 规范） ====================
         const baseTags = {
             // 一、质量词库
