@@ -809,14 +809,15 @@
             const bgMusic = document.createElement('audio');
             bgMusic.id = 'bgMusic';
             bgMusic.loop = true;
+            bgMusic.preload = 'auto';
             bgMusic.innerHTML = '<source src="bgm.mp3" type="audio/mpeg">';
             document.body.appendChild(bgMusic);
             
-            bgMusic.volume = 0.5;
+            bgMusic.volume = 0.6;
             
             // 尝试播放（可能需要用户交互）
             bgMusic.play().catch(function(e) {
-                console.log('音乐需要用户交互才能播放');
+                console.log('音乐自动播放被阻止，等待用户交互');
             });
             
             // 点击任意位置尝试播放音乐
