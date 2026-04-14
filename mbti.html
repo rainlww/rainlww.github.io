@@ -3,53 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MBTI 人格检测 - 专业版</title>
+    <title>MBTI 人格检测</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: "Georgia", "Microsoft YaHei", serif;
-            background: linear-gradient(135deg, #a8c8a8 0%, #b8d8b8 50%, #c8e8c8 100%);
+            background: linear-gradient(135deg, #d4f0e8 0%, #e8f8f0 50%, #f0fcf4 100%);
             min-height: 100vh;
             padding: 20px;
         }
         .container { max-width: 900px; margin: 0 auto; }
         .card {
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
         }
         .title {
             font-size: 2em;
-            background: linear-gradient(135deg, #5a8a5a, #6a9a6a, #7aaa7a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #5a8a7a;
             font-weight: bold;
             text-align: center;
             margin-bottom: 10px;
         }
         .subtitle {
             font-size: 0.9em;
-            color: #666;
-            text-align: center;
-            margin-bottom: 15px;
-            padding: 15px;
-            background: linear-gradient(135deg, rgba(90, 138, 90, 0.08), rgba(106, 154, 106, 0.08));
-            border-radius: 10px;
-            border-left: 4px solid #5a8a5a;
-        }
-        
-        .accuracy-notice {
-            font-size: 0.8em;
-            color: #ff9800;
+            color: #888;
             text-align: center;
             margin-bottom: 25px;
-            padding: 12px;
-            background: linear-gradient(135deg, rgba(255, 152, 0, 0.08), rgba(255, 193, 7, 0.08));
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(90, 138, 122, 0.05), rgba(138, 170, 154, 0.05));
             border-radius: 10px;
-            border: 1px dashed rgba(255, 152, 0, 0.4);
+            border-left: 4px solid #5a8a7a;
         }
         
         .tabs {
@@ -70,9 +56,9 @@
             color: #666;
         }
         .tab-btn.active {
-            background: linear-gradient(135deg, #5a8a5a, #6a9a6a);
+            background: linear-gradient(135deg, #7ab8a0, #8ac8b0);
             color: #fff;
-            border-color: #5a8a5a;
+            border-color: #7ab8a0;
         }
         .tab-btn:hover:not(.active) {
             background: #f0f2f5;
@@ -94,9 +80,9 @@
         }
         .input-box:focus {
             outline: none;
-            border-color: #5a8a5a;
+            border-color: #7ab8a0;
             background: #fff;
-            box-shadow: 0 0 0 4px rgba(90, 138, 90, 0.12);
+            box-shadow: 0 0 0 4px rgba(122, 184, 160, 0.15);
         }
         .btn {
             width: 100%; padding: 18px 35px;
@@ -107,36 +93,33 @@
             font-weight: bold;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #5a8a5a, #6a9a6a);
+            background: linear-gradient(135deg, #7ab8a0, #8ac8b0);
             color: #fff;
-            box-shadow: 0 8px 25px rgba(90, 138, 90, 0.35);
+            box-shadow: 0 8px 25px rgba(122, 184, 160, 0.3);
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(90, 138, 90, 0.45); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(122, 184, 160, 0.4); }
         .btn-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
         .btn-secondary {
-            background: linear-gradient(135deg, #a8a8b0, #b8b8c0);
+            background: linear-gradient(135deg, #a8b8b0, #b8c8c0);
             color: #fff;
             padding: 14px 20px;
             font-size: 0.95em;
         }
-        .btn-success { background: linear-gradient(135deg, #27ae60, #229954); }
+        .btn-success { background: linear-gradient(135deg, #88c8a0, #98d8b0); }
         .hidden { display: none !important; }
         
         .result-header {
             text-align: center;
             padding: 30px;
-            background: linear-gradient(135deg, rgba(90, 138, 90, 0.1), rgba(106, 154, 106, 0.1));
+            background: linear-gradient(135deg, rgba(122, 184, 160, 0.08), rgba(138, 200, 176, 0.08));
             border-radius: 15px;
             margin-bottom: 25px;
-            border: 2px solid #5a8a5a;
+            border: 2px solid #7ab8a0;
         }
         .mbti-type {
             font-size: 3.5em;
             font-weight: bold;
-            background: linear-gradient(135deg, #5a8a5a, #6a9a6a, #7aaa7a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #5a8a7a;
             letter-spacing: 8px;
             margin-bottom: 10px;
         }
@@ -144,11 +127,31 @@
         .confidence-badge {
             display: inline-block;
             padding: 6px 16px;
-            background: linear-gradient(135deg, #5a8a5a, #6a9a6a);
+            background: linear-gradient(135deg, #7ab8a0, #8ac8b0);
             color: #fff;
             border-radius: 20px;
             font-size: 0.85em;
             font-weight: 600;
+        }
+        
+        .type-description {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            border-left: 4px solid #7ab8a0;
+            text-align: left;
+        }
+        .type-description h3 {
+            color: #5a8a7a;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+        }
+        .type-description p {
+            color: #555;
+            line-height: 2;
+            font-size: 0.95em;
+            text-align: justify;
         }
         
         .dimensions-section {
@@ -160,11 +163,11 @@
         }
         .section-title {
             font-size: 1.2em;
-            color: #5a8a5a;
+            color: #5a8a7a;
             font-weight: bold;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid rgba(90, 138, 90, 0.2);
+            border-bottom: 2px solid rgba(90, 138, 122, 0.2);
         }
         .dimension-row {
             display: grid;
@@ -180,14 +183,14 @@
         }
         .dimension-bar-container {
             height: 10px;
-            background: rgba(90, 138, 90, 0.15);
+            background: rgba(122, 184, 160, 0.15);
             border-radius: 5px;
             overflow: hidden;
             position: relative;
         }
         .dimension-bar {
             height: 100%;
-            background: linear-gradient(90deg, #5a8a5a, #6a9a6a, #7aaa7a);
+            background: linear-gradient(90deg, #7ab8a0, #8ac8b0, #9ad8c0);
             border-radius: 5px;
             transition: width 1s ease;
         }
@@ -208,21 +211,21 @@
         }
         .function-card {
             padding: 20px;
-            background: linear-gradient(135deg, rgba(90, 138, 90, 0.08), rgba(106, 154, 106, 0.08));
+            background: linear-gradient(135deg, rgba(122, 184, 160, 0.06), rgba(138, 200, 176, 0.06));
             border-radius: 12px;
-            border-left: 4px solid #5a8a5a;
+            border-left: 4px solid #7ab8a0;
         }
         .function-name {
             font-size: 1.1em;
             font-weight: bold;
-            color: #5a8a5a;
+            color: #5a8a7a;
             margin-bottom: 8px;
         }
         .function-role {
             display: inline-block;
             padding: 3px 10px;
-            background: rgba(90, 138, 90, 0.15);
-            color: #5a8a5a;
+            background: rgba(122, 184, 160, 0.15);
+            color: #5a8a7a;
             border-radius: 12px;
             font-size: 0.75em;
             font-weight: 600;
@@ -230,72 +233,25 @@
         }
         .function-desc { font-size: 0.85em; color: #666; line-height: 1.7; }
         
-        .analysis-section {
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-        .analysis-item {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px dashed rgba(90, 138, 90, 0.2);
-        }
-        .analysis-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .analysis-label {
-            font-size: 0.95em;
-            color: #5a8a5a;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .analysis-content {
-            font-size: 0.9em;
-            color: #444;
-            line-height: 2;
-            text-align: justify;
-        }
-        
-        .suggestions-section {
-            padding: 25px;
-            background: linear-gradient(135deg, rgba(39, 174, 96, 0.08), rgba(34, 153, 84, 0.08));
-            border-radius: 15px;
-            border-left: 4px solid #27ae60;
-        }
-        .suggestion-item {
-            margin-bottom: 15px;
-            padding-left: 25px;
-            position: relative;
-        }
-        .suggestion-item::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #27ae60;
-            font-weight: bold;
-        }
-        .suggestion-text { font-size: 0.9em; color: #444; line-height: 1.8; }
-        
         .back-link { text-align: center; margin-top: 25px; }
         .back-link a {
             color: #fff;
             text-decoration: none;
             padding: 12px 28px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15));
+            background: linear-gradient(135deg, rgba(122, 184, 160, 0.8), rgba(138, 200, 176, 0.8));
             border-radius: 25px;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
             font-weight: 600;
             display: inline-block;
         }
         .back-link a:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.25));
+            background: linear-gradient(135deg, rgba(122, 184, 160, 1), rgba(138, 200, 176, 1));
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
         
         .loading-section { text-align: center; padding: 50px 30px; }
-        #loadingText { font-size: 0.9em; color: #5a8a5a; margin-bottom: 12px; font-style: italic; }
+        #loadingText { font-size: 0.9em; color: #7ab8a0; margin-bottom: 12px; font-style: italic; }
         
         @media (max-width: 600px) {
             .card { padding: 30px 20px; }
@@ -312,8 +268,7 @@
     <div class="container">
         <div class="card">
             <h1 class="title">MBTI 人格类型检测</h1>
-            <p class="subtitle">基于荣格八维认知功能理论的专业人格分析</p>
-            <p class="accuracy-notice">⚠️ 当前使用语义分析模式（简化版），精确度有限，仅供参考～ AI 精准分析功能开发中...</p>
+            <p class="subtitle">基于语义分析的人格类型测试</p>
             
             <div class="tabs">
                 <button class="tab-btn active" onclick="switchTab('text')">📝 粘贴简介</button>
@@ -327,23 +282,22 @@
             
             <div id="linkSection" class="input-section hidden">
                 <label class="input-label">请输入 Neta 人物链接或安利语</label>
-                <div style="padding: 20px; background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.1)); border: 2px dashed rgba(255, 152, 0, 0.4); border-radius: 12px; text-align: center; margin-bottom: 15px;">
-                    <div style="font-size: 1.1em; color: #ff9800; font-weight: bold; margin-bottom: 8px;">🔧 维护中……</div>
+                <div style="padding: 20px; background: linear-gradient(135deg, rgba(255, 193, 7, 0.08), rgba(255, 152, 0, 0.08)); border: 2px dashed rgba(255, 152, 0, 0.3); border-radius: 12px; text-align: center; margin-bottom: 15px;">
+                    <div style="font-size: 1.1em; color: #ffb84d; font-weight: bold; margin-bottom: 8px;">🔧 维护中……</div>
                     <div style="font-size: 0.85em; color: #888; line-height: 1.6;">
-                        由于 API 接口升级，链接自动获取功能暂时不可用<br>
-                        请切换到「📝 粘贴简介」标签页手动输入～<br>
-                        <span style="color: #aaa; font-size: 0.8em;">（恢复时间待定）</span>
+                        链接自动获取功能暂时不可用<br>
+                        请切换到「📝 粘贴简介」标签页手动输入～
                     </div>
                 </div>
                 <textarea class="input-box" id="linkInput" disabled style="opacity: 0.5; background: #f5f5f5;"></textarea>
             </div>
             
-            <button class="btn btn-primary" onclick="analyzeMBTI()" id="analyzeBtn">🔬 开始专业分析</button>
+            <button class="btn btn-primary" onclick="analyzeMBTI()" id="analyzeBtn">🔬 开始分析</button>
             
             <div class="loading-section hidden" id="loadingSection">
-                <div id="loadingText" style="font-size: 0.9em; color: #5a8a5a; margin-bottom: 12px; font-style: italic;">执行者雨落正在读你的心……</div>
-                <div style="width: 250px; height: 8px; background: rgba(90, 138, 90, 0.2); border-radius: 4px; margin: 0 auto; overflow: hidden;">
-                    <div id="loadingBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #5a8a5a, #6a9a6a, #7aaa7a); border-radius: 4px; transition: width 0.3s ease;"></div>
+                <div id="loadingText" style="font-size: 0.9em; color: #7ab8a0; margin-bottom: 12px; font-style: italic;">执行者雨落正在读你的心……</div>
+                <div style="width: 250px; height: 8px; background: rgba(122, 184, 160, 0.2); border-radius: 4px; margin: 0 auto; overflow: hidden;">
+                    <div id="loadingBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #7ab8a0, #8ac8b0, #9ad8c0); border-radius: 4px; transition: width 0.3s ease;"></div>
                 </div>
             </div>
             
@@ -382,7 +336,7 @@
         }
 
         // ========== 语义分析引擎 ==========
-        // 简单关键词匹配，确保能正常工作
+        // 基于完整语义的关键词匹配
         
         const semanticPatterns = {
             E: [
@@ -391,8 +345,11 @@
                 { pattern: /活泼/g, weight: 2, desc: '活泼' },
                 { pattern: /朋友多/g, weight: 2, desc: '朋友多' },
                 { pattern: /热闹/g, weight: 2, desc: '喜欢热闹' },
-                { pattern: /一个人/g, weight: -3, desc: '不喜欢一个人（反向）' },
-                { pattern: /独处/g, weight: -3, desc: '不喜欢独处（反向）' }
+                { pattern: /人群/g, weight: 2, desc: '喜欢人群' },
+                { pattern: /交流/g, weight: 2, desc: '喜欢交流' },
+                { pattern: /一个人/g, weight: -3, desc: '不喜欢一个人' },
+                { pattern: /独处/g, weight: -3, desc: '不喜欢独处' },
+                { pattern: /安静/g, weight: -2, desc: '不喜欢安静' }
             ],
             I: [
                 { pattern: /喜欢一个人/g, weight: 3, desc: '偏好独处' },
@@ -400,8 +357,11 @@
                 { pattern: /内向/g, weight: 2, desc: '内向' },
                 { pattern: /安静/g, weight: 2, desc: '安静' },
                 { pattern: /宅/g, weight: 2, desc: '宅' },
-                { pattern: /社交/g, weight: -2, desc: '不喜欢社交（反向）' },
-                { pattern: /累/g, weight: -2, desc: '社交累（反向）' }
+                { pattern: /思考/g, weight: 2, desc: '喜欢思考' },
+                { pattern: /阅读/g, weight: 2, desc: '喜欢阅读' },
+                { pattern: /社交/g, weight: -2, desc: '不喜欢社交' },
+                { pattern: /累/g, weight: -2, desc: '社交累' },
+                { pattern: /热闹/g, weight: -2, desc: '不喜欢热闹' }
             ],
             S: [
                 { pattern: /注重细节/g, weight: 3, desc: '注重细节' },
@@ -409,8 +369,11 @@
                 { pattern: /现实/g, weight: 2, desc: '现实' },
                 { pattern: /经验/g, weight: 2, desc: '依赖经验' },
                 { pattern: /脚踏实地/g, weight: 2, desc: '脚踏实地' },
-                { pattern: /想象/g, weight: -2, desc: '不喜欢想象（反向）' },
-                { pattern: /抽象/g, weight: -2, desc: '不喜欢抽象（反向）' }
+                { pattern: /事实/g, weight: 2, desc: '注重事实' },
+                { pattern: /具体/g, weight: 2, desc: '具体' },
+                { pattern: /当下/g, weight: 2, desc: '关注当下' },
+                { pattern: /想象/g, weight: -2, desc: '不喜欢想象' },
+                { pattern: /抽象/g, weight: -2, desc: '不喜欢抽象' }
             ],
             N: [
                 { pattern: /喜欢想象/g, weight: 3, desc: '偏好想象' },
@@ -418,8 +381,11 @@
                 { pattern: /理论/g, weight: 2, desc: '理论' },
                 { pattern: /未来/g, weight: 2, desc: '未来导向' },
                 { pattern: /创意/g, weight: 2, desc: '创意' },
-                { pattern: /细节/g, weight: -2, desc: '不喜欢细节（反向）' },
-                { pattern: /无聊/g, weight: -2, desc: '觉得无聊（反向）' }
+                { pattern: /灵感/g, weight: 2, desc: '灵感' },
+                { pattern: /可能性/g, weight: 2, desc: '可能性' },
+                { pattern: /本质/g, weight: 2, desc: '探索本质' },
+                { pattern: /细节/g, weight: -2, desc: '不喜欢细节' },
+                { pattern: /无聊/g, weight: -2, desc: '觉得无聊' }
             ],
             T: [
                 { pattern: /理性/g, weight: 3, desc: '理性' },
@@ -428,7 +394,10 @@
                 { pattern: /客观/g, weight: 2, desc: '客观' },
                 { pattern: /公平/g, weight: 2, desc: '公平' },
                 { pattern: /原则/g, weight: 2, desc: '原则' },
-                { pattern: /感情用事/g, weight: -2, desc: '不感情用事（反向）' }
+                { pattern: /推理/g, weight: 2, desc: '推理' },
+                { pattern: /对错/g, weight: 2, desc: '注重对错' },
+                { pattern: /感情用事/g, weight: -2, desc: '不感情用事' },
+                { pattern: /情绪化/g, weight: -2, desc: '不情绪化' }
             ],
             F: [
                 { pattern: /感性/g, weight: 3, desc: '感性' },
@@ -438,7 +407,9 @@
                 { pattern: /体贴/g, weight: 2, desc: '体贴' },
                 { pattern: /善良/g, weight: 2, desc: '善良' },
                 { pattern: /和谐/g, weight: 2, desc: '和谐' },
-                { pattern: /冷漠/g, weight: -2, desc: '不冷漠（反向）' }
+                { pattern: /他人感受/g, weight: 2, desc: '在意他人感受' },
+                { pattern: /冷漠/g, weight: -2, desc: '不冷漠' },
+                { pattern: /无情/g, weight: -2, desc: '不无情' }
             ],
             J: [
                 { pattern: /喜欢计划/g, weight: 3, desc: '喜欢计划' },
@@ -448,7 +419,9 @@
                 { pattern: /条理/g, weight: 2, desc: '条理' },
                 { pattern: /自律/g, weight: 2, desc: '自律' },
                 { pattern: /按时/g, weight: 2, desc: '按时' },
-                { pattern: /拖延/g, weight: -2, desc: '不拖延（反向）' }
+                { pattern: /准时/g, weight: 2, desc: '准时' },
+                { pattern: /完成/g, weight: 2, desc: '追求完成' },
+                { pattern: /拖延/g, weight: -2, desc: '不拖延' }
             ],
             P: [
                 { pattern: /喜欢自由/g, weight: 3, desc: '喜欢自由' },
@@ -457,8 +430,10 @@
                 { pattern: /随意/g, weight: 2, desc: '随意' },
                 { pattern: /随性/g, weight: 2, desc: '随性' },
                 { pattern: /探索/g, weight: 2, desc: '探索' },
+                { pattern: /新鲜感/g, weight: 2, desc: '新鲜感' },
                 { pattern: /束缚/g, weight: 2, desc: '讨厌束缚' },
-                { pattern: /限制/g, weight: 2, desc: '讨厌限制' }
+                { pattern: /限制/g, weight: 2, desc: '讨厌限制' },
+                { pattern: /计划/g, weight: -2, desc: '不喜欢计划' }
             ]
         };
         
@@ -482,22 +457,86 @@
         };
 
         const typeDescriptions = {
-            'INTJ': { name: '建筑师型', desc: '富有想象力和战略性的思想家，一切皆在计划之中' },
-            'INTP': { name: '逻辑学家型', desc: '具有创造力的发明家，对知识有着止不住的渴望' },
-            'ENTJ': { name: '指挥官型', desc: '大胆、富有想象力且意志强大的领导者' },
-            'ENTP': { name: '辩论家型', desc: '聪明好奇的思想者，不会放弃任何智力上的挑战' },
-            'INFJ': { name: '提倡者型', desc: '安静而神秘，同时鼓舞人心且不知疲倦的理想主义者' },
-            'INFP': { name: '调停者型', desc: '诗意、善良的利他主义者，总是热情地为正当理由提供帮助' },
-            'ENFJ': { name: '主人公型', desc: '富有魅力、鼓舞人心的领导者，有能力让听众为之着迷' },
-            'ENFP': { name: '竞选者型', desc: '热情、有创造力、爱社交的自由人，总能找到理由微笑' },
-            'ISTJ': { name: '物流师型', desc: '实用、注重事实的可靠人士' },
-            'ISFJ': { name: '守卫者型', desc: '非常专注而温暖的守护者，时刻准备着保护爱着的人们' },
-            'ESTJ': { name: '总经理型', desc: '出色的管理者，在管理事情或人的方面无与伦比' },
-            'ESFJ': { name: '执政官型', desc: '极有同情心、爱社交、受欢迎的人，总是热心提供帮助' },
-            'ISTP': { name: '鉴赏家型', desc: '大胆而实际的实验家，擅长使用各种形式的工具' },
-            'ISFP': { name: '探险家型', desc: '有魅力、随时准备探索未知的新鲜事物' },
-            'ESTP': { name: '企业家型', desc: '聪明、精力充沛、善于感知的人，真心享受生活在边缘' },
-            'ESFP': { name: '表演者型', desc: '自发的、精力充沛、热情的表演者——生活在他们周围永远不会无聊' }
+            'INTJ': { 
+                name: '建筑师型', 
+                desc: '富有想象力和战略性的思想家，一切皆在计划之中',
+                intro: 'INTJ 是独立、理性、富有战略眼光的思想家。他们擅长制定长远计划，喜欢独立思考，追求知识和能力。INTJ 通常比较内向，但对感兴趣的事物会表现出极大的热情和专注。他们重视逻辑和效率，不喜欢重复和无意义的工作。'
+            },
+            'INTP': { 
+                name: '逻辑学家型', 
+                desc: '具有创造力的发明家，对知识有着止不住的渴望',
+                intro: 'INTP 是好奇、理性、富有创造力的思考者。他们对抽象概念和理论有着浓厚的兴趣，喜欢探索事物的本质和规律。INTP 通常比较安静，但内心充满了好奇和想法。他们重视真理和知识，喜欢独立研究和思考。'
+            },
+            'ENTJ': { 
+                name: '指挥官型', 
+                desc: '大胆、富有想象力且意志强大的领导者',
+                intro: 'ENTJ 是自信、果断、天生的领导者。他们擅长制定战略和计划，喜欢挑战和竞争。ENTJ 通常比较外向，善于表达和说服他人。他们重视效率和成果，喜欢带领团队实现目标。'
+            },
+            'ENTP': { 
+                name: '辩论家型', 
+                desc: '聪明好奇的思想者，不会放弃任何智力上的挑战',
+                intro: 'ENTP 是机智、好奇、富有创造力的思考者。他们喜欢探索新想法和可能性，擅长辩论和说服。ENTP 通常比较外向，喜欢与人交流和讨论。他们重视智慧和创意，不喜欢重复和常规。'
+            },
+            'INFJ': { 
+                name: '提倡者型', 
+                desc: '安静而神秘，同时鼓舞人心且不知疲倦的理想主义者',
+                intro: 'INFJ 是理想主义、富有同情心、深刻的思考者。他们关心他人，追求意义和价值。INFJ 通常比较内向，但对人类和社会有着深刻的洞察。他们重视和谐与真诚，喜欢帮助他人成长。'
+            },
+            'INFP': { 
+                name: '调停者型', 
+                desc: '诗意、善良的利他主义者，总是热情地为正当理由提供帮助',
+                intro: 'INFP 是理想主义、善良、富有想象力的梦想家。他们重视个人价值和意义，追求真实和和谐。INFP 通常比较内向，但内心充满热情和理想。他们重视情感和创意，喜欢帮助他人实现潜能。'
+            },
+            'ENFJ': { 
+                name: '主人公型', 
+                desc: '富有魅力、鼓舞人心的领导者，有能力让听众为之着迷',
+                intro: 'ENFJ 是热情、富有同情心、天生的领导者。他们关心他人，擅长激励和引导。ENFJ 通常比较外向，善于表达和沟通。他们重视和谐与成长，喜欢帮助他人发挥潜能。'
+            },
+            'ENFP': { 
+                name: '竞选者型', 
+                desc: '热情、有创造力、爱社交的自由人，总能找到理由微笑',
+                intro: 'ENFP 是热情、好奇、富有创造力的探索者。他们喜欢探索新想法和可能性，擅长与人交流。ENFP 通常比较外向，充满活力和创意。他们重视自由和真实，喜欢追求有意义的目标。'
+            },
+            'ISTJ': { 
+                name: '物流师型', 
+                desc: '实用、注重事实的可靠人士',
+                intro: 'ISTJ 是务实、可靠、注重细节的执行者。他们重视责任和承诺，擅长组织和规划。ISTJ 通常比较内向，但工作认真负责。他们重视事实和传统，喜欢按部就班地完成任务。'
+            },
+            'ISFJ': { 
+                name: '守卫者型', 
+                desc: '非常专注而温暖的守护者，时刻准备着保护爱着的人们',
+                intro: 'ISFJ 是温暖、可靠、富有同情心的守护者。他们关心他人，重视和谐与稳定。ISFJ 通常比较内向，但对家人和朋友非常忠诚。他们重视传统和责任，喜欢默默付出。'
+            },
+            'ESTJ': { 
+                name: '总经理型', 
+                desc: '出色的管理者，在管理事情或人的方面无与伦比',
+                intro: 'ESTJ 是务实、果断、高效的组织者。他们擅长管理和执行，重视秩序和规则。ESTJ 通常比较外向，喜欢领导和组织。他们重视效率和成果，喜欢按计划完成任务。'
+            },
+            'ESFJ': { 
+                name: '执政官型', 
+                desc: '极有同情心、爱社交、受欢迎的人，总是热心提供帮助',
+                intro: 'ESFJ 是热情、友好、富有同情心的照顾者。他们关心他人，重视和谐与关系。ESFJ 通常比较外向，善于社交和沟通。他们重视传统和责任，喜欢帮助和支持他人。'
+            },
+            'ISTP': { 
+                name: '鉴赏家型', 
+                desc: '大胆而实际的实验家，擅长使用各种形式的工具',
+                intro: 'ISTP 是务实、灵活、善于动手的问题解决者。他们喜欢探索和实验，擅长使用工具和技术。ISTP 通常比较内向，但行动力强。他们重视自由和效率，喜欢解决实际问题。'
+            },
+            'ISFP': { 
+                name: '探险家型', 
+                desc: '有魅力、随时准备探索未知的新鲜事物',
+                intro: 'ISFP 是温和、敏感、富有艺术气息的探索者。他们重视个人价值和自由，喜欢体验和感受。ISFP 通常比较内向，但内心充满热情。他们重视和谐与真实，喜欢用创意表达自己。'
+            },
+            'ESTP': { 
+                name: '企业家型', 
+                desc: '聪明、精力充沛、善于感知的人，真心享受生活在边缘',
+                intro: 'ESTP 是活力四射、务实、善于应变的行动派。他们喜欢冒险和挑战，擅长应对突发情况。ESTP 通常比较外向，充满活力和魅力。他们重视自由和效率，喜欢享受当下。'
+            },
+            'ESFP': { 
+                name: '表演者型', 
+                desc: '自发的、精力充沛、热情的表演者——生活在他们周围永远不会无聊',
+                intro: 'ESFP 是热情、活泼、富有感染力的表演者。他们喜欢与人交流和分享，擅长活跃气氛。ESFP 通常比较外向，充满活力和热情。他们重视快乐和体验，喜欢享受生活和当下。'
+            }
         };
 
         function getOppositeDimension(dim) {
@@ -506,7 +545,6 @@
         }
 
         function analyzeSemantically(text) {
-            console.log('开始分析文本，长度:', text.length);
             const scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
             const matchedPatterns = { E: [], I: [], S: [], N: [], T: [], F: [], J: [], P: [] };
             
@@ -514,7 +552,6 @@
                 for (const { pattern, weight, desc } of patterns) {
                     const match = text.match(pattern);
                     if (match) {
-                        console.log('匹配到:', dimension, desc, '权重:', weight);
                         if (weight > 0) {
                             scores[dimension] += weight;
                             if (!matchedPatterns[dimension].includes(desc)) {
@@ -531,7 +568,6 @@
                 }
             }
             
-            console.log('分析结果:', scores);
             return { scores, matchedPatterns };
         }
 
@@ -572,35 +608,13 @@
                 type: mbtiType,
                 name: typeInfo.name,
                 desc: typeInfo.desc,
+                intro: typeInfo.intro,
                 confidence,
                 percents,
                 scores,
                 matchedPatterns,
-                stack: stack,
-                suggestions: generateSuggestions(mbtiType)
+                stack: stack
             };
-        }
-
-        function generateSuggestions(mbtiType) {
-            const suggestions = {
-                'INTJ': ['适当放松对完美的追求', '多关注当下和身边人的感受', '学会表达情感', '在行动前多听取他人意见'],
-                'INTP': ['将想法付诸实践', '学会做决定并坚持执行', '多参与社交活动', '关注他人的情感需求'],
-                'ENTJ': ['倾听他人的想法', '关注团队成员的情感需求', '适当放慢节奏', '学会欣赏过程中的美好'],
-                'ENTP': ['学会坚持完成项目', '在做决定时多考虑他人的感受', '培养耐心和毅力', '学会倾听'],
-                'INFJ': ['学会设立边界', '多关注自己的需求', '接受不完美', '学会直接表达'],
-                'INFP': ['将理想付诸行动', '学会面对冲突', '培养批判性思维', '学会做决定并坚持'],
-                'ENFJ': ['关注自己的需求', '学会接受批评', '培养独立思考能力', '学会说不'],
-                'ENFP': ['学会专注', '培养自律', '学会面对负面情绪', '在做决定时多考虑现实因素'],
-                'ISTJ': ['尝试接受新的方法和想法', '学会灵活应变', '多表达情感', '学会放松'],
-                'ISFJ': ['学会表达自己的需求', '接受变化', '培养自信', '学会说不'],
-                'ESTJ': ['倾听他人的想法', '学会灵活应变', '关注他人的情感需求', '学会放松'],
-                'ESFJ': ['学会独立思考', '接受不同的价值观', '关注自己的需求', '学会面对冲突'],
-                'ISTP': ['学会表达情感', '培养长远规划能力', '学会承诺并坚持', '多关注他人的情感需求'],
-                'ISFP': ['学会表达自己', '培养规划能力', '学会面对冲突和批评', '多关注逻辑和客观事实'],
-                'ESTP': ['学会三思而后行', '培养长远规划能力', '关注他人的情感需求', '学会承诺和责任'],
-                'ESFP': ['学会规划和自律', '培养深度思考能力', '学会面对负面情绪', '多关注长远目标']
-            };
-            return suggestions[mbtiType] || [];
         }
 
         async function analyzeMBTI() {
@@ -650,18 +664,10 @@
 
         function showResult(input) {
             try {
-                console.log('=== 开始分析 ===');
                 const functionScores = analyzeSemantically(input);
-                console.log('分析得分:', functionScores);
-                
                 const mbtiType = deriveMBTIType(functionScores);
-                console.log('MBTI 类型:', mbtiType);
-                
                 const report = generateProfessionalReport(input, mbtiType, functionScores);
-                console.log('生成报告:', report);
-                
                 displayResult(mbtiType, report);
-                console.log('=== 分析完成 ===');
             } catch (error) {
                 console.error('分析过程出错:', error);
                 showToast('分析失败：' + error.message);
@@ -684,19 +690,8 @@
             };
             return descs[func];
         }
-        
-        function getDimensionName(dim) {
-            const names = {
-                'E': '外向', 'I': '内向',
-                'S': '实感', 'N': '直觉',
-                'T': '理性', 'F': '感性',
-                'J': '判断', 'P': '感知'
-            };
-            return names[dim];
-        }
 
         function displayResult(mbtiType, report) {
-            console.log('显示结果，类型:', mbtiType);
             const resultSection = document.getElementById('mbtiResultSection');
             const resultDiv = document.getElementById('mbtiResult');
             
@@ -714,11 +709,15 @@
                     <div class="mbti-type">${report.type}</div>
                     <div class="mbti-name">${report.name} · ${report.desc}</div>
                     <div class="confidence-badge">分析置信度：${report.confidence}</div>
-                    <div style="margin-top: 10px; font-size: 0.8em; color: #999;">分析模式：语义分析（简化版）</div>
+                </div>
+                
+                <div class="type-description">
+                    <h3>📖 人格简介</h3>
+                    <p>${report.intro}</p>
                 </div>
                 
                 <div class="dimensions-section">
-                    <div class="section-title">📊 四维度分析</div>
+                    <div class="section-title">📊 八维分布</div>
                     <div class="dimension-row">
                         <div class="dimension-label" style="text-align: right;">外向 E ${report.percents.E}%</div>
                         <div class="dimension-bar-container">
@@ -760,32 +759,13 @@
                             <div class="function-card">
                                 <div class="function-name">${func} · ${stackNames[func]}</div>
                                 <div class="function-role">${roleNames[i]}</div>
-                                <div class="function-desc">${stackNames[func]}——${getFunctionDesc(func)}</div>
+                                <div class="function-desc">${getFunctionDesc(func)}</div>
                             </div>
                         `).join('')}
                     </div>
                 </div>
                 
-                <div class="analysis-section">
-                    <div class="section-title">📝 语义模式识别</div>
-                    ${Object.entries(report.matchedPatterns).filter(([_, pats]) => pats.length > 0).map(([dim, pats]) => `
-                        <div class="analysis-item">
-                            <div class="analysis-label">${getDimensionName(dim)}（得分：${report.scores[dim]}）</div>
-                            <div class="analysis-content">识别到：${pats.join('、')}</div>
-                        </div>
-                    `).join('')}
-                </div>
-                
-                <div class="suggestions-section">
-                    <div class="section-title" style="color: #27ae60; border-color: rgba(39, 174, 96, 0.3);">💡 个人发展建议</div>
-                    ${report.suggestions.map(s => `
-                        <div class="suggestion-item">
-                            <div class="suggestion-text">${s}</div>
-                        </div>
-                    `).join('')}
-                </div>
-                
-                <div style="margin-top: 20px; padding: 15px; background: rgba(102, 126, 234, 0.05); border-radius: 10px; font-size: 0.85em; color: #888; text-align: center;">
+                <div style="margin-top: 20px; padding: 15px; background: rgba(122, 184, 160, 0.05); border-radius: 10px; font-size: 0.85em; color: #888; text-align: center;">
                     ⚠️ 本分析基于语义模式识别，仅供参考。专业人格评估需要结合面谈、量表等多种方法。
                 </div>
             `;
@@ -798,7 +778,8 @@
             const resultDiv = document.getElementById('mbtiResult');
             const type = resultDiv.querySelector('.mbti-type').textContent;
             const name = resultDiv.querySelector('.mbti-name').textContent;
-            const text = `MBTI 人格类型：${type} - ${name}\n\n（完整报告请查看页面）`;
+            const intro = resultDiv.querySelector('.type-description p').textContent;
+            const text = `MBTI 人格类型：${type} - ${name}\n\n${intro}`;
             const tempInput = document.createElement('textarea');
             tempInput.value = text;
             document.body.appendChild(tempInput);
