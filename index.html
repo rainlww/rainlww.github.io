@@ -58,12 +58,29 @@
         .loading-text {
             font-size: 2.8em;
             color: #fff;
-            font-weight: 300;
+            font-weight: bold;
             font-family: 'Comic Sans MS', 'Chalkboard', 'YouYuan', 'Microsoft YaHei', cursive;
-            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.5);
             letter-spacing: 5px;
             position: relative;
             z-index: 10;
+        }
+
+        /* 云层 */
+        .cloud {
+            position: absolute;
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            animation: cloudFloat linear infinite;
+        }
+
+        @keyframes cloudFloat {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(100vw);
+            }
         }
 
         /* 主页 */
@@ -527,6 +544,26 @@
             }
         }
 
+        // 创建云层
+        function createClouds() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const cloudCount = 8;
+            
+            for (let i = 0; i < cloudCount; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud';
+                const size = Math.random() * 200 + 150;
+                cloud.style.width = size + 'px';
+                cloud.style.height = (size * 0.6) + 'px';
+                cloud.style.top = Math.random() * 60 + '%';
+                cloud.style.left = Math.random() * 100 + '%';
+                cloud.style.animationDuration = (Math.random() * 20 + 20) + 's';
+                cloud.style.animationDelay = (Math.random() * 10) + 's';
+                cloud.style.opacity = Math.random() * 0.4 + 0.2;
+                loadingScreen.appendChild(cloud);
+            }
+        }
+
         // 页面加载
         window.addEventListener('DOMContentLoaded', function() {
             const loadingScreen = document.getElementById('loading-screen');
@@ -535,6 +572,9 @@
             
             // 创建下雨效果
             createRain();
+            
+            // 创建云层效果
+            createClouds();
             
             // 省略号动画
             let dotCount = 0;
