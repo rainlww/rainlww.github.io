@@ -44,7 +44,6 @@
             font-weight: bold;
             font-family: 'Comic Sans MS', 'Chalkboard', 'YouYuan', 'Microsoft YaHei', cursive;
             text-shadow: 0 3px 15px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.5);
-            margin-bottom: 30px;
             letter-spacing: 5px;
             animation: bounce 4s ease-in-out infinite;
         }
@@ -64,30 +63,6 @@
             75% {
                 transform: translateY(-10px) scale(1.05);
             }
-        }
-
-        .loading-bar-container {
-            width: 300px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .loading-bar {
-            width: 0%;
-            height: 100%;
-            background: #fff;
-            border-radius: 10px;
-            transition: width 0.3s ease;
-            animation: loading 2s ease-in-out infinite;
-        }
-
-        @keyframes loading {
-            0% { width: 0%; }
-            50% { width: 70%; }
-            100% { width: 100%; }
         }
 
         /* 主页 */
@@ -366,10 +341,7 @@
 <body>
     <!-- Loading 页面 -->
     <div id="loading-screen">
-        <div class="loading-text">Loading...</div>
-        <div class="loading-bar-container">
-            <div class="loading-bar"></div>
-        </div>
+        <div class="loading-text" id="loadingText">Loading</div>
     </div>
 
     <!-- 主页 -->
@@ -505,7 +477,18 @@
         window.addEventListener('DOMContentLoaded', function() {
             const loadingScreen = document.getElementById('loading-screen');
             const mainScreen = document.getElementById('main-screen');
-            const loadingBar = document.querySelector('.loading-bar');
+            const loadingText = document.getElementById('loadingText');
+            
+            // 省略号动画（0-1-2-3-0 循环）
+            let dotCount = 0;
+            const dotInterval = setInterval(function() {
+                dotCount = (dotCount + 1) % 4;
+                let dots = '';
+                for (let i = 0; i < dotCount; i++) {
+                    dots += '.';
+                }
+                loadingText.textContent = 'Loading' + dots;
+            }, 400);
             
             // 预加载背景图片
             let loadedImages = 0;
@@ -516,11 +499,10 @@
                 img.src = src;
                 img.onload = function() {
                     loadedImages++;
-                    const progress = Math.floor((loadedImages / totalImages) * 100);
-                    loadingBar.style.width = progress + '%';
                     
                     if (loadedImages >= totalImages) {
-                        // 图片加载完成，显示页面
+                        // 图片加载完成，停止动画，显示页面
+                        clearInterval(dotInterval);
                         setTimeout(function() {
                             loadingScreen.classList.add('hidden');
                             mainScreen.classList.add('visible');
@@ -541,7 +523,12 @@
             setTimeout(function() {
                 if (loadedImages < totalImages) {
                     // 图片还没加载完，继续等
-                    loadingBar.style.width = '50%';
+                } else {
+                    clearInterval(dotInterval);
+                    loadingScreen.classList.add('hidden');
+                    mainScreen.classList.add('visible');
+                    currentBgIndex = Math.floor(Math.random() * backgrounds.length);
+                    setBackground(currentBgIndex);
                 }
             }, 1500);
         });
