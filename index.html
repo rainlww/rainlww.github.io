@@ -81,8 +81,9 @@
         /* 云层 */
         .cloud {
             position: absolute;
-            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 70%);
             border-radius: 50%;
+            filter: blur(20px);
             animation: cloudFloat linear infinite;
         }
 
@@ -574,19 +575,18 @@
         // 创建云层
         function createClouds() {
             const loadingScreen = document.getElementById('loading-screen');
-            const cloudCount = 8;
+            const cloudCount = 12;  // 增加到 12 层
             
             for (let i = 0; i < cloudCount; i++) {
                 const cloud = document.createElement('div');
                 cloud.className = 'cloud';
-                const size = Math.random() * 200 + 150;
+                const size = Math.random() * 300 + 200;  // 更大的云
                 cloud.style.width = size + 'px';
-                cloud.style.height = (size * 0.6) + 'px';
-                cloud.style.top = Math.random() * 60 + '%';
+                cloud.style.height = (size * 0.7) + 'px';
+                cloud.style.top = Math.random() * 70 + '%';
                 cloud.style.left = Math.random() * 100 + '%';
-                cloud.style.animationDuration = (Math.random() * 20 + 20) + 's';
-                cloud.style.animationDelay = (Math.random() * 10) + 's';
-                cloud.style.opacity = Math.random() * 0.4 + 0.2;
+                cloud.style.animationDuration = (Math.random() * 15 + 15) + 's';  // 更快
+                cloud.style.animationDelay = (Math.random() * 5) + 's';
                 loadingScreen.appendChild(cloud);
             }
         }
@@ -651,9 +651,6 @@
                 mainScreen.classList.add('visible');
                 currentBgIndex = Math.floor(Math.random() * backgrounds.length);
                 setBackground(currentBgIndex);
-                
-                // 主页开始下小雨
-                createPageRain();
             }, 3500);
         });
 
