@@ -112,14 +112,15 @@
         }
 
         .section-label {
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1em;
+            color: #fff;
             text-align: left;
             margin-bottom: 15px;
             margin-top: 10px;
             letter-spacing: 2px;
             font-style: italic;
-            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
         }
 
         .entries-grid {
@@ -351,7 +352,7 @@
             <h1 class="title">欢迎来到雨落的世界！</h1>
 
             <!-- 第一行：有关雨落们的事 -->
-            <p class="section-label">——有关雨落们的事</p>
+            <p class="section-label">有关雨落们的事</p>
             <div class="entries-grid">
                 <!-- 雨落们的观测记录 -->
                 <div class="entry-card" onclick="window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;">
@@ -477,20 +478,11 @@
             }
         }
 
-        // 页面加载 - 超快模式
+        // 页面加载
         window.addEventListener('DOMContentLoaded', function() {
             const loadingScreen = document.getElementById('loading-screen');
             const mainScreen = document.getElementById('main-screen');
             const loadingText = document.getElementById('loadingText');
-            
-            // 立即随机设置背景（第一张）
-            currentBgIndex = Math.floor(Math.random() * backgrounds.length);
-            setBackground(currentBgIndex);
-            
-            // 预加载另一张背景图（后台加载，不影响显示）
-            const nextIndex = (currentBgIndex + 1) % backgrounds.length;
-            const preloadImg = new Image();
-            preloadImg.src = backgrounds[nextIndex];
             
             // 省略号动画
             let dotCount = 0;
@@ -501,14 +493,46 @@
                     dots += '.';
                 }
                 loadingText.textContent = 'Loading' + dots;
-            }, 300);
+            }, 400);
             
-            // 0.8 秒后直接显示页面（不等图片）
+            // 预加载背景图片
+            let loadedImages = 0;
+            const totalImages = backgrounds.length;
+            
+            backgrounds.forEach(function(src) {
+                const img = new Image();
+                img.src = src;
+                img.onload = function() {
+                    loadedImages++;
+                    if (loadedImages >= totalImages) {
+                        clearInterval(dotInterval);
+                        loadingScreen.classList.add('hidden');
+                        mainScreen.classList.add('visible');
+                        currentBgIndex = Math.floor(Math.random() * backgrounds.length);
+                        setBackground(currentBgIndex);
+                    }
+                };
+                img.onerror = function() {
+                    console.log('图片加载失败：' + src);
+                    loadedImages++;
+                    if (loadedImages >= totalImages) {
+                        clearInterval(dotInterval);
+                        loadingScreen.classList.add('hidden');
+                        mainScreen.classList.add('visible');
+                        currentBgIndex = Math.floor(Math.random() * backgrounds.length);
+                        setBackground(currentBgIndex);
+                    }
+                };
+            });
+            
+            // 最多等 2 秒
             setTimeout(function() {
                 clearInterval(dotInterval);
                 loadingScreen.classList.add('hidden');
                 mainScreen.classList.add('visible');
-            }, 800);
+                currentBgIndex = Math.floor(Math.random() * backgrounds.length);
+                setBackground(currentBgIndex);
+            }, 2000);
         });
 
         // 导航函数
