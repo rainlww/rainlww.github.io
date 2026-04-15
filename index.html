@@ -97,21 +97,37 @@
             z-index: 10;
         }
 
-        /* 云层 */
+        /* 水墨云层 */
         .cloud {
             position: absolute;
-            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 70%);
-            border-radius: 50%;
-            filter: blur(20px);
-            animation: cloudFloat linear infinite;
+            background: radial-gradient(ellipse at center, rgba(200, 200, 200, 0.4) 0%, rgba(150, 150, 150, 0.2) 30%, rgba(100, 100, 100, 0.1) 50%, rgba(50, 50, 50, 0) 70%);
+            border-radius: 50% 60% 40% 70% / 60% 50% 70% 40%;
+            filter: blur(30px);
+            animation: cloudFloat linear infinite, cloudMorph ease-in-out infinite;
+            opacity: 0.6;
         }
 
         @keyframes cloudFloat {
             from {
-                transform: translateX(-100%);
+                transform: translateX(-100%) scale(0.8);
             }
             to {
-                transform: translateX(100vw);
+                transform: translateX(100vw) scale(1.2);
+            }
+        }
+
+        @keyframes cloudMorph {
+            0%, 100% {
+                border-radius: 50% 60% 40% 70% / 60% 50% 70% 40%;
+            }
+            25% {
+                border-radius: 60% 50% 70% 40% / 50% 70% 40% 60%;
+            }
+            50% {
+                border-radius: 70% 40% 50% 60% / 40% 60% 50% 70%;
+            }
+            75% {
+                border-radius: 40% 70% 60% 50% / 70% 40% 60% 50%;
             }
         }
 
@@ -446,14 +462,15 @@
                     <button class="entry-btn" onclick="window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;">点击进入</button>
                 </div>
 
-                <!-- 雨落们的档案馆 -->
-                <div class="entry-card" onclick="navigateTo('archive.html')">
+                <!-- 雨落们的档案馆（暂未开放） -->
+                <div class="entry-card" style="opacity: 0.5; cursor: not-allowed;" onclick="return false;">
                     <h2 class="entry-title">雨落们的档案馆</h2>
                     <p class="entry-desc">
                         这是千万滴雨落下的瞬间。<br>
-                        每一滴都反射着独特的光芒。
+                        每一滴都反射着独特的光芒。<br>
+                        <span style="color: #8a9a9f; font-size: 0.85em; margin-top: 8px; display: block;">🔒 暂未对外开放</span>
                     </p>
-                    <button class="entry-btn">进入档案馆</button>
+                    <button class="entry-btn" style="background: linear-gradient(135deg, #a0a0a0, #b0b0b0); cursor: not-allowed;">暂未开放</button>
                 </div>
             </div>
 
@@ -591,21 +608,22 @@
             }
         }
 
-        // 创建云层
+        // 创建水墨云层
         function createClouds() {
             const loadingScreen = document.getElementById('loading-screen');
-            const cloudCount = 12;  // 增加到 12 层
+            const cloudCount = 15;  // 15 层水墨云
             
             for (let i = 0; i < cloudCount; i++) {
                 const cloud = document.createElement('div');
                 cloud.className = 'cloud';
-                const size = Math.random() * 300 + 200;  // 更大的云
+                const size = Math.random() * 400 + 300;  // 大云
                 cloud.style.width = size + 'px';
-                cloud.style.height = (size * 0.7) + 'px';
-                cloud.style.top = Math.random() * 70 + '%';
+                cloud.style.height = (size * 0.5) + 'px';
+                cloud.style.top = Math.random() * 80 + '%';
                 cloud.style.left = Math.random() * 100 + '%';
-                cloud.style.animationDuration = (Math.random() * 15 + 15) + 's';  // 更快
-                cloud.style.animationDelay = (Math.random() * 5) + 's';
+                cloud.style.animationDuration = (Math.random() * 20 + 25) + 's';  // 缓慢飘动
+                cloud.style.animationDelay = (Math.random() * 8) + 's';
+                cloud.style.opacity = Math.random() * 0.4 + 0.3;  // 朦胧感
                 loadingScreen.appendChild(cloud);
             }
         }
