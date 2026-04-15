@@ -43,9 +43,9 @@
         .raindrop {
             position: absolute;
             top: -100px;
-            width: 2px;
-            height: 15px;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.6));
+            width: 3px;
+            height: 25px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
             animation: fall linear infinite;
         }
 
@@ -53,6 +53,18 @@
             to {
                 transform: translateY(100vh);
             }
+        }
+
+        /* 主页雨滴 */
+        .page-raindrop {
+            position: fixed;
+            top: -50px;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5));
+            animation: fall linear infinite;
+            pointer-events: none;
+            z-index: 5;
         }
 
         .loading-text {
@@ -531,16 +543,31 @@
         // 创建雨滴
         function createRain() {
             const loadingScreen = document.getElementById('loading-screen');
-            const raindropCount = 50;
+            const raindropCount = 150;  // 增加到 150 个雨滴
             
             for (let i = 0; i < raindropCount; i++) {
                 const raindrop = document.createElement('div');
                 raindrop.className = 'raindrop';
                 raindrop.style.left = Math.random() * 100 + '%';
-                raindrop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+                raindrop.style.animationDuration = (Math.random() * 0.3 + 0.4) + 's';  // 更快
                 raindrop.style.animationDelay = Math.random() * 2 + 's';
-                raindrop.style.opacity = Math.random() * 0.5 + 0.3;
+                raindrop.style.opacity = Math.random() * 0.5 + 0.5;  // 更明显
                 loadingScreen.appendChild(raindrop);
+            }
+        }
+
+        // 创建主页小雨
+        function createPageRain() {
+            const raindropCount = 40;  // 主页小雨，40 个雨滴
+            
+            for (let i = 0; i < raindropCount; i++) {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'page-raindrop';
+                raindrop.style.left = Math.random() * 100 + '%';
+                raindrop.style.animationDuration = (Math.random() * 0.5 + 0.8) + 's';
+                raindrop.style.animationDelay = Math.random() * 3 + 's';
+                raindrop.style.opacity = Math.random() * 0.3 + 0.2;
+                document.body.appendChild(raindrop);
             }
         }
 
@@ -617,14 +644,17 @@
                 };
             });
             
-            // 最多等 2 秒
+            // 最多等 3.5 秒（延长加载时间）
             setTimeout(function() {
                 clearInterval(dotInterval);
                 loadingScreen.classList.add('hidden');
                 mainScreen.classList.add('visible');
                 currentBgIndex = Math.floor(Math.random() * backgrounds.length);
                 setBackground(currentBgIndex);
-            }, 2000);
+                
+                // 主页开始下小雨
+                createPageRain();
+            }, 3500);
         });
 
         // 导航函数
