@@ -477,13 +477,22 @@
             }
         }
 
-        // 页面加载
+        // 页面加载 - 超快模式
         window.addEventListener('DOMContentLoaded', function() {
             const loadingScreen = document.getElementById('loading-screen');
             const mainScreen = document.getElementById('main-screen');
             const loadingText = document.getElementById('loadingText');
             
-            // 省略号动画（0-1-2-3-0 循环）
+            // 立即随机设置背景（第一张）
+            currentBgIndex = Math.floor(Math.random() * backgrounds.length);
+            setBackground(currentBgIndex);
+            
+            // 预加载另一张背景图（后台加载，不影响显示）
+            const nextIndex = (currentBgIndex + 1) % backgrounds.length;
+            const preloadImg = new Image();
+            preloadImg.src = backgrounds[nextIndex];
+            
+            // 省略号动画
             let dotCount = 0;
             const dotInterval = setInterval(function() {
                 dotCount = (dotCount + 1) % 4;
@@ -492,49 +501,14 @@
                     dots += '.';
                 }
                 loadingText.textContent = 'Loading' + dots;
-            }, 400);
+            }, 300);
             
-            // 预加载背景图片
-            let loadedImages = 0;
-            const totalImages = backgrounds.length;
-            
-            backgrounds.forEach(function(src) {
-                const img = new Image();
-                img.src = src;
-                img.onload = function() {
-                    loadedImages++;
-                    
-                    if (loadedImages >= totalImages) {
-                        // 图片加载完成，停止动画，显示页面
-                        clearInterval(dotInterval);
-                        setTimeout(function() {
-                            loadingScreen.classList.add('hidden');
-                            mainScreen.classList.add('visible');
-                            
-                            // 随机设置背景
-                            currentBgIndex = Math.floor(Math.random() * backgrounds.length);
-                            setBackground(currentBgIndex);
-                        }, 500);
-                    }
-                };
-                img.onerror = function() {
-                    console.log('图片加载失败：' + src);
-                    loadedImages++;
-                };
-            });
-            
-            // 最少等待 1.5 秒（确保用户看到 Loading 动画）
+            // 0.8 秒后直接显示页面（不等图片）
             setTimeout(function() {
-                if (loadedImages < totalImages) {
-                    // 图片还没加载完，继续等
-                } else {
-                    clearInterval(dotInterval);
-                    loadingScreen.classList.add('hidden');
-                    mainScreen.classList.add('visible');
-                    currentBgIndex = Math.floor(Math.random() * backgrounds.length);
-                    setBackground(currentBgIndex);
-                }
-            }, 1500);
+                clearInterval(dotInterval);
+                loadingScreen.classList.add('hidden');
+                mainScreen.classList.add('visible');
+            }, 800);
         });
 
         // 导航函数
