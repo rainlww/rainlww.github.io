@@ -17,20 +17,21 @@
             overflow-x: hidden;
         }
 
-        /* Loading 页面 */
+        /* Loading 页面 - 下雨效果 */
         #loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #ADD8E6 100%);
+            background: linear-gradient(135deg, #4a6a7a 0%, #3a5a6a 50%, #2a4a5a 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 9999;
             transition: opacity 0.5s ease;
+            overflow: hidden;
         }
 
         #loading-screen.hidden {
@@ -38,13 +39,31 @@
             pointer-events: none;
         }
 
+        /* 雨滴 */
+        .raindrop {
+            position: absolute;
+            top: -100px;
+            width: 2px;
+            height: 15px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.6));
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
         .loading-text {
             font-size: 2.8em;
             color: #fff;
-            font-weight: bold;
+            font-weight: 300;
             font-family: 'Comic Sans MS', 'Chalkboard', 'YouYuan', 'Microsoft YaHei', cursive;
-            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.5);
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
             letter-spacing: 5px;
+            position: relative;
+            z-index: 10;
         }
 
         /* 主页 */
@@ -492,11 +511,30 @@
             }
         }
 
+        // 创建雨滴
+        function createRain() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const raindropCount = 50;
+            
+            for (let i = 0; i < raindropCount; i++) {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'raindrop';
+                raindrop.style.left = Math.random() * 100 + '%';
+                raindrop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+                raindrop.style.animationDelay = Math.random() * 2 + 's';
+                raindrop.style.opacity = Math.random() * 0.5 + 0.3;
+                loadingScreen.appendChild(raindrop);
+            }
+        }
+
         // 页面加载
         window.addEventListener('DOMContentLoaded', function() {
             const loadingScreen = document.getElementById('loading-screen');
             const mainScreen = document.getElementById('main-screen');
             const loadingText = document.getElementById('loadingText');
+            
+            // 创建下雨效果
+            createRain();
             
             // 省略号动画
             let dotCount = 0;
