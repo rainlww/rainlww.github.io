@@ -111,6 +111,17 @@
             letter-spacing: 2px;
         }
 
+        .section-label {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: left;
+            margin-bottom: 15px;
+            margin-top: 10px;
+            letter-spacing: 2px;
+            font-style: italic;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+        }
+
         .entries-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -339,6 +350,8 @@
         <div class="container">
             <h1 class="title">欢迎来到雨落的世界！</h1>
 
+            <!-- 第一行：有关雨落们的事 -->
+            <p class="section-label">——有关雨落们的事</p>
             <div class="entries-grid">
                 <!-- 雨落们的观测记录 -->
                 <div class="entry-card" onclick="window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;">
@@ -350,16 +363,20 @@
                     <button class="entry-btn" onclick="window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;">点击进入</button>
                 </div>
 
-                <!-- 绘境 · 标签配方库 -->
-                <div class="entry-card" onclick="navigateTo('huijing.html')">
-                    <h2 class="entry-title">绘境 · 标签配方库</h2>
+                <!-- 雨落们的档案馆 -->
+                <div class="entry-card" onclick="navigateTo('archive.html')">
+                    <h2 class="entry-title">雨落们的档案馆</h2>
                     <p class="entry-desc">
-                        这是一个神奇的 tag 生成器！指哪打哪，萌新福音！<br>
-                        来试试吗？
+                        这是千万滴雨落下的瞬间。<br>
+                        每一滴都反射着独特的光芒。
                     </p>
-                    <button class="entry-btn">进入绘境</button>
+                    <button class="entry-btn">进入档案馆</button>
                 </div>
+            </div>
 
+            <!-- 第二行：观测站的功能区 -->
+            <p class="section-label">观测站的千奇百怪功能区</p>
+            <div class="entries-grid">
                 <!-- 测试·更深认识 ta -->
                 <div class="entry-card" onclick="navigateTo('test-choice.html')">
                     <h2 class="entry-title">测试·更深认识 ta</h2>
@@ -370,14 +387,14 @@
                     <button class="entry-btn">开始测试</button>
                 </div>
 
-                <!-- 预留入口 -->
-                <div class="entry-card" onclick="navigateTo('coming-soon.html')">
-                    <h2 class="entry-title">创作工坊</h2>
+                <!-- 绘境 · 标签配方库 -->
+                <div class="entry-card" onclick="navigateTo('huijing.html')">
+                    <h2 class="entry-title">绘境 · 标签配方库</h2>
                     <p class="entry-desc">
-                        角色设计 · 世界观设定 · 故事创作<br>
-                        敬请期待
+                        这是一个神奇的 tag 生成器！指哪打哪，萌新福音！<br>
+                        来试试吗？
                     </p>
-                    <button class="entry-btn">即将上线</button>
+                    <button class="entry-btn">进入绘境</button>
                 </div>
             </div>
 
