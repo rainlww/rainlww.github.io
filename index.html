@@ -473,7 +473,7 @@
         /* 暗号专用区域 - 固定在 footer 上方 */
         .secret-code-area {
             position: absolute;
-            bottom: 100px;
+            bottom: 150px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
@@ -1173,15 +1173,15 @@
                     <button class="entry-btn" onclick="window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;">点击进入</button>
                 </div>
 
-                <!-- 雨落们的档案馆 -->
-                <div class="entry-card" onclick="navigateTo('archive.html')">
+                <!-- 雨落们的档案馆（暂未开放） -->
+                <div class="entry-card" style="opacity: 0.5; cursor: not-allowed;" onclick="return false;">
                     <h2 class="entry-title">雨落们的档案馆</h2>
                     <p class="entry-desc">
                         这是千万滴雨落下的瞬间。<br>
                         每一滴都反射着独特的光芒。<br>
-                        <span style="color: #9a7a8a; font-size: 0.85em; margin-top: 8px; display: block;">标签筛选系统已开放</span>
+                        <span style="color: #8a9a9f; font-size: 0.85em; margin-top: 8px; display: block;">🔒 暂未对外开放</span>
                     </p>
-                    <button class="entry-btn">进入档案馆</button>
+                    <button class="entry-btn" style="background: linear-gradient(135deg, #a0a0a0, #b0b0b0); cursor: not-allowed;">暂未开放</button>
                 </div>
             </div>
 
