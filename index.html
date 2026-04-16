@@ -1174,14 +1174,14 @@
                 </div>
 
                 <!-- 雨落们的档案馆（暂未开放） -->
-                <div class="entry-card" style="opacity: 0.5; cursor: not-allowed;" onclick="return false;">
+                <div class="entry-card" id="archiveCard" style="opacity: 0.5; cursor: not-allowed;" onclick="tryUnlockArchive()">
                     <h2 class="entry-title">雨落们的档案馆</h2>
                     <p class="entry-desc">
                         这是千万滴雨落下的瞬间。<br>
                         每一滴都反射着独特的光芒。<br>
-                        <span style="color: #8a9a9f; font-size: 0.85em; margin-top: 8px; display: block;">🔒 暂未对外开放</span>
+                        <span style="color: #8a9a9f; font-size: 0.85em; margin-top: 8px; display: block;" id="archiveLockText">🔒 暂未对外开放</span>
                     </p>
-                    <button class="entry-btn" style="background: linear-gradient(135deg, #a0a0a0, #b0b0b0); cursor: not-allowed;">暂未开放</button>
+                    <button class="entry-btn" id="archiveBtn" style="background: linear-gradient(135deg, #a0a0a0, #b0b0b0); cursor: not-allowed;">暂未开放</button>
                 </div>
             </div>
 
@@ -1676,17 +1676,24 @@
             // 锁定档案馆
             const archiveCard = document.getElementById('archiveCard');
             const archiveBtn = document.getElementById('archiveBtn');
+            const lockText = document.getElementById('archiveLockText');
             
             archiveCard.style.opacity = '0.5';
             archiveCard.style.cursor = 'not-allowed';
             archiveCard.classList.remove('unlocked');
             archiveCard.onclick = function() {
-                return false;
+                tryUnlockArchive();
             };
             
             archiveBtn.style.background = 'linear-gradient(135deg, #a0a0a0, #b0b0b0)';
             archiveBtn.style.cursor = 'not-allowed';
             archiveBtn.textContent = '暂未开放';
+            archiveBtn.onclick = null;
+            
+            if (lockText) {
+                lockText.style.color = '#8a9a9f';
+                lockText.textContent = '🔒 暂未对外开放';
+            }
             
             alert('🔒 已退出开发者模式');
         }
@@ -1696,16 +1703,33 @@
             const archiveCard = document.getElementById('archiveCard');
             const archiveBtn = document.getElementById('archiveBtn');
             
+            // 移除锁定样式
             archiveCard.style.opacity = '1';
             archiveCard.style.cursor = 'pointer';
+            archiveCard.removeAttribute('style');
             archiveCard.classList.add('unlocked');
-            archiveCard.onclick = function() {
+            
+            // 设置点击跳转
+            archiveCard.onclick = function(e) {
+                e.stopPropagation();
                 navigateTo('archive.html');
             };
             
+            // 解锁按钮
             archiveBtn.style.background = 'linear-gradient(135deg, #5a7d8a, #7a9da8)';
             archiveBtn.style.cursor = 'pointer';
             archiveBtn.textContent = '进入档案馆';
+            archiveBtn.onclick = function(e) {
+                e.stopPropagation();
+                navigateTo('archive.html');
+            };
+            
+            // 更新描述中的锁定提示
+            const lockSpan = archiveCard.querySelector('span');
+            if (lockSpan) {
+                lockSpan.style.color = '#9a7a8a';
+                lockSpan.textContent = '✨ 开发者模式已解锁';
+            }
         }
 
         // 尝试解锁档案馆（点击时）
@@ -1713,7 +1737,7 @@
             if (devMode) {
                 navigateTo('archive.html');
             }
-            // 否则不响应（被 style 覆盖）
+            // 否则不响应（被 opacity 和 cursor 覆盖）
         }
     </script>
 </body>
