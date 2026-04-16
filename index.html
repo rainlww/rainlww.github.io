@@ -226,6 +226,88 @@
             pointer-events: none;
         }
 
+        /* 背景纯享模式 */
+        #main-screen.fullscreen-bg {
+            background-size: contain !important;
+            background-position: center !important;
+        }
+
+        .fullscreen-hint {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #5a7d8a;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .fullscreen-hint:hover {
+            transform: scale(1.05);
+            background: #fff;
+        }
+
+        /* 时间显示 */
+        .card-time {
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: right;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        /* 神秘暗号输入框 */
+        .secret-code-container {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
+        }
+
+        .secret-code-input {
+            width: 200px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 25px;
+            font-size: 0.9em;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .secret-code-input:focus {
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 开发者模式标识 */
+        .dev-mode-indicator {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 100, 100, 0.9);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            z-index: 1002;
+            display: none;
+        }
+
+        .dev-mode-indicator.active {
+            display: block;
+        }
+
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -308,6 +390,16 @@
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
             background: rgba(255, 255, 255, 0.55);
             border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* 开发者模式解锁样式 */
+        .entry-card.unlocked {
+            opacity: 1 !important;
+            cursor: pointer !important;
+        }
+
+        .entry-card.unlocked:hover {
+            transform: translateY(-5px);
         }
 
         .entry-title {
@@ -690,6 +782,12 @@
         <!-- 背景模糊层 -->
         <div id="bgOverlay"></div>
         
+        <!-- 背景纯享按钮 -->
+        <div class="fullscreen-hint" id="fullscreenHint" onclick="toggleFullscreen()">🖼️ 背景纯享</div>
+        
+        <!-- 开发者模式标识 -->
+        <div class="dev-mode-indicator" id="devModeIndicator">🔓 开发者模式</div>
+        
         <div class="container">
             <h1 class="title">欢迎来到雨落的世界！</h1>
             <p class="intro-text">— 听，下雨了。—</p>
@@ -705,17 +803,19 @@
                         快来快来！
                     </p>
                     <button class="entry-btn" onclick="window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;">点击进入</button>
+                    <div class="card-time" id="time1"></div>
                 </div>
 
                 <!-- 雨落们的档案馆（暂未开放） -->
-                <div class="entry-card" style="opacity: 0.5; cursor: not-allowed;" onclick="return false;">
+                <div class="entry-card" style="opacity: 0.5; cursor: not-allowed;" id="archiveCard" onclick="tryUnlockArchive()">
                     <h2 class="entry-title">雨落们的档案馆</h2>
                     <p class="entry-desc">
                         这是千万滴雨落下的瞬间。<br>
                         每一滴都反射着独特的光芒。<br>
                         <span style="color: #8a9a9f; font-size: 0.85em; margin-top: 8px; display: block;">🔒 暂未对外开放</span>
                     </p>
-                    <button class="entry-btn" style="background: linear-gradient(135deg, #a0a0a0, #b0b0b0); cursor: not-allowed;">暂未开放</button>
+                    <button class="entry-btn" style="background: linear-gradient(135deg, #a0a0a0, #b0b0b0); cursor: not-allowed;" id="archiveBtn">暂未开放</button>
+                    <div class="card-time" id="time2"></div>
                 </div>
             </div>
 
@@ -730,6 +830,7 @@
                         探索人格的奥秘～
                     </p>
                     <button class="entry-btn">开始测试</button>
+                    <div class="card-time" id="time3"></div>
                 </div>
 
                 <!-- 绘境 · 标签配方库 -->
@@ -740,6 +841,7 @@
                         来试试吗？
                     </p>
                     <button class="entry-btn">进入绘境</button>
+                    <div class="card-time" id="time4"></div>
                 </div>
             </div>
 
@@ -754,6 +856,11 @@
         
         <!-- 切换背景按钮 -->
         <button class="switch-bg-btn" onclick="switchBackground()">🖼️ 切换背景</button>
+        
+        <!-- 神秘暗号输入框 -->
+        <div class="secret-code-container">
+            <input type="text" class="secret-code-input" id="secretCodeInput" placeholder="输入暗号..." onkeypress="checkSecretCode(event)">
+        </div>
     </div>
 
     <!-- 弹窗 -->
@@ -987,6 +1094,116 @@
             setTimeout(function() {
                 window.location.href = url;
             }, 300);
+        }
+
+        // ========== 新功能 ==========
+
+        // 1. 更新时间显示（北京时间）
+        function updateTime() {
+            const now = new Date();
+            // 转换为北京时间（UTC+8）
+            const beijingTime = new Date(now.getTime() + (8 - now.getTimezoneOffset() / 60) * 60 * 60 * 1000);
+            
+            const year = beijingTime.getFullYear();
+            const month = String(beijingTime.getMonth() + 1).padStart(2, '0');
+            const date = String(beijingTime.getDate()).padStart(2, '0');
+            const hours = String(beijingTime.getHours()).padStart(2, '0');
+            const minutes = String(beijingTime.getMinutes()).padStart(2, '0');
+            const seconds = String(beijingTime.getSeconds()).padStart(2, '0');
+            
+            const timeString = `${year}.${month}.${date} ${hours}:${minutes}:${seconds}`;
+            
+            // 更新所有时间显示
+            const timeElements = document.querySelectorAll('.card-time');
+            timeElements.forEach(el => {
+                el.textContent = timeString;
+            });
+        }
+
+        // 每秒更新时间
+        setInterval(updateTime, 1000);
+        // 初始化时间
+        setTimeout(updateTime, 100);
+
+        // 2. 背景纯享模式
+        let isFullscreen = false;
+        function toggleFullscreen() {
+            const mainScreen = document.getElementById('main-screen');
+            const fullscreenHint = document.getElementById('fullscreenHint');
+            
+            isFullscreen = !isFullscreen;
+            
+            if (isFullscreen) {
+                mainScreen.classList.add('fullscreen-bg');
+                fullscreenHint.textContent = '❌ 退出纯享';
+                // 隐藏其他元素
+                document.querySelector('.container').style.opacity = '0';
+                document.querySelector('.play-btn').style.display = 'none';
+                document.querySelector('.switch-bg-btn').style.display = 'none';
+                document.querySelector('.secret-code-container').style.display = 'none';
+            } else {
+                mainScreen.classList.remove('fullscreen-bg');
+                fullscreenHint.textContent = '🖼️ 背景纯享';
+                // 显示其他元素
+                document.querySelector('.container').style.opacity = '1';
+                document.querySelector('.play-btn').style.display = 'block';
+                document.querySelector('.switch-bg-btn').style.display = 'block';
+                document.querySelector('.secret-code-container').style.display = 'block';
+            }
+        }
+
+        // 3. 神秘暗号验证
+        let devMode = false;
+        function checkSecretCode(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('secretCodeInput');
+                const code = input.value.trim();
+                
+                if (code === '雨晴了') {
+                    // 暗号正确，开启开发者模式
+                    devMode = true;
+                    document.getElementById('devModeIndicator').classList.add('active');
+                    input.value = '';
+                    input.placeholder = '✅ 开发者模式已开启';
+                    
+                    // 解锁档案馆
+                    unlockArchive();
+                    
+                    alert('🔓 开发者模式已开启！\n所有未开放页面和功能现已解锁。');
+                } else {
+                    // 暗号错误
+                    input.value = '';
+                    input.placeholder = '❌ 暗号错误';
+                    setTimeout(() => {
+                        input.placeholder = '输入暗号...';
+                    }, 2000);
+                }
+            }
+        }
+
+        // 解锁档案馆
+        function unlockArchive() {
+            const archiveCard = document.getElementById('archiveCard');
+            const archiveBtn = document.getElementById('archiveBtn');
+            
+            archiveCard.style.opacity = '1';
+            archiveCard.style.cursor = 'pointer';
+            archiveCard.classList.add('unlocked');
+            archiveCard.onclick = function() {
+                navigateTo('archive.html');
+            };
+            
+            archiveBtn.style.background = 'linear-gradient(135deg, #5a7d8a, #7a9da8)';
+            archiveBtn.style.cursor = 'pointer';
+            archiveBtn.textContent = '进入档案馆';
+        }
+
+        // 尝试解锁档案馆（点击时）
+        function tryUnlockArchive() {
+            if (devMode) {
+                navigateTo('archive.html');
+            }
+            // 否则不响应（被 style 覆盖）
         }
     </script>
 </body>
