@@ -105,25 +105,25 @@
             box-shadow: 0 0 40px rgba(200, 200, 200, 0.3);
         }
 
-        /* 远景云 - 朦胧但可见 */
+        /* 远景云 - 适中朦胧 */
         .cloud-far {
-            background: radial-gradient(ellipse at center, rgba(200, 200, 200, 0.7) 0%, rgba(150, 150, 150, 0.5) 40%, rgba(100, 100, 100, 0.3) 70%, rgba(50, 50, 50, 0) 90%);
-            filter: blur(40px);
-            opacity: 0.8;
+            background: radial-gradient(ellipse at center, rgba(180, 180, 180, 0.5) 0%, rgba(140, 140, 140, 0.3) 40%, rgba(100, 100, 100, 0.2) 70%, rgba(60, 60, 60, 0) 90%);
+            filter: blur(50px);
+            opacity: 0.65;
         }
 
-        /* 中景云 - 清晰可见 */
+        /* 中景云 - 适中清晰 */
         .cloud-mid {
-            background: radial-gradient(ellipse at center, rgba(220, 220, 220, 0.8) 0%, rgba(170, 170, 170, 0.6) 40%, rgba(120, 120, 120, 0.4) 70%, rgba(70, 70, 70, 0) 90%);
-            filter: blur(25px);
-            opacity: 0.85;
+            background: radial-gradient(ellipse at center, rgba(200, 200, 200, 0.6) 0%, rgba(160, 160, 160, 0.4) 40%, rgba(120, 120, 120, 0.25) 70%, rgba(80, 80, 80, 0) 90%);
+            filter: blur(30px);
+            opacity: 0.7;
         }
 
-        /* 近景云 - 最清晰 */
+        /* 近景云 - 适中 */
         .cloud-near {
-            background: radial-gradient(ellipse at center, rgba(235, 235, 235, 0.9) 0%, rgba(190, 190, 190, 0.7) 40%, rgba(140, 140, 140, 0.5) 70%, rgba(90, 90, 90, 0) 90%);
-            filter: blur(15px);
-            opacity: 0.9;
+            background: radial-gradient(ellipse at center, rgba(215, 215, 215, 0.7) 0%, rgba(175, 175, 175, 0.5) 40%, rgba(135, 135, 135, 0.3) 70%, rgba(95, 95, 95, 0) 90%);
+            filter: blur(20px);
+            opacity: 0.75;
         }
 
         @keyframes cloudFloat {
@@ -445,11 +445,186 @@
             transform: scale(1.2);
         }
 
-        /* 响应式 */
+        /* 响应式设计 - 全平台适配 */
+        
+        /* 平板（768px 及以下） */
         @media (max-width: 768px) {
-            .title { font-size: 2.5em; letter-spacing: 5px; }
-            .subtitle { font-size: 1.1em; }
-            .entries-grid { grid-template-columns: 1fr; }
+            .title { 
+                font-size: 2.2em; 
+                letter-spacing: 5px;
+                margin-top: -40px !important;
+            }
+            .intro-text {
+                font-size: 1.1em;
+                letter-spacing: 2px;
+            }
+            .subtitle { 
+                font-size: 1em;
+                margin-bottom: 35px;
+            }
+            .entries-grid { 
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .section-label {
+                font-size: 0.95em;
+                margin-top: 25px;
+            }
+            .entry-card {
+                padding: 18px 15px;
+            }
+            .entry-title {
+                font-size: 1.1em;
+            }
+            .entry-desc {
+                font-size: 0.85em;
+            }
+            .play-btn, .switch-bg-btn {
+                padding: 10px 20px;
+                font-size: 0.85em;
+            }
+        }
+
+        /* 手机（480px 及以下） */
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+            #main-screen {
+                padding: 30px 15px;
+            }
+            .title { 
+                font-size: 1.8em; 
+                letter-spacing: 3px;
+                margin-top: -35px !important;
+            }
+            .intro-text {
+                font-size: 0.95em;
+                letter-spacing: 1px;
+                margin-bottom: 35px;
+            }
+            .section-label {
+                font-size: 0.85em;
+                padding: 6px 12px;
+            }
+            .entries-grid { 
+                gap: 15px;
+            }
+            .entry-card {
+                padding: 15px 12px;
+                border-radius: 10px;
+            }
+            .entry-title {
+                font-size: 1em;
+            }
+            .entry-desc {
+                font-size: 0.8em;
+                line-height: 1.5;
+            }
+            .entry-btn {
+                padding: 7px 20px;
+                font-size: 0.85em;
+            }
+            .play-btn {
+                bottom: 20px;
+                left: 20px;
+                padding: 10px 22px;
+                font-size: 0.8em;
+            }
+            .switch-bg-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 18px;
+                font-size: 0.8em;
+            }
+            .footer {
+                font-size: 0.85em;
+                margin-top: 30px;
+            }
+            .modal-content {
+                padding: 40px 25px;
+                margin: 20px;
+            }
+            .modal-text {
+                font-size: 1.1em;
+            }
+        }
+
+        /* 小屏手机（360px 及以下） */
+        @media (max-width: 360px) {
+            .title { 
+                font-size: 1.5em;
+                letter-spacing: 2px;
+            }
+            .intro-text {
+                font-size: 0.85em;
+            }
+            .section-label {
+                font-size: 0.8em;
+            }
+            .entry-title {
+                font-size: 0.95em;
+            }
+            .entry-desc {
+                font-size: 0.75em;
+            }
+            .play-btn, .switch-bg-btn {
+                padding: 8px 15px;
+                font-size: 0.75em;
+                bottom: 15px;
+            }
+        }
+
+        /* 横屏模式 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .container {
+                padding-top: 20px !important;
+            }
+            .title {
+                font-size: 1.6em;
+                margin-top: -20px !important;
+            }
+            .intro-text {
+                margin-bottom: 20px;
+            }
+            .entries-grid {
+                gap: 15px;
+            }
+            .footer {
+                margin-top: 20px;
+            }
+        }
+
+        /* 桌面大屏（1400px 及以上） */
+        @media (min-width: 1400px) {
+            .container {
+                max-width: 1100px;
+            }
+            .title {
+                font-size: 4em;
+            }
+            .intro-text {
+                font-size: 1.5em;
+            }
+            .entries-grid {
+                gap: 30px;
+            }
+            .entry-card {
+                padding: 25px 20px;
+            }
+        }
+
+        /* Loading 页响应式 */
+        @media (max-width: 480px) {
+            .loading-text {
+                font-size: 2em;
+            }
+            .raindrop {
+                height: 18px;
+            }
+            .cloud {
+                opacity: 0.5;
+            }
         }
     </style>
 </head>
@@ -627,15 +802,15 @@
             }
         }
 
-        // 创建分层明显云层
+        // 创建分层云层（适中）
         function createClouds() {
             const loadingScreen = document.getElementById('loading-screen');
             
-            // 远景云 - 8 层，朦胧但可见
-            for (let i = 0; i < 8; i++) {
+            // 远景云 - 5 层，朦胧
+            for (let i = 0; i < 5; i++) {
                 const cloud = document.createElement('div');
                 cloud.className = 'cloud cloud-far';
-                const size = Math.random() * 500 + 400;
+                const size = Math.random() * 400 + 300;
                 cloud.style.width = size + 'px';
                 cloud.style.height = (size * 0.5) + 'px';
                 cloud.style.top = Math.random() * 60 + '%';
@@ -645,11 +820,11 @@
                 loadingScreen.appendChild(cloud);
             }
             
-            // 中景云 - 10 层，清晰可见
-            for (let i = 0; i < 10; i++) {
+            // 中景云 - 6 层，适中
+            for (let i = 0; i < 6; i++) {
                 const cloud = document.createElement('div');
                 cloud.className = 'cloud cloud-mid';
-                const size = Math.random() * 400 + 300;
+                const size = Math.random() * 300 + 200;
                 cloud.style.width = size + 'px';
                 cloud.style.height = (size * 0.6) + 'px';
                 cloud.style.top = Math.random() * 70 + '%';
@@ -659,11 +834,11 @@
                 loadingScreen.appendChild(cloud);
             }
             
-            // 近景云 - 8 层，最清晰
-            for (let i = 0; i < 8; i++) {
+            // 近景云 - 5 层，较清晰
+            for (let i = 0; i < 5; i++) {
                 const cloud = document.createElement('div');
                 cloud.className = 'cloud cloud-near';
-                const size = Math.random() * 300 + 200;
+                const size = Math.random() * 250 + 150;
                 cloud.style.width = size + 'px';
                 cloud.style.height = (size * 0.7) + 'px';
                 cloud.style.top = Math.random() * 80 + '%';
