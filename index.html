@@ -470,44 +470,41 @@
             font-family: 'Courier New', monospace;
         }
 
-        /* 暗号专用区域 - 固定小细长条 */
+        /* 暗号专用区域 - 固定在 footer 上方 */
         .secret-code-area {
-            position: fixed;
-            bottom: 30px;
+            position: absolute;
+            bottom: 50px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 1001;
-            /* 固定，不随滚动移动 */
+            z-index: 10;
+            width: 100%;
+            text-align: center;
         }
 
         .secret-code-box {
-            width: 220px;
-            height: 35px;
-            background: rgba(255, 255, 255, 0.45);
-            border: 2px solid rgba(255, 255, 255, 0.35);
-            border-radius: 12px;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
+            display: inline-block;
+            background: transparent;
+            border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            padding-left: 15px;
-            overflow: hidden;
+            padding: 8px 20px;
         }
 
         .secret-code-box:hover {
-            background: rgba(255, 255, 255, 0.55);
-            transform: scale(1.02);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transform: scale(1.05);
         }
 
         .secret-code-box-text {
-            font-size: 0.8em;
-            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.85);
             font-weight: 300;
-            letter-spacing: 1px;
-            white-space: nowrap;
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+
+        .secret-code-prefix, .secret-code-suffix {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0 5px;
         }
 
         /* 暗号弹窗 */
@@ -1212,21 +1209,47 @@
                 </div>
             </div>
 
+            <!-- 第三行：工具箱 -->
+            <p class="section-label">——观测站的秘密工具箱</p>
+            <div class="entries-grid">
+                <!-- 角色 UUID 识别工具 -->
+                <div class="entry-card" onclick="navigateTo('uuid-tool.html')">
+                    <h2 class="entry-title">🔍 角色 UUID 识别工具</h2>
+                    <p class="entry-desc">
+                        输入角色链接，自动提取 UUID<br>
+                        快速、准确、一键复制
+                    </p>
+                    <button class="entry-btn">使用工具</button>
+                </div>
+
+                <!-- 九型人格测试 -->
+                <div class="entry-card" onclick="navigateTo('enneagram.html')">
+                    <h2 class="entry-title">✨ 九型人格测试</h2>
+                    <p class="entry-desc">
+                        探索你的核心动机与深层恐惧<br>
+                        18 道题，发现真实的自己
+                    </p>
+                    <button class="entry-btn">开始测试</button>
+                </div>
+            </div>
+
             <div class="footer">
                 <p>雨落的世界 · 由 伊斯派菈 制作</p>
                 <p style="margin-top: 8px;">每一个世界，都是一段独特的旅程</p>
+            </div>
+            
+            <!-- 暗号专用区域 - 固定在 footer 上方 -->
+            <div class="secret-code-area">
+                <div class="secret-code-box" onclick="openSecretModal()">
+                    <span class="secret-code-prefix">——</span>
+                    <span class="secret-code-box-text">点击输入神秘暗号</span>
+                    <span class="secret-code-suffix">——</span>
+                </div>
             </div>
         </div>
         
         <!-- 开始播放按钮 -->
         <button class="play-btn" id="playBtn" onclick="showModal()">🎵 开始播放</button>
-        
-        <!-- 暗号专用区域 -->
-        <div class="secret-code-area">
-            <div class="secret-code-box" onclick="openSecretModal()">
-                <span class="secret-code-box-text">🔐 点击输入暗号</span>
-            </div>
-        </div>
         
         <!-- 右下角悬浮按钮 -->
         <div class="floating-buttons">
@@ -1236,7 +1259,7 @@
         <!-- 悬浮选项弹窗 -->
         <div class="floating-options" id="floatingOptions">
             <div class="floating-options-title">你想做什么？</div>
-            <div class="floating-option-item" onclick="toggleFullscreen()">🖼️ 背景纯享</div>
+            <div class="floating-option-item" onclick="toggleFullscreen()" id="fullscreenOption">🖼️ 背景纯享</div>
             <div class="floating-option-item" onclick="switchBackground()">🖼️ 切换背景</div>
         </div>
     </div>
@@ -1524,11 +1547,16 @@
         function toggleFullscreen() {
             const mainScreen = document.getElementById('main-screen');
             const floatingOptions = document.getElementById('floatingOptions');
+            const fullscreenOption = document.getElementById('fullscreenOption');
             
             isFullscreen = !isFullscreen;
             
             if (isFullscreen) {
                 mainScreen.classList.add('fullscreen-bg');
+                // 切换按钮文字
+                if (fullscreenOption) {
+                    fullscreenOption.textContent = '❌ 退出纯享';
+                }
                 // 隐藏其他元素
                 document.querySelector('.container').style.opacity = '0';
                 document.querySelector('.play-btn').style.display = 'none';
@@ -1537,6 +1565,10 @@
                 floatingOptions.classList.remove('active');
             } else {
                 mainScreen.classList.remove('fullscreen-bg');
+                // 恢复按钮文字
+                if (fullscreenOption) {
+                    fullscreenOption.textContent = '🖼️ 背景纯享';
+                }
                 // 显示其他元素
                 document.querySelector('.container').style.opacity = '1';
                 document.querySelector('.play-btn').style.display = 'block';

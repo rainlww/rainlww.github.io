@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色 UUID 识别工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Microsoft YaHei', 'Segoe UI', serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6a8a9a 0%, #7a9aaa 50%, #8aaa ba 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 50px 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #3a5a6a;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #5a7d8a;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.95em;
+            color: #3a5a6a;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(90, 125, 138, 0.3);
+            border-radius: 12px;
+            font-size: 1em;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: rgba(90, 125, 138, 0.8);
+            box-shadow: 0 4px 15px rgba(90, 125, 138, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #5a7d8a, #7a9da8);
+            color: #fff;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(90, 125, 138, 0.3);
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(90, 125, 138, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #a0a0a0, #b0b0b0);
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(90, 125, 138, 0.1);
+            border-radius: 12px;
+            border: 2px solid rgba(90, 125, 138, 0.3);
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-label {
+            font-size: 0.9em;
+            color: #5a7d8a;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .result-uuid {
+            font-size: 1.3em;
+            color: #3a5a6a;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            word-break: break-all;
+            margin-bottom: 15px;
+        }
+
+        .result-copy {
+            font-size: 0.85em;
+            color: #7a9da8;
+            font-style: italic;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #5a7d8a;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #3a5a6a;
+            transform: translateX(-5px);
+        }
+
+        .error-msg {
+            color: #c0392b;
+            font-size: 0.9em;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .example {
+            font-size: 0.85em;
+            color: #7a9da8;
+            margin-top: 15px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 角色 UUID 识别工具</h1>
+        <p class="subtitle">输入角色链接，自动提取 UUID</p>
+
+        <div class="input-group">
+            <label for="roleLink">角色链接：</label>
+            <input type="text" id="roleLink" placeholder="粘贴角色链接，例如：https://nieta.art/character/xxxx-xxxx-xxxx" onkeypress="if(event.key==='Enter') extractUUID()">
+            <p class="example">示例：https://nieta.art/character/bd1a9f8f-8c88-4f3f-b4d8-2f8af36a0d1b</p>
+        </div>
+
+        <div>
+            <button class="btn" onclick="extractUUID()">🔍 提取 UUID</button>
+            <button class="btn btn-secondary" onclick="clearAll()">🗑️ 清空</button>
+        </div>
+
+        <div class="result-box" id="resultBox">
+            <p class="result-label">✨ 识别结果：</p>
+            <p class="result-uuid" id="uuidResult"></p>
+            <p class="result-copy">📋 点击 UUID 可复制</p>
+        </div>
+
+        <p class="error-msg" id="errorMsg"></p>
+
+        <a href="index.html" class="back-link">← 返回主页</a>
+    </div>
+
+    <script>
+        function extractUUID() {
+            const link = document.getElementById('roleLink').value.trim();
+            const resultBox = document.getElementById('resultBox');
+            const uuidResult = document.getElementById('uuidResult');
+            const errorMsg = document.getElementById('errorMsg');
+
+            // 清空错误信息
+            errorMsg.textContent = '';
+
+            // 正则表达式匹配 UUID 格式
+            const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+            const match = link.match(uuidRegex);
+
+            if (match) {
+                const uuid = match[0];
+                uuidResult.textContent = uuid;
+                resultBox.classList.add('show');
+                
+                // 添加点击复制功能
+                uuidResult.onclick = function() {
+                    navigator.clipboard.writeText(uuid).then(() => {
+                        const originalText = uuidResult.textContent;
+                        uuidResult.textContent = '✅ 已复制！';
+                        setTimeout(() => {
+                            uuidResult.textContent = originalText;
+                        }, 2000);
+                    });
+                };
+                uuidResult.style.cursor = 'pointer';
+            } else {
+                resultBox.classList.remove('show');
+                errorMsg.textContent = '❌ 未找到有效的 UUID 格式，请检查链接是否正确';
+            }
+        }
+
+        function clearAll() {
+            document.getElementById('roleLink').value = '';
+            document.getElementById('resultBox').classList.remove('show');
+            document.getElementById('errorMsg').textContent = '';
+        }
+    </script>
+</body>
+</html>
