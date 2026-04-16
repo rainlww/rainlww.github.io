@@ -59,19 +59,20 @@
             opacity: 1;
         }
 
-        /* 雨滴 */
+        /* 雨滴 - 覆盖全屏 */
         .raindrop {
             position: absolute;
-            top: -100px;
+            top: -50px;
             width: 3px;
             height: 25px;
             background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
             animation: fall linear infinite;
+            pointer-events: none;
         }
 
         @keyframes fall {
             to {
-                transform: translateY(100vh);
+                transform: translateY(110vh);  /* 下落超过屏幕高度，确保覆盖到底部 */
             }
         }
 
@@ -469,13 +470,14 @@
             font-family: 'Courier New', monospace;
         }
 
-        /* 暗号专用区域 - 小细长条 */
+        /* 暗号专用区域 - 固定小细长条 */
         .secret-code-area {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1001;
+            /* 固定，不随滚动移动 */
         }
 
         .secret-code-box {
@@ -491,6 +493,7 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             padding-left: 15px;
+            overflow: hidden;
         }
 
         .secret-code-box:hover {
@@ -504,6 +507,7 @@
             color: rgba(255, 255, 255, 0.9);
             font-weight: 300;
             letter-spacing: 1px;
+            white-space: nowrap;
         }
 
         /* 暗号弹窗 */
@@ -1323,15 +1327,16 @@
             }
         }
 
-        // 创建雨滴
+        // 创建雨滴（覆盖全屏）
         function createRain() {
             const loadingScreen = document.getElementById('loading-screen');
-            const raindropCount = 150;  // 增加到 150 个雨滴
+            const raindropCount = 500;  // 增加到 500 个雨滴，确保覆盖全屏
             
             for (let i = 0; i < raindropCount; i++) {
                 const raindrop = document.createElement('div');
                 raindrop.className = 'raindrop';
-                raindrop.style.left = Math.random() * 100 + '%';
+                // 使用 vw 单位确保覆盖整个屏幕宽度
+                raindrop.style.left = Math.random() * 100 + 'vw';
                 raindrop.style.animationDuration = (Math.random() * 0.3 + 0.4) + 's';  // 更快
                 raindrop.style.animationDelay = Math.random() * 2 + 's';
                 raindrop.style.opacity = Math.random() * 0.5 + 0.5;  // 更明显
