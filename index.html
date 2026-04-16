@@ -97,15 +97,33 @@
             z-index: 10;
         }
 
-        /* 水墨云层 - 超朦胧 */
+        /* 水墨云层 - 分层朦胧 */
         .cloud {
             position: absolute;
-            background: radial-gradient(ellipse at center, rgba(180, 180, 180, 0.5) 0%, rgba(140, 140, 140, 0.3) 30%, rgba(100, 100, 100, 0.15) 50%, rgba(60, 60, 60, 0) 70%);
             border-radius: 50% 60% 40% 70% / 60% 50% 70% 40%;
-            filter: blur(50px);
             animation: cloudFloat linear infinite, cloudMorph ease-in-out infinite;
-            opacity: 0.7;
             mix-blend-mode: overlay;
+        }
+
+        /* 远景云 - 最朦胧 */
+        .cloud-far {
+            background: radial-gradient(ellipse at center, rgba(160, 160, 160, 0.4) 0%, rgba(120, 120, 120, 0.2) 40%, rgba(80, 80, 80, 0.1) 60%, rgba(40, 40, 40, 0) 80%);
+            filter: blur(80px);
+            opacity: 0.5;
+        }
+
+        /* 中景云 - 中等朦胧 */
+        .cloud-mid {
+            background: radial-gradient(ellipse at center, rgba(170, 170, 170, 0.5) 0%, rgba(130, 130, 130, 0.3) 40%, rgba(90, 90, 90, 0.15) 60%, rgba(50, 50, 50, 0) 80%);
+            filter: blur(50px);
+            opacity: 0.6;
+        }
+
+        /* 近景云 - 较清晰 */
+        .cloud-near {
+            background: radial-gradient(ellipse at center, rgba(180, 180, 180, 0.6) 0%, rgba(140, 140, 140, 0.4) 40%, rgba(100, 100, 100, 0.2) 60%, rgba(60, 60, 60, 0) 80%);
+            filter: blur(30px);
+            opacity: 0.7;
         }
 
         @keyframes cloudFloat {
@@ -609,22 +627,49 @@
             }
         }
 
-        // 创建超朦胧水墨云层
+        // 创建分层水墨云层
         function createClouds() {
             const loadingScreen = document.getElementById('loading-screen');
-            const cloudCount = 20;  // 20 层云，更密集
             
-            for (let i = 0; i < cloudCount; i++) {
+            // 远景云 - 6 层，最朦胧，最大，最慢
+            for (let i = 0; i < 6; i++) {
                 const cloud = document.createElement('div');
-                cloud.className = 'cloud';
-                const size = Math.random() * 500 + 400;  // 超大云
+                cloud.className = 'cloud cloud-far';
+                const size = Math.random() * 600 + 500;
+                cloud.style.width = size + 'px';
+                cloud.style.height = (size * 0.5) + 'px';
+                cloud.style.top = Math.random() * 60 + '%';
+                cloud.style.left = Math.random() * 100 + '%';
+                cloud.style.animationDuration = (Math.random() * 30 + 40) + 's';
+                cloud.style.animationDelay = (Math.random() * 15) + 's';
+                loadingScreen.appendChild(cloud);
+            }
+            
+            // 中景云 - 8 层，中等朦胧
+            for (let i = 0; i < 8; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud cloud-mid';
+                const size = Math.random() * 400 + 300;
                 cloud.style.width = size + 'px';
                 cloud.style.height = (size * 0.6) + 'px';
-                cloud.style.top = Math.random() * 90 + '%';
+                cloud.style.top = Math.random() * 70 + '%';
                 cloud.style.left = Math.random() * 100 + '%';
-                cloud.style.animationDuration = (Math.random() * 25 + 30) + 's';  // 更慢
+                cloud.style.animationDuration = (Math.random() * 20 + 25) + 's';
                 cloud.style.animationDelay = (Math.random() * 10) + 's';
-                cloud.style.opacity = Math.random() * 0.5 + 0.4;  // 更浓
+                loadingScreen.appendChild(cloud);
+            }
+            
+            // 近景云 - 6 层，较清晰，最小，最快
+            for (let i = 0; i < 6; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud cloud-near';
+                const size = Math.random() * 300 + 200;
+                cloud.style.width = size + 'px';
+                cloud.style.height = (size * 0.7) + 'px';
+                cloud.style.top = Math.random() * 80 + '%';
+                cloud.style.left = Math.random() * 100 + '%';
+                cloud.style.animationDuration = (Math.random() * 15 + 15) + 's';
+                cloud.style.animationDelay = (Math.random() * 5) + 's';
                 loadingScreen.appendChild(cloud);
             }
         }
