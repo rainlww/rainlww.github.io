@@ -97,14 +97,15 @@
             z-index: 10;
         }
 
-        /* 水墨云层 */
+        /* 水墨云层 - 超朦胧 */
         .cloud {
             position: absolute;
-            background: radial-gradient(ellipse at center, rgba(200, 200, 200, 0.4) 0%, rgba(150, 150, 150, 0.2) 30%, rgba(100, 100, 100, 0.1) 50%, rgba(50, 50, 50, 0) 70%);
+            background: radial-gradient(ellipse at center, rgba(180, 180, 180, 0.5) 0%, rgba(140, 140, 140, 0.3) 30%, rgba(100, 100, 100, 0.15) 50%, rgba(60, 60, 60, 0) 70%);
             border-radius: 50% 60% 40% 70% / 60% 50% 70% 40%;
-            filter: blur(30px);
+            filter: blur(50px);
             animation: cloudFloat linear infinite, cloudMorph ease-in-out infinite;
-            opacity: 0.6;
+            opacity: 0.7;
+            mix-blend-mode: overlay;
         }
 
         @keyframes cloudFloat {
@@ -608,22 +609,22 @@
             }
         }
 
-        // 创建水墨云层
+        // 创建超朦胧水墨云层
         function createClouds() {
             const loadingScreen = document.getElementById('loading-screen');
-            const cloudCount = 15;  // 15 层水墨云
+            const cloudCount = 20;  // 20 层云，更密集
             
             for (let i = 0; i < cloudCount; i++) {
                 const cloud = document.createElement('div');
                 cloud.className = 'cloud';
-                const size = Math.random() * 400 + 300;  // 大云
+                const size = Math.random() * 500 + 400;  // 超大云
                 cloud.style.width = size + 'px';
-                cloud.style.height = (size * 0.5) + 'px';
-                cloud.style.top = Math.random() * 80 + '%';
+                cloud.style.height = (size * 0.6) + 'px';
+                cloud.style.top = Math.random() * 90 + '%';
                 cloud.style.left = Math.random() * 100 + '%';
-                cloud.style.animationDuration = (Math.random() * 20 + 25) + 's';  // 缓慢飘动
-                cloud.style.animationDelay = (Math.random() * 8) + 's';
-                cloud.style.opacity = Math.random() * 0.4 + 0.3;  // 朦胧感
+                cloud.style.animationDuration = (Math.random() * 25 + 30) + 's';  // 更慢
+                cloud.style.animationDelay = (Math.random() * 10) + 's';
+                cloud.style.opacity = Math.random() * 0.5 + 0.4;  // 更浓
                 loadingScreen.appendChild(cloud);
             }
         }
