@@ -15,6 +15,7 @@
             font-family: 'Georgia', 'Microsoft YaHei', 'Segoe UI', serif;
             min-height: 100vh;
             overflow-x: hidden;
+            background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #ADD8E6 100%);
         }
 
         /* Loading 页面 - 下雨效果 */
@@ -153,6 +154,7 @@
         /* 主页 */
         #main-screen {
             display: none;
+            width: 100%;
             min-height: 100vh;
             background-size: cover;
             background-position: center;
@@ -171,13 +173,18 @@
         @media (max-width: 480px) {
             #main-screen {
                 background-attachment: scroll;  /* 手机禁用固定背景，提升性能 */
-                background-position: center center;
+                background-position: center top;  /* 从顶部开始显示 */
+                background-size: 100% auto;  /* 宽度填满，高度自适应 */
+                min-height: 100vh;
+                width: 100vw;
+                padding: 30px 15px;
             }
         }
 
         @media (max-width: 360px) {
             #main-screen {
-                background-position: 50% 30%;  /* 小屏调整背景位置 */
+                background-position: center top;  /* 小屏从顶部开始 */
+                background-size: 100% auto;
             }
         }
 
@@ -514,11 +521,21 @@
 
         /* 手机（480px 及以下） */
         @media (max-width: 480px) {
-            body {
+            html, body {
+                width: 100%;
+                overflow-x: hidden;
+                margin: 0;
                 padding: 0;
             }
             #main-screen {
                 padding: 30px 15px;
+                width: 100vw;
+                left: 0;
+                right: 0;
+            }
+            .container {
+                width: 100%;
+                max-width: 100%;
             }
             .title { 
                 font-size: 1.8em; 
