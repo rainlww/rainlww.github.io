@@ -170,21 +170,28 @@
         }
 
         /* 背景图片响应式适配 */
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
             #main-screen {
                 background-attachment: scroll;  /* 手机禁用固定背景，提升性能 */
-                background-position: center top;  /* 从顶部开始显示 */
-                background-size: 100% auto;  /* 宽度填满，高度自适应 */
+                background-position: center center;  /* 居中显示 */
+                background-size: cover;  /* 覆盖整个屏幕 */
                 min-height: 100vh;
                 width: 100vw;
                 padding: 30px 15px;
             }
         }
 
+        @media (max-width: 480px) {
+            #main-screen {
+                background-position: center center;
+                background-size: cover;
+            }
+        }
+
         @media (max-width: 360px) {
             #main-screen {
-                background-position: center top;  /* 小屏从顶部开始 */
-                background-size: 100% auto;
+                background-position: center center;
+                background-size: cover;
             }
         }
 
@@ -766,26 +773,23 @@
     </audio>
 
     <script>
-        // 背景图片数组（使用优化后的图片）
-        const backgrounds = ['banner_optimized.jpg', 'banner2_optimized.jpg'];
+        // 背景图片数组
+        // 桌面端用优化后的横幅图
+        const desktopBackgrounds = ['banner_optimized.jpg', 'banner2_optimized.jpg'];
+        // 手机端用雨落小姐选的竖版图
+        const mobileBackgrounds = ['mobile-bg1.png', 'mobile-bg2.png'];
+        
+        // 根据屏幕尺寸选择背景数组
+        const backgrounds = window.innerWidth <= 768 ? mobileBackgrounds : desktopBackgrounds;
+        
         let currentBgIndex = 0;
         let musicStarted = false;
 
-        // 设置背景图片（带响应式优化）
+        // 设置背景图片
         function setBackground(index) {
             const mainScreen = document.getElementById('main-screen');
             const bgUrl = "url('" + backgrounds[index] + "')";
             mainScreen.style.backgroundImage = bgUrl;
-            
-            // 根据屏幕尺寸优化背景显示
-            if (window.innerWidth <= 480) {
-                mainScreen.style.backgroundAttachment = 'scroll';
-                mainScreen.style.backgroundPosition = 'center center';
-            } else if (window.innerWidth <= 360) {
-                mainScreen.style.backgroundPosition = '50% 30%';
-            } else if (window.innerWidth >= 1920) {
-                mainScreen.style.backgroundSize = 'cover';
-            }
         }
 
         // 切换背景
