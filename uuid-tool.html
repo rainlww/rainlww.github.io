@@ -14,34 +14,75 @@
         body {
             font-family: 'Georgia', 'Microsoft YaHei', 'Segoe UI', serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #6a8a9a 0%, #7a9aaa 50%, #8aaa ba 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            background: linear-gradient(135deg, #6a8a9a 0%, #7a9aaa 50%, #8aaaba 100%);
+            padding: 40px 20px;
         }
 
         .container {
+            max-width: 700px;
+            margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             padding: 50px 40px;
-            max-width: 600px;
-            width: 100%;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            text-align: center;
         }
 
         h1 {
             font-size: 2em;
             color: #3a5a6a;
+            text-align: center;
             margin-bottom: 15px;
             letter-spacing: 2px;
         }
 
         .subtitle {
+            text-align: center;
             font-size: 1em;
             color: #5a7d8a;
             margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .tutorial {
+            background: rgba(90, 125, 138, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 4px solid #5a7d8a;
+        }
+
+        .tutorial h2 {
+            font-size: 1.3em;
+            color: #3a5a6a;
+            margin-bottom: 15px;
+        }
+
+        .tutorial ol {
+            margin-left: 20px;
+            color: #5a7d8a;
+            line-height: 2;
+        }
+
+        .tutorial li {
+            margin-bottom: 8px;
+        }
+
+        .tutorial-code {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #3a5a6a;
+        }
+
+        .tutorial-tip {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: rgba(90, 125, 138, 0.15);
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #5a7d8a;
             font-style: italic;
         }
 
@@ -51,7 +92,7 @@
 
         .input-group label {
             display: block;
-            font-size: 0.95em;
+            font-size: 1em;
             color: #3a5a6a;
             margin-bottom: 10px;
             font-weight: 600;
@@ -65,6 +106,7 @@
             font-size: 1em;
             outline: none;
             transition: all 0.3s ease;
+            font-family: inherit;
         }
 
         .input-group input:focus {
@@ -72,33 +114,46 @@
             box-shadow: 0 4px 15px rgba(90, 125, 138, 0.2);
         }
 
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
         .btn {
-            background: linear-gradient(135deg, #5a7d8a, #7a9da8);
-            color: #fff;
-            border: none;
-            padding: 12px 40px;
+            flex: 1;
+            padding: 12px 25px;
             border-radius: 25px;
             font-size: 1em;
             cursor: pointer;
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(90, 125, 138, 0.3);
             transition: all 0.3s ease;
-            margin: 5px;
+            border: none;
         }
 
-        .btn:hover {
-            transform: scale(1.05);
+        .btn-primary {
+            background: linear-gradient(135deg, #5a7d8a, #7a9da8);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
             box-shadow: 0 6px 20px rgba(90, 125, 138, 0.4);
         }
 
         .btn-secondary {
             background: linear-gradient(135deg, #a0a0a0, #b0b0b0);
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #909090, #a0a0a0);
         }
 
         .result-box {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(90, 125, 138, 0.1);
+            margin-top: 25px;
+            padding: 25px;
+            background: rgba(90, 125, 138, 0.08);
             border-radius: 12px;
             border: 2px solid rgba(90, 125, 138, 0.3);
             display: none;
@@ -115,19 +170,27 @@
         }
 
         .result-label {
-            font-size: 0.9em;
+            font-size: 0.95em;
             color: #5a7d8a;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-weight: 600;
         }
 
         .result-uuid {
-            font-size: 1.3em;
+            font-size: 1.4em;
             color: #3a5a6a;
             font-family: 'Courier New', monospace;
             letter-spacing: 1px;
             word-break: break-all;
             margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+        }
+
+        .result-uuid:hover {
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.95);
         }
 
         .result-copy {
@@ -137,8 +200,9 @@
         }
 
         .back-link {
-            display: inline-block;
-            margin-top: 30px;
+            display: block;
+            text-align: center;
+            margin-top: 25px;
             color: #5a7d8a;
             text-decoration: none;
             font-size: 0.95em;
@@ -147,44 +211,98 @@
 
         .back-link:hover {
             color: #3a5a6a;
-            transform: translateX(-5px);
         }
 
         .error-msg {
             color: #c0392b;
             font-size: 0.9em;
-            margin-top: 10px;
+            margin-top: 12px;
             font-style: italic;
+            padding: 10px 15px;
+            background: rgba(192, 57, 43, 0.1);
+            border-radius: 8px;
+            display: none;
         }
 
-        .example {
+        .error-msg.show {
+            display: block;
+        }
+
+        .example-links {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(90, 125, 138, 0.05);
+            border-radius: 8px;
+        }
+
+        .example-links p {
             font-size: 0.85em;
             color: #7a9da8;
-            margin-top: 15px;
-            font-style: italic;
+            margin-bottom: 8px;
+        }
+
+        .example-link {
+            font-size: 0.8em;
+            color: #5a7d8a;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            display: block;
+            margin-top: 5px;
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 1.6em;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔍 角色 UUID 识别工具</h1>
+        <h1>角色 UUID 识别工具</h1>
         <p class="subtitle">输入角色链接，自动提取 UUID</p>
+
+        <div class="tutorial">
+            <h2>使用教程</h2>
+            <ol>
+                <li>在 Neta 平台找到你想查询的角色页面</li>
+                <li>复制浏览器地址栏中的完整链接</li>
+                <li>将链接粘贴到下方的输入框中</li>
+                <li>点击"提取 UUID"按钮</li>
+                <li>UUID 将显示在下方，点击即可复制</li>
+            </ol>
+            <div class="tutorial-tip">
+                提示：UUID 是角色的唯一标识符，格式为 8-4-4-4-12 的字符串，例如：bd1a9f8f-8c88-4f3f-b4d8-2f8af36a0d1b
+            </div>
+        </div>
 
         <div class="input-group">
             <label for="roleLink">角色链接：</label>
-            <input type="text" id="roleLink" placeholder="粘贴角色链接，例如：https://nieta.art/character/xxxx-xxxx-xxxx" onkeypress="if(event.key==='Enter') extractUUID()">
-            <p class="example">示例：https://nieta.art/character/bd1a9f8f-8c88-4f3f-b4d8-2f8af36a0d1b</p>
+            <input type="text" id="roleLink" placeholder="粘贴角色链接..." onkeypress="if(event.key==='Enter') extractUUID()">
+            <div class="example-links">
+                <p>链接格式示例：</p>
+                <span class="example-link">https://nieta.art/character/bd1a9f8f-8c88-4f3f-b4d8-2f8af36a0d1b</span>
+            </div>
         </div>
 
-        <div>
-            <button class="btn" onclick="extractUUID()">🔍 提取 UUID</button>
-            <button class="btn btn-secondary" onclick="clearAll()">🗑️ 清空</button>
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="extractUUID()">提取 UUID</button>
+            <button class="btn btn-secondary" onclick="clearAll()">清空</button>
         </div>
 
         <div class="result-box" id="resultBox">
-            <p class="result-label">✨ 识别结果：</p>
-            <p class="result-uuid" id="uuidResult"></p>
-            <p class="result-copy">📋 点击 UUID 可复制</p>
+            <p class="result-label">识别结果：</p>
+            <p class="result-uuid" id="uuidResult" onclick="copyUUID()"></p>
+            <p class="result-copy">点击 UUID 可复制</p>
         </div>
 
         <p class="error-msg" id="errorMsg"></p>
@@ -200,7 +318,14 @@
             const errorMsg = document.getElementById('errorMsg');
 
             // 清空错误信息
-            errorMsg.textContent = '';
+            errorMsg.classList.remove('show');
+
+            // 检查输入是否为空
+            if (!link) {
+                errorMsg.textContent = '请先输入角色链接';
+                errorMsg.classList.add('show');
+                return;
+            }
 
             // 正则表达式匹配 UUID 格式
             const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
@@ -210,28 +335,40 @@
                 const uuid = match[0];
                 uuidResult.textContent = uuid;
                 resultBox.classList.add('show');
-                
-                // 添加点击复制功能
-                uuidResult.onclick = function() {
-                    navigator.clipboard.writeText(uuid).then(() => {
-                        const originalText = uuidResult.textContent;
-                        uuidResult.textContent = '✅ 已复制！';
-                        setTimeout(() => {
-                            uuidResult.textContent = originalText;
-                        }, 2000);
-                    });
-                };
-                uuidResult.style.cursor = 'pointer';
             } else {
                 resultBox.classList.remove('show');
-                errorMsg.textContent = '❌ 未找到有效的 UUID 格式，请检查链接是否正确';
+                errorMsg.textContent = '未找到有效的 UUID 格式，请检查链接是否正确。UUID 格式示例：bd1a9f8f-8c88-4f3f-b4d8-2f8af36a0d1b';
+                errorMsg.classList.add('show');
             }
+        }
+
+        function copyUUID() {
+            const uuid = document.getElementById('uuidResult').textContent;
+            if (!uuid) return;
+
+            navigator.clipboard.writeText(uuid).then(() => {
+                const resultBox = document.getElementById('resultBox');
+                const originalHTML = resultBox.innerHTML;
+                
+                resultBox.innerHTML = `
+                    <p class="result-label">识别结果：</p>
+                    <p class="result-uuid" style="background: rgba(90, 125, 138, 0.2);">${uuid}</p>
+                    <p class="result-copy" style="color: #5a7d8a; font-weight: 600;">已复制到剪贴板</p>
+                `;
+
+                setTimeout(() => {
+                    resultBox.innerHTML = originalHTML;
+                    document.getElementById('uuidResult').textContent = uuid;
+                }, 2000);
+            }).catch(() => {
+                alert('复制失败，请手动复制');
+            });
         }
 
         function clearAll() {
             document.getElementById('roleLink').value = '';
             document.getElementById('resultBox').classList.remove('show');
-            document.getElementById('errorMsg').textContent = '';
+            document.getElementById('errorMsg').classList.remove('show');
         }
     </script>
 </body>

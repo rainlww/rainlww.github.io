@@ -43,180 +43,235 @@
             font-style: italic;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(154, 122, 138, 0.2);
-            border-radius: 10px;
+        .input-section {
             margin-bottom: 30px;
-            overflow: hidden;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #9a7a8a, #aa8a9a);
-            width: 0%;
-            transition: width 0.4s ease;
-        }
-
-        .question-card {
-            background: rgba(154, 122, 138, 0.08);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 25px;
-            border: 2px solid rgba(154, 122, 138, 0.2);
-            display: none;
-        }
-
-        .question-card.active {
+        .input-section label {
             display: block;
-            animation: fadeIn 0.4s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .question-number {
-            font-size: 0.85em;
-            color: #9a7a8a;
-            margin-bottom: 12px;
+            font-size: 1.1em;
+            color: #5a4a5a;
+            margin-bottom: 15px;
             font-weight: 600;
         }
 
-        .question-text {
-            font-size: 1.2em;
-            color: #5a4a5a;
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .option {
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.8);
+        .input-section textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 20px;
             border: 2px solid rgba(154, 122, 138, 0.3);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            border-radius: 15px;
             font-size: 1em;
-            color: #5a4a5a;
+            outline: none;
+            transition: all 0.3s ease;
+            resize: vertical;
+            font-family: inherit;
+            line-height: 1.8;
         }
 
-        .option:hover {
-            background: rgba(154, 122, 138, 0.15);
-            border-color: rgba(154, 122, 138, 0.6);
-            transform: translateX(5px);
+        .input-section textarea:focus {
+            border-color: rgba(154, 122, 138, 0.8);
+            box-shadow: 0 4px 15px rgba(154, 122, 138, 0.2);
         }
 
-        .option.selected {
+        .input-hint {
+            font-size: 0.9em;
+            color: #9a7a8a;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .btn-analyze {
+            width: 100%;
+            padding: 15px;
             background: linear-gradient(135deg, #9a7a8a, #aa8a9a);
             color: #fff;
-            border-color: rgba(154, 122, 138, 0.8);
-        }
-
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            gap: 15px;
-        }
-
-        .btn {
-            padding: 12px 35px;
+            border: none;
             border-radius: 25px;
-            font-size: 1em;
+            font-size: 1.1em;
             cursor: pointer;
             font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
-            border: none;
         }
 
-        .btn-prev {
-            background: linear-gradient(135deg, #a0a0a0, #b0b0b0);
-            color: #fff;
+        .btn-analyze:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .btn-next {
-            background: linear-gradient(135deg, #9a7a8a, #aa8a9a);
-            color: #fff;
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
+        .btn-analyze:disabled {
+            opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
 
-        .result-card {
+        .result-section {
             display: none;
-            text-align: center;
+            margin-top: 40px;
         }
 
-        .result-card.show {
+        .result-section.show {
             display: block;
             animation: fadeIn 0.5s ease;
         }
 
-        .result-type {
-            font-size: 3em;
-            color: #9a7a8a;
-            margin-bottom: 15px;
-            font-weight: bold;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .result-name {
-            font-size: 1.5em;
+        .result-title {
+            font-size: 1.8em;
             color: #5a4a5a;
-            margin-bottom: 20px;
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .result-desc {
-            font-size: 1.1em;
+        .chart-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 30px;
+        }
+
+        .pie-chart {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                #e74c5a 0deg,
+                #e74c5a var(--t1-deg),
+                #f39c12 var(--t1-deg),
+                #f39c12 var(--t2-deg),
+                #3498db var(--t2-deg),
+                #3498db var(--t3-deg),
+                #9b59b6 var(--t3-deg),
+                #9b59b6 var(--t4-deg),
+                #1abc9c var(--t4-deg),
+                #1abc9c var(--t5-deg),
+                #34495e var(--t5-deg),
+                #34495e var(--t6-deg),
+                #e67e22 var(--t6-deg),
+                #e67e22 var(--t7-deg),
+                #c0392b var(--t7-deg),
+                #c0392b var(--t8-deg),
+                #95a5a6 var(--t8-deg),
+                #95a5a6 360deg
+            );
+        }
+
+        .chart-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-center-type {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #9a7a8a;
+        }
+
+        .chart-center-label {
+            font-size: 0.85em;
+            color: #7a6a7a;
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: rgba(154, 122, 138, 0.08);
+            border-radius: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .legend-text {
+            font-size: 0.9em;
+            color: #5a4a5a;
+        }
+
+        .legend-percent {
+            font-size: 0.9em;
+            color: #9a7a8a;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .result-detail {
+            background: rgba(154, 122, 138, 0.08);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #9a7a8a;
+        }
+
+        .result-detail h3 {
+            font-size: 1.3em;
+            color: #5a4a5a;
+            margin-bottom: 15px;
+        }
+
+        .result-detail p {
+            font-size: 1em;
             color: #7a6a7a;
             line-height: 1.8;
-            margin-bottom: 30px;
-            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .btn-restart {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #a0a0a0, #b0b0b0);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .btn-restart:hover {
+            background: linear-gradient(135deg, #909090, #a0a0a0);
         }
 
         .back-link {
-            display: inline-block;
+            display: block;
+            text-align: center;
             margin-top: 20px;
             color: #9a7a8a;
             text-decoration: none;
             font-size: 0.95em;
-            transition: all 0.3s ease;
         }
 
         .back-link:hover {
             color: #7a6a7a;
-            transform: translateX(-5px);
-        }
-
-        .intro-text {
-            background: rgba(154, 122, 138, 0.1);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border-left: 4px solid #9a7a8a;
-        }
-
-        .intro-text p {
-            font-size: 1em;
-            color: #5a4a5a;
-            line-height: 1.7;
-            margin-bottom: 10px;
         }
 
         @media (max-width: 768px) {
@@ -226,388 +281,192 @@
             h1 {
                 font-size: 1.8em;
             }
-            .question-text {
-                font-size: 1.1em;
+            .chart-container {
+                width: 250px;
+                height: 250px;
+            }
+            .chart-center {
+                width: 120px;
+                height: 120px;
+            }
+            .chart-center-type {
+                font-size: 2em;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>✨ 九型人格测试</h1>
-        <p class="subtitle">探索你的核心动机与深层恐惧</p>
+        <h1>✨ 九型人格分析</h1>
+        <p class="subtitle">描述你自己，让我来读懂你的内心</p>
 
-        <div class="intro-text" id="introText">
-            <p><strong>九型人格（Enneagram）</strong>是一种古老的智慧系统，将人的性格分为九种基本类型。</p>
-            <p>与 MBTI 不同，九型人格关注的是<strong>内在动机</strong>和<strong>核心恐惧</strong>，而非行为偏好。</p>
-            <p>本测试共 18 道题，请根据你的<strong>第一反应</strong>选择最符合你的选项。</p>
+        <div class="input-section" id="inputSection">
+            <label for="selfDesc">请用一段话描述你自己：</label>
+            <textarea id="selfDesc" placeholder="例如：
+我是一个比较内向的人，喜欢独处思考。在工作中我追求完美，常常会因为细节不够好而焦虑。我很在意别人的看法，希望能被认可和喜爱。面对冲突时，我倾向于避免正面冲突，但内心会有自己的想法和坚持。我有很多兴趣爱好，但常常三分钟热度...
+
+（可以从性格特点、行为模式、内心感受、人际关系等方面描述）"></textarea>
+            <p class="input-hint">💡 描述越详细，分析越准确。建议 100 字以上。</p>
+            <button class="btn-analyze" onclick="analyzePersonality()" id="analyzeBtn">开始分析</button>
         </div>
 
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
+        <div class="result-section" id="resultSection">
+            <h2 class="result-title">你的九型人格分布</h2>
+            
+            <div class="chart-container">
+                <div class="pie-chart" id="pieChart"></div>
+                <div class="chart-center">
+                    <div class="chart-center-type" id="mainType">Type 4</div>
+                    <div class="chart-center-label">主导类型</div>
+                </div>
+            </div>
 
-        <div id="quizContainer"></div>
+            <div class="legend" id="legend"></div>
 
-        <div class="result-card" id="resultCard">
-            <div class="result-type" id="resultType"></div>
-            <div class="result-name" id="resultName"></div>
-            <div class="result-desc" id="resultDesc"></div>
-            <button class="btn btn-next" onclick="restartTest()">🔄 重新测试</button>
-            <br>
+            <div class="result-detail">
+                <h3 id="resultName">Type 4 - 浪漫主义者</h3>
+                <p id="resultDesc"></p>
+            </div>
+
+            <button class="btn-restart" onclick="restartTest()">🔄 重新分析</button>
             <a href="index.html" class="back-link">← 返回主页</a>
-        </div>
-
-        <div class="nav-buttons" id="navButtons">
-            <button class="btn btn-prev" id="btnPrev" onclick="prevQuestion()" disabled>← 上一题</button>
-            <button class="btn btn-next" id="btnNext" onclick="nextQuestion()" disabled>下一题 →</button>
         </div>
     </div>
 
     <script>
-        // 九型人格测试题目（18 题）
-        const questions = [
-            {
-                text: "当你面临压力时，你倾向于：",
-                options: [
-                    { text: "追求完美，纠正错误", type: 1 },
-                    { text: "帮助他人，满足他人需求", type: 2 },
-                    { text: "努力工作，争取成就", type: 3 },
-                    { text: "退缩到内心世界", type: 4 }
-                ]
-            },
-            {
-                text: "你最大的恐惧是：",
-                options: [
-                    { text: "被批评、不完美", type: 1 },
-                    { text: "不被爱、不被需要", type: 2 },
-                    { text: "失败、没有价值", type: 3 },
-                    { text: "平凡、没有独特性", type: 4 }
-                ]
-            },
-            {
-                text: "你希望别人如何看待你：",
-                options: [
-                    { text: "正直、有原则", type: 1 },
-                    { text: "善良、乐于助人", type: 2 },
-                    { text: "成功、有能力", type: 3 },
-                    { text: "独特、有深度", type: 4 }
-                ]
-            },
-            {
-                text: "你做决定时主要依靠：",
-                options: [
-                    { text: "逻辑和客观分析", type: 5 },
-                    { text: "直觉和想象力", type: 4 },
-                    { text: "经验和安全感", type: 6 },
-                    { text: "乐观和可能性", type: 7 }
-                ]
-            },
-            {
-                text: "在团队中，你通常扮演：",
-                options: [
-                    { text: "领导者，掌控全局", type: 8 },
-                    { text: "协调者，维护和谐", type: 9 },
-                    { text: "执行者，完成任务", type: 3 },
-                    { text: "创新者，提出新想法", type: 7 }
-                ]
-            },
-            {
-                text: "你处理冲突的方式是：",
-                options: [
-                    { text: "直面冲突，据理力争", type: 8 },
-                    { text: "避免冲突，寻求和平", type: 9 },
-                    { text: "分析局势，谨慎应对", type: 6 },
-                    { text: "转移话题，寻找乐趣", type: 7 }
-                ]
-            },
-            {
-                text: "你最看重：",
-                options: [
-                    { text: "知识和理解", type: 5 },
-                    { text: "安全和稳定", type: 6 },
-                    { text: "自由和选择", type: 7 },
-                    { text: "控制和力量", type: 8 }
-                ]
-            },
-            {
-                text: "你的时间通常花在：",
-                options: [
-                    { text: "学习和研究感兴趣的事物", type: 5 },
-                    { text: "准备应对可能的风险", type: 6 },
-                    { text: "体验新事物，避免无聊", type: 7 },
-                    { text: "保护自己和身边的人", type: 8 }
-                ]
-            },
-            {
-                text: "别人对你的评价通常是：",
-                options: [
-                    { text: "理性、独立", type: 5 },
-                    { text: "忠诚、可靠", type: 6 },
-                    { text: "热情、有趣", type: 7 },
-                    { text: "强势、有保护欲", type: 8 }
-                ]
-            },
-            {
-                text: "你感到最舒适的状态是：",
-                options: [
-                    { text: "独处，不受打扰", type: 5 },
-                    { text: "有明确的指导和规则", type: 6 },
-                    { text: "有多种选择和可能性", type: 7 },
-                    { text: "掌控局面，做决定", type: 8 }
-                ]
-            },
-            {
-                text: "你的核心动机是：",
-                options: [
-                    { text: "维持内心的平静和和谐", type: 9 },
-                    { text: "被他人需要和欣赏", type: 2 },
-                    { text: "做到最好，追求卓越", type: 1 },
-                    { text: "保持独立和自给自足", type: 5 }
-                ]
-            },
-            {
-                text: "你最容易陷入的情绪是：",
-                options: [
-                    { text: "愤怒（对自己或他人）", type: 8 },
-                    { text: "羞耻/自卑感", type: 4 },
-                    { text: "焦虑/担忧", type: 6 },
-                    { text: "麻木/惰性", type: 9 }
-                ]
-            },
-            {
-                text: "你对待规则的态度是：",
-                options: [
-                    { text: "严格遵守，认为规则很重要", type: 1 },
-                    { text: "根据情况灵活调整", type: 9 },
-                    { text: "质疑规则，寻求更好的方式", type: 5 },
-                    { text: "利用规则达成目标", type: 3 }
-                ]
-            },
-            {
-                text: "你表达爱的方式是：",
-                options: [
-                    { text: "为对方做事，满足需求", type: 2 },
-                    { text: "给予对方空间和自由", type: 5 },
-                    { text: "保护对方，提供支持", type: 8 },
-                    { text: "与对方分享美好体验", type: 7 }
-                ]
-            },
-            {
-                text: "你面对挑战时：",
-                options: [
-                    { text: "迎难而上，绝不退缩", type: 8 },
-                    { text: "寻求他人帮助和支持", type: 2 },
-                    { text: "先观察，再行动", type: 6 },
-                    { text: "找到有趣的角度看待它", type: 7 }
-                ]
-            },
-            {
-                text: "你最不能忍受：",
-                options: [
-                    { text: "不公平和不正义", type: 1 },
-                    { text: "被忽视和被拒绝", type: 2 },
-                    { text: "被控制和被束缚", type: 8 },
-                    { text: "无聊和重复", type: 7 }
-                ]
-            },
-            {
-                text: "你的成长方向是：",
-                options: [
-                    { text: "学会放松，接受不完美", type: 1 },
-                    { text: "学会爱自己，而不只是爱他人", type: 2 },
-                    { text: "学会做真实的自己，而非迎合他人", type: 3 },
-                    { text: "学会放下过去，活在当下", type: 4 }
-                ]
-            },
-            {
-                text: "你希望被记住为：",
-                options: [
-                    { text: "一个有原则的人", type: 1 },
-                    { text: "一个善良的人", type: 2 },
-                    { text: "一个成功的人", type: 3 },
-                    { text: "一个独特的人", type: 4 },
-                    { text: "一个智慧的人", type: 5 },
-                    { text: "一个忠诚的人", type: 6 },
-                    { text: "一个快乐的人", type: 7 },
-                    { text: "一个强大的人", type: 8 },
-                    { text: "一个平和的人", type: 9 }
-                ]
-            }
-        ];
-
-        // 九型人格结果描述
-        const results = {
-            1: {
-                name: "完美主义者（The Reformer）",
-                desc: "你追求完美，有强烈的道德感和原则性。你希望世界变得更好，对自己和他人都有很高的标准。你的核心恐惧是被批评、不完美，核心动机是做到正确和正直。\n\n优势：正直、负责、自律、追求卓越\n挑战：过度批判、僵化、难以放松\n成长方向：学会接受不完美，对自己和他人更宽容"
-            },
-            2: {
-                name: "给予者（The Helper）",
-                desc: "你温暖、慷慨，总是把他人需求放在自己之前。你渴望被爱和被需要，通过帮助他人来获得价值感。你的核心恐惧是不被爱、不被需要，核心动机是被他人需要和欣赏。\n\n优势：善良、同理心强、乐于助人\n挑战：忽视自己需求、过度付出、期待回报\n成长方向：学会爱自己，设立健康的边界"
-            },
-            3: {
-                name: "成就者（The Achiever）",
-                desc: "你目标明确，效率高，渴望成功和被认可。你善于适应环境，展现他人想看到的一面。你的核心恐惧是失败、没有价值，核心动机是有成就、被赞赏。\n\n优势：有动力、高效、适应力强\n挑战：过度工作、忽视感受、形象导向\n成长方向：学会做真实的自己，而非迎合他人期待"
-            },
-            4: {
-                name: "浪漫主义者（The Individualist）",
-                desc: "你敏感、富有创造力，渴望独特和深度。你容易感到与他人不同，情绪波动较大。你的核心恐惧是平凡、没有独特性，核心动机是找到真实的自我和意义。\n\n优势：创造力、深度、真实\n挑战：情绪化、自我怀疑、沉溺过去\n成长方向：学会放下过去，活在当下，发现平凡中的美"
-            },
-            5: {
-                name: "观察者（The Investigator）",
-                desc: "你理性、独立，渴望理解和掌握知识。你需要大量独处时间，情感上保持距离。你的核心恐惧是无能、被侵入，核心动机是有能力、自给自足。\n\n优势：分析力强、独立、专注\n挑战：情感疏离、过度思考、孤立\n成长方向：学会与他人建立情感连接，分享你的知识"
-            },
-            6: {
-                name: "忠诚者（The Loyalist）",
-                desc: "你忠诚、可靠，重视安全和稳定。你善于预见风险，为可能的困难做准备。你的核心恐惧是没有支持、不安全，核心动机是获得安全和确定性。\n\n优势：忠诚、负责、预见性强\n挑战：过度担忧、犹豫不决、怀疑\n成长方向：学会信任自己和他人，面对不确定性"
-            },
-            7: {
-                name: "热情者（The Enthusiast）",
-                desc: "你乐观、热情，渴望体验和自由。你善于发现可能性，避免痛苦和限制。你的核心恐惧是被束缚、痛苦，核心动机是保持快乐和自由。\n\n优势：乐观、创造力、适应力\n挑战：承诺困难、逃避痛苦、分散精力\n成长方向：学会专注和深入，面对必要的痛苦"
-            },
-            8: {
-                name: "挑战者（The Challenger）",
-                desc: "你强势、自信，渴望控制和力量。你保护自己和身边的人，直面冲突。你的核心恐惧是被伤害、被控制，核心动机是保护自己、掌控局面。\n\n优势：领导力、保护欲、直接\n挑战：过度控制、愤怒、难以示弱\n成长方向：学会示弱，信任他人，放下控制"
-            },
-            9: {
-                name: "调停者（The Peacemaker）",
-                desc: "你平和、包容，渴望和谐与平静。你善于理解各方立场，避免冲突。你的核心恐惧是冲突、分离，核心动机是维持内心的平静和外在的和谐。\n\n优势：平和、包容、善于倾听\n挑战：逃避冲突、难以做决定、自我忽视\n成长方向：学会表达自己的需求，面对必要的冲突"
-            }
+        // 九型人格关键词
+        const typeKeywords = {
+            1: ['完美', '原则', '正确', '道德', '标准', '批评', '改进', '秩序', '责任', '自律', '理想', '公正', '规范', '严谨', '正直'],
+            2: ['帮助', '关心', '爱', '需要', '付出', '温暖', '善良', '他人', '给予', '认可', '感激', '关系', '体贴', '支持', '奉献'],
+            3: ['成功', '成就', '目标', '效率', '形象', '认可', '竞争', '优秀', '表现', '价值', '进步', '结果', '领先', '荣誉', '胜利'],
+            4: ['独特', '特别', '不同', '深度', '真实', '缺失', '羡慕', '艺术', '情感', '敏感', '内省', '意义', '浪漫', '悲伤', '美'],
+            5: ['知识', '理解', '独立', '思考', '分析', '观察', '学习', '研究', '空间', '隐私', '理性', '专注', '探索', '智慧', '距离'],
+            6: ['安全', '担心', '忠诚', '准备', '风险', '怀疑', '信任', '责任', '团体', '规则', '警惕', '支持', '可靠', '焦虑', '承诺'],
+            7: ['快乐', '自由', '体验', '新鲜', '可能', '冒险', '乐观', '选择', '有趣', '逃避', '计划', '热情', '多样', '享受', '好奇'],
+            8: ['控制', '力量', '保护', '直接', '挑战', '领导', '强势', '正义', '对抗', '支配', '自信', '行动', '权威', '果断', '真相'],
+            9: ['和平', '和谐', '平静', '舒适', '避免', '融合', '接纳', '耐心', '稳定', '随和', '调解', '惰性', '包容', '安逸', '平衡']
         };
 
-        let currentQuestion = 0;
-        let answers = [];
+        const typeNames = {
+            1: '完美主义者',
+            2: '给予者',
+            3: '成就者',
+            4: '浪漫主义者',
+            5: '观察者',
+            6: '忠诚者',
+            7: '热情者',
+            8: '挑战者',
+            9: '调停者'
+        };
 
-        // 初始化测试
-        function initQuiz() {
-            const container = document.getElementById('quizContainer');
-            container.innerHTML = '';
+        const typeColors = [
+            '#e74c5a', '#f39c12', '#3498db', '#9b59b6', '#1abc9c',
+            '#34495e', '#e67e22', '#c0392b', '#95a5a6'
+        ];
 
-            questions.forEach((q, index) => {
-                const card = document.createElement('div');
-                card.className = 'question-card' + (index === 0 ? ' active' : '');
-                card.innerHTML = `
-                    <div class="question-number">问题 ${index + 1} / ${questions.length}</div>
-                    <div class="question-text">${q.text}</div>
-                    <div class="options">
-                        ${q.options.map((opt, i) => `
-                            <div class="option" data-type="${opt.type}" onclick="selectOption(this, ${index}, ${opt.type})">
-                                ${opt.text}
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+        const typeDescs = {
+            1: "你追求完美，有强烈的道德感和原则性。你对自己和他人都有很高的标准，希望世界变得更好。你善于发现错误并纠正它们，但有时可能过于批判和僵化。",
+            2: "你温暖、慷慨，总是把他人需求放在自己之前。你渴望被爱和被需要，通过帮助他人来获得价值感。你有很强的同理心，但有时可能忽视自己的需求。",
+            3: "你目标明确，效率高，渴望成功和被认可。你善于适应环境，展现他人想看到的一面。你有强大的执行力，但有时可能过度工作和忽视感受。",
+            4: "你敏感、富有创造力，渴望独特和深度。你容易感到与他人不同，情绪波动较大。你有艺术天赋和深度思考能力，但有时可能沉溺于过去和缺失感。",
+            5: "你理性、独立，渴望理解和掌握知识。你需要大量独处时间，情感上保持距离。你有强大的分析能力，但有时可能过度思考和情感疏离。",
+            6: "你忠诚、可靠，重视安全和稳定。你善于预见风险，为可能的困难做准备。你有很强的责任感，但有时可能过度担忧和犹豫不决。",
+            7: "你乐观、热情，渴望体验和自由。你善于发现可能性，避免痛苦和限制。你有创造力和适应力，但有时可能承诺困难和逃避痛苦。",
+            8: "你强势、自信，渴望控制和力量。你保护自己和身边的人，直面冲突。你有领导力和保护欲，但有时可能过度控制和难以示弱。",
+            9: "你平和、包容，渴望和谐与平静。你善于理解各方立场，避免冲突。你有倾听能力和包容心，但有时可能逃避冲突和难以做决定。"
+        };
 
-            updateProgress();
-        }
-
-        // 选择选项
-        function selectOption(element, questionIndex, type) {
-            // 移除同题其他选项的选中状态
-            const options = element.parentElement.querySelectorAll('.option');
-            options.forEach(opt => opt.classList.remove('selected'));
+        function analyzePersonality() {
+            const text = document.getElementById('selfDesc').value.trim();
             
-            // 选中当前选项
-            element.classList.add('selected');
-            
-            // 保存答案
-            answers[questionIndex] = type;
-            
-            // 启用下一题按钮
-            document.getElementById('btnNext').disabled = false;
-        }
-
-        // 下一题
-        function nextQuestion() {
-            if (currentQuestion < questions.length - 1) {
-                document.querySelectorAll('.question-card')[currentQuestion].classList.remove('active');
-                currentQuestion++;
-                document.querySelectorAll('.question-card')[currentQuestion].classList.add('active');
-                
-                document.getElementById('btnPrev').disabled = false;
-                updateProgress();
-                
-                // 如果是最后一题，改变按钮文字
-                if (currentQuestion === questions.length - 1) {
-                    document.getElementById('btnNext').textContent = '查看结果 ✨';
-                }
-            } else {
-                showResult();
+            if (text.length < 50) {
+                alert('请详细描述你自己，至少 50 字哦～');
+                return;
             }
-        }
 
-        // 上一题
-        function prevQuestion() {
-            if (currentQuestion > 0) {
-                document.querySelectorAll('.question-card')[currentQuestion].classList.remove('active');
-                currentQuestion--;
-                document.querySelectorAll('.question-card')[currentQuestion].classList.add('active');
-                
-                document.getElementById('btnNext').disabled = !answers[currentQuestion];
-                document.getElementById('btnNext').textContent = '下一题 →';
-                
-                if (currentQuestion === 0) {
-                    document.getElementById('btnPrev').disabled = true;
-                }
-                updateProgress();
-            }
-        }
-
-        // 更新进度条
-        function updateProgress() {
-            const progress = ((currentQuestion + 1) / questions.length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-        }
-
-        // 显示结果
-        function showResult() {
             // 计算各类型得分
             const scores = {};
-            answers.forEach(type => {
-                scores[type] = (scores[type] || 0) + 1;
+            for (let i = 1; i <= 9; i++) {
+                scores[i] = 0;
+            }
+
+            // 统计关键词匹配
+            typeKeywords.forEach((keywords, type) => {
+                keywords.forEach(keyword => {
+                    const regex = new RegExp(keyword, 'gi');
+                    const matches = text.match(regex);
+                    if (matches) {
+                        scores[type] += matches.length;
+                    }
+                });
             });
 
-            // 找出得分最高的类型
+            // 计算总分和百分比
+            const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+            const percentages = {};
+            for (let i = 1; i <= 9; i++) {
+                percentages[i] = Math.round((scores[i] / total) * 100);
+            }
+
+            // 找出主导类型
             let maxScore = 0;
-            let resultType = 1;
-            for (let type in scores) {
-                if (scores[type] > maxScore) {
-                    maxScore = scores[type];
-                    resultType = parseInt(type);
+            let mainType = 1;
+            for (let i = 1; i <= 9; i++) {
+                if (scores[i] > maxScore) {
+                    maxScore = scores[i];
+                    mainType = i;
                 }
             }
 
-            // 隐藏测验，显示结果
-            document.getElementById('quizContainer').style.display = 'none';
-            document.getElementById('navButtons').style.display = 'none';
-            document.getElementById('introText').style.display = 'none';
-            document.getElementById('progressBar').style.display = 'none';
-
-            const result = results[resultType];
-            document.getElementById('resultType').textContent = `Type ${resultType}`;
-            document.getElementById('resultName').textContent = result.name;
-            document.getElementById('resultDesc').textContent = result.desc;
-            document.getElementById('resultCard').classList.add('show');
+            // 显示结果
+            showResult(percentages, mainType);
         }
 
-        // 重新测试
+        function showResult(percentages, mainType) {
+            document.getElementById('inputSection').style.display = 'none';
+            document.getElementById('resultSection').classList.add('show');
+
+            // 设置饼图变量
+            const chart = document.getElementById('pieChart');
+            let cumulativeDeg = 0;
+            
+            for (let i = 1; i <= 9; i++) {
+                const deg = percentages[i] * 3.6;
+                chart.style.setProperty(`--t${i}-deg`, `${cumulativeDeg + deg}deg`);
+                cumulativeDeg += deg;
+            }
+
+            // 设置主导类型
+            document.getElementById('mainType').textContent = `Type ${mainType}`;
+
+            // 生成图例
+            const legend = document.getElementById('legend');
+            legend.innerHTML = '';
+            
+            // 按百分比排序
+            const sorted = Object.entries(percentages).sort((a, b) => b[1] - a[1]);
+            
+            sorted.forEach(([type, percent]) => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `
+                    <div class="legend-color" style="background: ${typeColors[type - 1]}"></div>
+                    <span class="legend-text">Type ${type} - ${typeNames[type]}</span>
+                    <span class="legend-percent">${percent}%</span>
+                `;
+                legend.appendChild(item);
+            });
+
+            // 设置主导类型描述
+            document.getElementById('resultName').textContent = `Type ${mainType} - ${typeNames[mainType]}`;
+            document.getElementById('resultDesc').textContent = typeDescs[mainType];
+        }
+
         function restartTest() {
-            currentQuestion = 0;
-            answers = [];
-            document.getElementById('quizContainer').style.display = 'block';
-            document.getElementById('navButtons').style.display = 'flex';
-            document.getElementById('introText').style.display = 'block';
-            document.getElementById('resultCard').classList.remove('show');
-            document.getElementById('btnNext').disabled = true;
-            document.getElementById('btnNext').textContent = '下一题 →';
-            initQuiz();
+            document.getElementById('inputSection').style.display = 'block';
+            document.getElementById('resultSection').classList.remove('show');
+            document.getElementById('selfDesc').value = '';
         }
-
-        // 页面加载时初始化
-        initQuiz();
     </script>
 </body>
 </html>

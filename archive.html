@@ -19,365 +19,383 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        .page-title {
-            font-size: 2em;
-            color: #5a4a5a;
-            font-weight: bold;
-            margin-bottom: 30px;
-            text-align: left;
-        }
-
-        /* 筛选按钮 */
-        .filter-bar {
-            display: flex;
-            gap: 15px;
+        .header {
+            text-align: center;
             margin-bottom: 40px;
-            flex-wrap: wrap;
         }
 
-        .filter-btn {
-            padding: 10px 25px;
-            background: rgba(90, 74, 90, 0.2);
+        .title {
+            font-size: 2.5em;
             color: #5a4a5a;
-            border: none;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #7a6a7a;
+            font-style: italic;
+        }
+
+        /* 筛选区 */
+        .filter-section {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-title {
+            font-size: 1.3em;
+            color: #5a4a5a;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .filter-tag {
+            padding: 10px 20px;
+            background: rgba(154, 122, 138, 0.2);
+            border: 2px solid rgba(154, 122, 138, 0.3);
             border-radius: 25px;
-            font-size: 0.95em;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 500;
+            font-size: 0.95em;
+            color: #5a4a5a;
+            user-select: none;
         }
 
-        .filter-btn.active {
-            background: rgba(90, 74, 90, 0.6);
+        .filter-tag:hover {
+            background: rgba(154, 122, 138, 0.3);
+            transform: scale(1.05);
+        }
+
+        .filter-tag.active {
+            background: linear-gradient(135deg, #9a7a8a, #aa8a9a);
             color: #fff;
+            border-color: rgba(154, 122, 138, 0.8);
         }
 
-        .filter-btn:hover {
-            background: rgba(90, 74, 90, 0.4);
-            transform: translateY(-2px);
+        .filter-clear {
+            margin-top: 20px;
+            text-align: center;
         }
 
-        /* 卡片网格 */
-        .card-grid {
+        .filter-clear button {
+            padding: 8px 25px;
+            background: rgba(154, 122, 138, 0.15);
+            border: 2px solid rgba(154, 122, 138, 0.3);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            color: #5a4a5a;
+        }
+
+        .filter-clear button:hover {
+            background: rgba(154, 122, 138, 0.25);
+        }
+
+        /* 角色卡片网格 */
+        .characters-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
+            margin-bottom: 40px;
         }
 
-        .archive-card {
-            background: #fff;
+        .character-card {
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(90, 74, 90, 0.1);
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             cursor: pointer;
         }
 
-        .archive-card:hover {
+        .character-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(90, 74, 90, 0.2);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
         }
 
-        .card-cover {
-            width: 100%;
-            height: 350px;
-            background: #e0e0e0;
-            position: relative;
-            overflow: hidden;
+        .character-card.hidden {
+            display: none;
         }
 
-        .card-cover img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .card-cover.locked {
-            background: linear-gradient(135deg, #c5b5c5, #b5a5b5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .lock-icon {
-            font-size: 3em;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .card-number {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            width: 35px;
-            height: 35px;
-            background: rgba(90, 74, 90, 0.6);
-            color: #fff;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.9em;
-            font-weight: bold;
-        }
-
-        .card-info {
-            padding: 20px;
-        }
-
-        .card-title {
-            font-size: 1.2em;
-            color: #5a4a5a;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .card-desc {
-            font-size: 0.9em;
-            color: #8a7a8a;
-            line-height: 1.6;
-            margin-bottom: 15px;
-            min-height: 40px;
-        }
-
-        .card-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .character-number {
             font-size: 0.85em;
-        }
-
-        .card-views {
-            color: #a090a0;
-        }
-
-        .card-rating {
-            background: rgba(255, 200, 100, 0.3);
-            color: #c89050;
-            padding: 4px 12px;
-            border-radius: 15px;
+            color: #9a7a8a;
+            margin-bottom: 10px;
             font-weight: 600;
         }
 
-        .locked-text {
-            color: rgba(255, 255, 255, 0.8);
-            text-align: center;
-            padding: 20px;
-        }
-
-        .locked-sub {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-
-        /* 返回按钮 */
-        .back-link {
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .back-link a {
+        .character-name {
+            font-size: 1.4em;
             color: #5a4a5a;
-            text-decoration: none;
-            padding: 12px 30px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 30px;
-            transition: all 0.3s ease;
-            display: inline-block;
-            font-size: 0.95em;
+            margin-bottom: 12px;
+            font-weight: bold;
         }
 
-        .back-link a:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: translateY(-2px);
+        .character-desc {
+            font-size: 0.95em;
+            color: #7a6a7a;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            min-height: 60px;
+        }
+
+        .character-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .character-tag {
+            padding: 5px 12px;
+            background: rgba(154, 122, 138, 0.15);
+            border-radius: 15px;
+            font-size: 0.8em;
+            color: #5a4a5a;
+        }
+
+        /* 统计信息 */
+        .stats {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+        }
+
+        .stats-text {
+            font-size: 1em;
+            color: #5a4a5a;
+        }
+
+        .stats-highlight {
+            font-weight: bold;
+            color: #9a7a8a;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: #9a7a8a;
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #7a6a7a;
         }
 
         @media (max-width: 768px) {
-            .card-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 15px;
+            .title {
+                font-size: 2em;
             }
-            .card-cover {
-                height: 280px;
+            .characters-grid {
+                grid-template-columns: 1fr;
             }
-            .page-title {
-                font-size: 1.6em;
+            .filter-tags {
+                gap: 8px;
+            }
+            .filter-tag {
+                padding: 8px 15px;
+                font-size: 0.85em;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="page-title">雨落们的档案馆</h1>
-
-        <!-- 筛选按钮 -->
-        <div class="filter-bar">
-            <button class="filter-btn active">全部</button>
-            <button class="filter-btn">第一世</button>
-            <button class="filter-btn">第二世</button>
-            <button class="filter-btn">第三世</button>
-            <button class="filter-btn">第四世</button>
-            <button class="filter-btn">第五世</button>
+        <div class="header">
+            <h1 class="title">雨落们的档案馆</h1>
+            <p class="subtitle">每一位雨落，都是独特的存在</p>
         </div>
 
-        <!-- 卡片网格 -->
-        <div class="card-grid">
-            <!-- 卡片 1 - 已解锁 -->
-            <div class="archive-card">
-                <div class="card-cover">
-                    <span class="card-number">Ⅰ</span>
-                    <!-- 封面图待添加 -->
-                </div>
-                <div class="card-info">
-                    <h3 class="card-title">标题待填写</h3>
-                    <p class="card-desc">简介待填写</p>
-                    <div class="card-meta">
-                        <span class="card-views">0 万</span>
-                        <span class="card-rating">--分</span>
-                    </div>
-                </div>
+        <!-- 筛选区 -->
+        <div class="filter-section">
+            <h2 class="filter-title">标签筛选（可多选）</h2>
+            <div class="filter-tags" id="filterTags">
+                <!-- 标签由 JavaScript 动态生成 -->
             </div>
-
-            <!-- 卡片 2 - 已解锁 -->
-            <div class="archive-card">
-                <div class="card-cover">
-                    <span class="card-number">Ⅱ</span>
-                </div>
-                <div class="card-info">
-                    <h3 class="card-title">标题待填写</h3>
-                    <p class="card-desc">简介待填写</p>
-                    <div class="card-meta">
-                        <span class="card-views">0 万</span>
-                        <span class="card-rating">--分</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 卡片 3-10 - 未解锁 -->
-            <div class="archive-card">
-                <div class="card-cover locked">
-                    <span class="card-number">Ⅲ</span>
-                    <div class="lock-icon">🔒</div>
-                </div>
-                <div class="card-info">
-                    <div class="locked-text">
-                        未解锁档案
-                        <div class="locked-sub">敬请期待</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="archive-card">
-                <div class="card-cover locked">
-                    <span class="card-number">Ⅳ</span>
-                    <div class="lock-icon">🔒</div>
-                </div>
-                <div class="card-info">
-                    <div class="locked-text">
-                        未解锁档案
-                        <div class="locked-sub">敬请期待</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="archive-card">
-                <div class="card-cover locked">
-                    <span class="card-number">Ⅴ</span>
-                    <div class="lock-icon">🔒</div>
-                </div>
-                <div class="card-info">
-                    <div class="locked-text">
-                        未解锁档案
-                        <div class="locked-sub">敬请期待</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="archive-card">
-                <div class="card-cover locked">
-                    <span class="card-number">Ⅵ</span>
-                    <div class="lock-icon">🔒</div>
-                </div>
-                <div class="card-info">
-                    <div class="locked-text">
-                        未解锁档案
-                        <div class="locked-sub">敬请期待</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="archive-card">
-                <div class="card-cover locked">
-                    <span class="card-number">Ⅶ</span>
-                    <div class="lock-icon">🔒</div>
-                </div>
-                <div class="card-info">
-                    <div class="locked-text">
-                        未解锁档案
-                        <div class="locked-sub">敬请期待</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="archive-card">
-                <div class="card-cover locked">
-                    <span class="card-number">Ⅷ</span>
-                    <div class="lock-icon">🔒</div>
-                </div>
-                <div class="card-info">
-                    <div class="locked-text">
-                        未解锁档案
-                        <div class="locked-sub">敬请期待</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="archive-card">
-                <div class="card-cover locked">
-                    <span class="card-number">Ⅸ</span>
-                    <div class="lock-icon">🔒</div>
-                </div>
-                <div class="card-info">
-                    <div class="locked-text">
-                        未解锁档案
-                        <div class="locked-sub">敬请期待</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="archive-card">
-                <div class="card-cover locked">
-                    <span class="card-number">Ⅹ</span>
-                    <div class="lock-icon">🔒</div>
-                </div>
-                <div class="card-info">
-                    <div class="locked-text">
-                        未解锁档案
-                        <div class="locked-sub">敬请期待</div>
-                    </div>
-                </div>
+            <div class="filter-clear">
+                <button onclick="clearFilters()">清除所有筛选</button>
             </div>
         </div>
 
-        <!-- 返回按钮 -->
-        <div class="back-link">
-            <a href="index.html">← 返回主页</a>
+        <!-- 统计信息 -->
+        <div class="stats">
+            <p class="stats-text">
+                共 <span class="stats-highlight" id="totalCount">0</span> 位角色，
+                当前显示 <span class="stats-highlight" id="displayCount">0</span> 位
+            </p>
         </div>
+
+        <!-- 角色卡片网格 -->
+        <div class="characters-grid" id="charactersGrid">
+            <!-- 角色卡片由 JavaScript 动态生成 -->
+        </div>
+
+        <a href="index.html" class="back-link">← 返回主页</a>
     </div>
 
     <script>
-        // 筛选按钮交互
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                filterBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
+        // 角色数据（示例，后续可添加更多）
+        const characters = [
+            {
+                id: 1,
+                name: "明雨落",
+                desc: "来自观测站的雨落，拥有观察和记录的能力。喜欢安静地坐在窗边，看着外面的世界。",
+                tags: ["观测站", "文静", "记录者"]
+            },
+            {
+                id: 2,
+                name: "茶馆雨落",
+                desc: "在捏捏茶馆工作的雨落，擅长调制各种饮品。性格温和，喜欢听客人讲故事。",
+                tags: ["茶馆", "温和", "服务"]
+            },
+            {
+                id: 3,
+                name: "会馆雨落",
+                desc: "众生之门会馆的成员，行动力强。总是充满活力，喜欢结交新朋友。",
+                tags: ["会馆", "活力", "社交"]
+            },
+            {
+                id: 4,
+                name: "花园雨落",
+                desc: "圣拉姆特花园的守护者，热爱花草。每天清晨都会给晚香玉浇水。",
+                tags: ["圣拉姆特", "花园", "自然"]
+            },
+            {
+                id: 5,
+                name: "图书馆雨落",
+                desc: "沉浸在书海中的雨落，知识渊博。喜欢在安静的角落里阅读一整天。",
+                tags: ["图书馆", "知识", "安静"]
+            },
+            {
+                id: 6,
+                name: "星空雨落",
+                desc: "仰望星空的梦想家，相信每一颗星星都有一个故事。夜晚是她最活跃的时候。",
+                tags: ["星空", "梦想", "夜晚"]
+            },
+            {
+                id: 7,
+                name: "海洋雨落",
+                desc: "来自海边的雨落，喜欢听海浪的声音。性格如海水般深邃而温柔。",
+                tags: ["海洋", "温柔", "深邃"]
+            },
+            {
+                id: 8,
+                name: "森林雨落",
+                desc: "与大自然为伴的雨落，能听懂动物的语言。喜欢在森林中漫步。",
+                tags: ["森林", "自然", "动物"]
+            }
+        ];
+
+        // 所有可用标签
+        const allTags = [...new Set(characters.flatMap(c => c.tags))].sort();
+
+        // 当前选中的标签
+        let selectedTags = [];
+
+        // 初始化
+        function init() {
+            renderFilterTags();
+            renderCharacters();
+            updateStats();
+        }
+
+        // 渲染筛选标签
+        function renderFilterTags() {
+            const container = document.getElementById('filterTags');
+            container.innerHTML = allTags.map(tag => `
+                <div class="filter-tag" data-tag="${tag}" onclick="toggleTag('${tag}')">
+                    ${tag}
+                </div>
+            `).join('');
+        }
+
+        // 切换标签选中状态
+        function toggleTag(tag) {
+            const index = selectedTags.indexOf(tag);
+            if (index > -1) {
+                selectedTags.splice(index, 1);
+            } else {
+                selectedTags.push(tag);
+            }
+
+            // 更新 UI
+            document.querySelectorAll('.filter-tag').forEach(el => {
+                el.classList.toggle('active', selectedTags.includes(el.dataset.tag));
             });
-        });
+
+            // 重新渲染角色
+            renderCharacters();
+            updateStats();
+        }
+
+        // 清除所有筛选
+        function clearFilters() {
+            selectedTags = [];
+            document.querySelectorAll('.filter-tag').forEach(el => {
+                el.classList.remove('active');
+            });
+            renderCharacters();
+            updateStats();
+        }
+
+        // 渲染角色卡片
+        function renderCharacters() {
+            const container = document.getElementById('charactersGrid');
+            
+            const filtered = selectedTags.length === 0
+                ? characters
+                : characters.filter(c => 
+                    selectedTags.every(tag => c.tags.includes(tag))
+                );
+
+            container.innerHTML = filtered.map(c => `
+                <div class="character-card">
+                    <div class="character-number">No. ${String(c.id).padStart(3, '0')}</div>
+                    <h3 class="character-name">${c.name}</h3>
+                    <p class="character-desc">${c.desc}</p>
+                    <div class="character-tags">
+                        ${c.tags.map(tag => `<span class="character-tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 更新统计信息
+        function updateStats() {
+            document.getElementById('totalCount').textContent = characters.length;
+            
+            const displayCount = selectedTags.length === 0
+                ? characters.length
+                : characters.filter(c => 
+                    selectedTags.every(tag => c.tags.includes(tag))
+                ).length;
+            
+            document.getElementById('displayCount').textContent = displayCount;
+        }
+
+        // 页面加载时初始化
+        init();
     </script>
 </body>
 </html>
