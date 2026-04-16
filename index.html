@@ -167,6 +167,33 @@
             animation: fadeIn 0.5s ease;
         }
 
+        /* 背景图片响应式适配 */
+        @media (max-width: 480px) {
+            #main-screen {
+                background-attachment: scroll;  /* 手机禁用固定背景，提升性能 */
+                background-position: center center;
+            }
+        }
+
+        @media (max-width: 360px) {
+            #main-screen {
+                background-position: 50% 30%;  /* 小屏调整背景位置 */
+            }
+        }
+
+        @media (min-width: 1920px) {
+            #main-screen {
+                background-size: cover;  /* 大屏保持覆盖 */
+            }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            #main-screen {
+                background-position: center;
+                background-size: cover;
+            }
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -727,11 +754,21 @@
         let currentBgIndex = 0;
         let musicStarted = false;
 
-        // 设置背景图片
+        // 设置背景图片（带响应式优化）
         function setBackground(index) {
             const mainScreen = document.getElementById('main-screen');
             const bgUrl = "url('" + backgrounds[index] + "')";
             mainScreen.style.backgroundImage = bgUrl;
+            
+            // 根据屏幕尺寸优化背景显示
+            if (window.innerWidth <= 480) {
+                mainScreen.style.backgroundAttachment = 'scroll';
+                mainScreen.style.backgroundPosition = 'center center';
+            } else if (window.innerWidth <= 360) {
+                mainScreen.style.backgroundPosition = '50% 30%';
+            } else if (window.innerWidth >= 1920) {
+                mainScreen.style.backgroundSize = 'cover';
+            }
         }
 
         // 切换背景
