@@ -162,6 +162,13 @@
             background-repeat: no-repeat;
             padding: 40px 20px;
             position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 内容容器 - 可滚动 */
+        #main-screen .container {
+            position: relative;
+            z-index: 1;
         }
 
         #main-screen.visible {
@@ -452,7 +459,7 @@
 
         /* 时间显示 - 中央 */
         .current-time {
-            font-size: 1.1em;
+            font-size: 1em;
             color: rgba(255, 255, 255, 0.85);
             text-align: center;
             margin-bottom: 40px;
@@ -460,6 +467,262 @@
             font-weight: 300;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
             font-family: 'Courier New', monospace;
+        }
+
+        /* 暗号专用区域 */
+        .secret-code-area {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
+        }
+
+        .secret-code-box {
+            width: 180px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .secret-code-box:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .secret-code-box-text {
+            font-size: 0.85em;
+            color: #5a7d8a;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* 暗号弹窗 */
+        .secret-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .secret-modal.active {
+            display: flex;
+        }
+
+        .secret-modal-content {
+            background: linear-gradient(135deg, #87CEEB, #B0E0E6);
+            padding: 40px 60px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: modalPop 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes modalPop {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .secret-modal-title {
+            font-size: 1.3em;
+            color: #fff;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            letter-spacing: 2px;
+        }
+
+        .secret-modal-input {
+            width: 280px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 25px;
+            font-size: 1em;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .secret-modal-input:focus {
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .secret-modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .secret-modal-btn {
+            background: linear-gradient(135deg, #5a7d8a, #7a9da8);
+            color: #fff;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-size: 0.95em;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .secret-modal-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .secret-modal-btn.cancel {
+            background: linear-gradient(135deg, #a0a0a0, #b0b0b0);
+        }
+
+        .secret-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.8em;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .secret-modal-close:hover {
+            transform: scale(1.2);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* 右下角悬浮按钮组 */
+        .floating-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1001;
+        }
+
+        .floating-btn-round {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3em;
+        }
+
+        .floating-btn-round:hover {
+            transform: scale(1.1);
+            background: #fff;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 悬浮选项弹窗 */
+        .floating-options {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+            z-index: 1002;
+            display: none;
+            min-width: 180px;
+        }
+
+        .floating-options.active {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .floating-options-title {
+            font-size: 0.9em;
+            color: #5a7d8a;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .floating-option-item {
+            padding: 10px 15px;
+            margin: 5px 0;
+            background: linear-gradient(135deg, #87CEEB, #B0E0E6);
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        .floating-option-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 开发者模式退出按钮 */
+        .dev-exit-btn {
+            position: fixed;
+            top: 10px;
+            left: 150px;
+            background: rgba(255, 100, 100, 0.9);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            cursor: pointer;
+            z-index: 1002;
+            display: none;
+            border: none;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .dev-exit-btn.active {
+            display: block;
+        }
+
+        .dev-exit-btn:hover {
+            transform: scale(1.05);
+            background: rgba(255, 80, 80, 0.9);
         }
 
         .entries-grid {
@@ -885,12 +1148,15 @@
         <!-- 开发者模式标识 -->
         <div class="dev-mode-indicator" id="devModeIndicator">🔓 开发者模式</div>
         
+        <!-- 开发者模式退出按钮 -->
+        <button class="dev-exit-btn" id="devExitBtn" onclick="exitDevMode()">❌ 退出开发者模式</button>
+        
         <div class="container">
             <h1 class="title">欢迎来到雨落的世界！</h1>
             <p class="intro-text">— 听，下雨了。—</p>
             
             <!-- 时间显示 -->
-            <p class="current-time" id="currentTime">现在是 --:--:--</p>
+            <p class="current-time" id="currentTime">----.--.-- --:--:--</p>
 
             <!-- 第一行：有关雨落们的事 -->
             <p class="section-label">——有关雨落们的事</p>
@@ -947,17 +1213,24 @@
             </div>
         </div>
         
-        <!-- 开始播放按钮 -->
-        <button class="play-btn" id="playBtn" onclick="showModal()">🎵 开始播放</button>
+        <!-- 暗号专用区域 -->
+        <div class="secret-code-area">
+            <div class="secret-code-box" onclick="openSecretModal()">
+                <span class="secret-code-box-text">🔐 点击输入暗号</span>
+            </div>
+        </div>
         
-        <!-- 切换背景按钮 -->
-        <button class="switch-bg-btn" onclick="switchBackground()">🖼️ 切换背景</button>
+        <!-- 右下角悬浮按钮 -->
+        <div class="floating-buttons">
+            <div class="floating-btn-round" onclick="toggleFloatingOptions()">⚙️</div>
+        </div>
         
-        <!-- 背景纯享按钮 -->
-        <button class="fullscreen-btn" onclick="toggleFullscreen()">🖼️ 背景纯享</button>
-        
-        <!-- 神秘暗号按钮 -->
-        <button class="secret-code-btn" onclick="openSecretModal()">🔐 点击输入神秘暗号…</button>
+        <!-- 悬浮选项弹窗 -->
+        <div class="floating-options" id="floatingOptions">
+            <div class="floating-options-title">你想做什么？</div>
+            <div class="floating-option-item" onclick="toggleFullscreen()">🖼️ 背景纯享</div>
+            <div class="floating-option-item" onclick="switchBackground()">🖼️ 切换背景</div>
+        </div>
     </div>
 
     <!-- 神秘暗号弹窗 -->
@@ -966,7 +1239,10 @@
             <span class="secret-modal-close" onclick="closeSecretModal(event)">×</span>
             <h3 class="secret-modal-title">🔐 输入神秘暗号</h3>
             <input type="text" class="secret-modal-input" id="secretModalInput" placeholder="请输入暗号…" onkeypress="checkSecretModalCode(event)">
-            <button class="secret-modal-btn" onclick="submitSecretCode()">确认</button>
+            <div class="secret-modal-buttons">
+                <button class="secret-modal-btn cancel" onclick="closeSecretModalDirect()">返回</button>
+                <button class="secret-modal-btn" onclick="submitSecretCode()">确定</button>
+            </div>
         </div>
     </div>
 
@@ -1205,22 +1481,25 @@
 
         // ========== 新功能 ==========
 
-        // 1. 更新时间显示（北京时间）
+        // 1. 更新时间显示（北京时间，含年月日）
         function updateTime() {
             const now = new Date();
             // 转换为北京时间（UTC+8）
             const beijingTime = new Date(now.getTime() + (8 - now.getTimezoneOffset() / 60) * 60 * 60 * 1000);
             
+            const year = beijingTime.getFullYear();
+            const month = String(beijingTime.getMonth() + 1).padStart(2, '0');
+            const date = String(beijingTime.getDate()).padStart(2, '0');
             const hours = String(beijingTime.getHours()).padStart(2, '0');
             const minutes = String(beijingTime.getMinutes()).padStart(2, '0');
             const seconds = String(beijingTime.getSeconds()).padStart(2, '0');
             
-            const timeString = `${hours}:${minutes}:${seconds}`;
+            const timeString = `${year}.${month}.${date} ${hours}:${minutes}:${seconds}`;
             
             // 更新时间显示
             const timeElement = document.getElementById('currentTime');
             if (timeElement) {
-                timeElement.textContent = `现在是 ${timeString}`;
+                timeElement.textContent = timeString;
             }
         }
 
@@ -1233,37 +1512,54 @@
         let isFullscreen = false;
         function toggleFullscreen() {
             const mainScreen = document.getElementById('main-screen');
-            const fullscreenBtn = document.querySelector('.fullscreen-btn');
+            const floatingOptions = document.getElementById('floatingOptions');
             
             isFullscreen = !isFullscreen;
             
             if (isFullscreen) {
                 mainScreen.classList.add('fullscreen-bg');
-                fullscreenBtn.textContent = '❌ 退出纯享';
                 // 隐藏其他元素
                 document.querySelector('.container').style.opacity = '0';
                 document.querySelector('.play-btn').style.display = 'none';
-                document.querySelector('.switch-bg-btn').style.display = 'none';
-                document.querySelector('.secret-code-btn').style.display = 'none';
-                document.querySelector('.fullscreen-btn').style.display = 'none';
+                document.querySelector('.secret-code-area').style.display = 'none';
+                document.querySelector('.floating-buttons').style.display = 'none';
+                floatingOptions.classList.remove('active');
             } else {
                 mainScreen.classList.remove('fullscreen-bg');
-                fullscreenBtn.textContent = '🖼️ 背景纯享';
                 // 显示其他元素
                 document.querySelector('.container').style.opacity = '1';
                 document.querySelector('.play-btn').style.display = 'block';
-                document.querySelector('.switch-bg-btn').style.display = 'block';
-                document.querySelector('.secret-code-btn').style.display = 'block';
-                document.querySelector('.fullscreen-btn').style.display = 'block';
+                document.querySelector('.secret-code-area').style.display = 'block';
+                document.querySelector('.floating-buttons').style.display = 'block';
             }
         }
 
-        // 3. 神秘暗号弹窗
+        // 3. 悬浮选项弹窗
+        function toggleFloatingOptions() {
+            const options = document.getElementById('floatingOptions');
+            options.classList.toggle('active');
+        }
+
+        // 点击页面其他地方关闭选项
+        document.addEventListener('click', function(event) {
+            const floatingBtn = document.querySelector('.floating-btn-round');
+            const floatingOptions = document.getElementById('floatingOptions');
+            
+            if (!floatingBtn.contains(event.target) && !floatingOptions.contains(event.target)) {
+                floatingOptions.classList.remove('active');
+            }
+        });
+
+        // 4. 神秘暗号弹窗
         function openSecretModal() {
             const modal = document.getElementById('secretModal');
             modal.classList.add('active');
             document.getElementById('secretModalInput').value = '';
             document.getElementById('secretModalInput').focus();
+        }
+
+        function closeSecretModalDirect() {
+            document.getElementById('secretModal').classList.remove('active');
         }
 
         function closeSecretModal(event) {
@@ -1310,6 +1606,7 @@
                     // 开启开发者模式
                     devMode = true;
                     document.getElementById('devModeIndicator').classList.add('active');
+                    document.getElementById('devExitBtn').classList.add('active');
                     
                     // 解锁档案馆
                     unlockArchive();
@@ -1328,6 +1625,30 @@
                     input.placeholder = '请输入暗号…';
                 }, 2000);
             }
+        }
+
+        // 退出开发者模式
+        function exitDevMode() {
+            devMode = false;
+            document.getElementById('devModeIndicator').classList.remove('active');
+            document.getElementById('devExitBtn').classList.remove('active');
+            
+            // 锁定档案馆
+            const archiveCard = document.getElementById('archiveCard');
+            const archiveBtn = document.getElementById('archiveBtn');
+            
+            archiveCard.style.opacity = '0.5';
+            archiveCard.style.cursor = 'not-allowed';
+            archiveCard.classList.remove('unlocked');
+            archiveCard.onclick = function() {
+                return false;
+            };
+            
+            archiveBtn.style.background = 'linear-gradient(135deg, #a0a0a0, #b0b0b0)';
+            archiveBtn.style.cursor = 'not-allowed';
+            archiveBtn.textContent = '暂未开放';
+            
+            alert('🔒 已退出开发者模式');
         }
 
         // 解锁档案馆
