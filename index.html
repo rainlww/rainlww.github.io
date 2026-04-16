@@ -469,7 +469,7 @@
             font-family: 'Courier New', monospace;
         }
 
-        /* 暗号专用区域 */
+        /* 暗号专用区域 - 小细长条 */
         .secret-code-area {
             position: fixed;
             bottom: 30px;
@@ -479,29 +479,30 @@
         }
 
         .secret-code-box {
-            width: 180px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.85);
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            border-radius: 15px;
+            width: 220px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.45);
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-radius: 12px;
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding-left: 15px;
         }
 
         .secret-code-box:hover {
-            background: rgba(255, 255, 255, 0.95);
-            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.55);
+            transform: scale(1.02);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         .secret-code-box-text {
-            font-size: 0.85em;
-            color: #5a7d8a;
-            font-weight: 600;
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
             letter-spacing: 1px;
         }
 
@@ -1213,6 +1214,9 @@
             </div>
         </div>
         
+        <!-- 开始播放按钮 -->
+        <button class="play-btn" id="playBtn" onclick="showModal()">🎵 开始播放</button>
+        
         <!-- 暗号专用区域 -->
         <div class="secret-code-area">
             <div class="secret-code-box" onclick="openSecretModal()">
@@ -1481,11 +1485,13 @@
 
         // ========== 新功能 ==========
 
-        // 1. 更新时间显示（北京时间，含年月日）
+        // 1. 更新时间显示（北京时间 UTC+8，含年月日时分秒）
         function updateTime() {
             const now = new Date();
-            // 转换为北京时间（UTC+8）
-            const beijingTime = new Date(now.getTime() + (8 - now.getTimezoneOffset() / 60) * 60 * 60 * 1000);
+            
+            // 强制转换为北京时间（UTC+8）
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const beijingTime = new Date(utc + (3600000 * 8));  // 北京时间 = UTC + 8 小时
             
             const year = beijingTime.getFullYear();
             const month = String(beijingTime.getMonth() + 1).padStart(2, '0');
@@ -1583,17 +1589,24 @@
                 // 暗号正确，关闭弹窗
                 document.getElementById('secretModal').classList.remove('active');
                 
-                // 显示 Loading 页
+                // 显示 Loading 页（和正常加载页一样，有下雨效果）
                 const loadingScreen = document.getElementById('loading-screen');
                 const mainScreen = document.getElementById('main-screen');
                 const loadingText = document.getElementById('loadingText');
                 
+                // 确保 Loading 页可见
                 loadingScreen.classList.remove('hidden');
                 loadingScreen.style.display = 'flex';
+                loadingScreen.style.opacity = '1';
                 mainScreen.classList.remove('visible');
                 
                 // 修改 Loading 文字
                 loadingText.textContent = '观测站身份系统识别中…';
+                
+                // 重新创建雨滴效果（和正常 Loading 一样）
+                const existingRain = loadingScreen.querySelectorAll('.raindrop');
+                existingRain.forEach(r => r.remove());
+                createRain();  // 使用已有的 createRain 函数创建雨滴
                 
                 // 2 秒后显示欢迎弹窗
                 setTimeout(function() {
