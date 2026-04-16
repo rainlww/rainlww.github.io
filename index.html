@@ -776,8 +776,8 @@
         // 背景图片数组
         // 桌面端用优化后的横幅图
         const desktopBackgrounds = ['banner_optimized.jpg', 'banner2_optimized.jpg'];
-        // 手机端用压缩后的竖版图（快速加载）
-        const mobileBackgrounds = ['mobile-bg1_mobile.png', 'mobile-bg2_mobile.png'];
+        // 手机端用高压缩竖版图（和横版相同压缩标准）
+        const mobileBackgrounds = ['mobile-bg1_mobile.jpg', 'mobile-bg2_mobile.jpg'];
         
         // 根据屏幕尺寸选择背景数组
         const backgrounds = window.innerWidth <= 768 ? mobileBackgrounds : desktopBackgrounds;
