@@ -226,16 +226,11 @@
             pointer-events: none;
         }
 
-        /* 背景纯享模式 */
-        #main-screen.fullscreen-bg {
-            background-size: contain !important;
-            background-position: center !important;
-        }
-
-        .fullscreen-hint {
+        /* 背景纯享按钮 */
+        .fullscreen-btn {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            bottom: 20px;
+            left: 20px;
             background: rgba(255, 255, 255, 0.9);
             color: #5a7d8a;
             padding: 10px 20px;
@@ -245,48 +240,141 @@
             z-index: 1001;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
-            display: none;
+            border: none;
+            font-weight: 600;
         }
 
-        .fullscreen-hint:hover {
+        .fullscreen-btn:hover {
             transform: scale(1.05);
             background: #fff;
         }
 
-        /* 时间显示 */
-        .card-time {
-            font-size: 0.75em;
-            color: rgba(255, 255, 255, 0.6);
-            text-align: right;
-            margin-top: 10px;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 1px;
+        /* 背景纯享模式 */
+        #main-screen.fullscreen-bg {
+            background-size: contain !important;
+            background-position: center !important;
         }
 
-        /* 神秘暗号输入框 */
-        .secret-code-container {
+        /* 神秘暗号按钮 */
+        .secret-code-btn {
             position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1001;
-        }
-
-        .secret-code-input {
-            width: 200px;
-            padding: 10px 15px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid rgba(255, 255, 255, 0.5);
+            bottom: 20px;
+            right: 150px;
+            background: rgba(255, 255, 255, 0.85);
+            color: #5a7d8a;
+            padding: 10px 20px;
             border-radius: 25px;
             font-size: 0.9em;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+        }
+
+        .secret-code-btn:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* 神秘暗号弹窗 */
+        .secret-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .secret-modal.active {
+            display: flex;
+        }
+
+        .secret-modal-content {
+            background: linear-gradient(135deg, #87CEEB, #B0E0E6);
+            padding: 40px 60px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: modalPop 0.3s ease;
+        }
+
+        @keyframes modalPop {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .secret-modal-title {
+            font-size: 1.3em;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            letter-spacing: 2px;
+        }
+
+        .secret-modal-input {
+            width: 280px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 25px;
+            font-size: 1em;
             text-align: center;
             outline: none;
             transition: all 0.3s ease;
+            margin-bottom: 15px;
         }
 
-        .secret-code-input:focus {
+        .secret-modal-input:focus {
             border-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .secret-modal-btn {
+            background: linear-gradient(135deg, #5a7d8a, #7a9da8);
+            color: #fff;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-size: 0.95em;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .secret-modal-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .secret-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.8em;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .secret-modal-close:hover {
+            transform: scale(1.2);
+            color: rgba(255, 255, 255, 0.8);
         }
 
         /* 开发者模式标识 */
@@ -354,12 +442,24 @@
             font-size: 1.3em;
             color: rgba(255, 255, 255, 0.9);
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 15px;
             margin-top: 15px;
             letter-spacing: 3px;
             font-weight: 300;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
             font-style: italic;
+        }
+
+        /* 时间显示 - 中央 */
+        .current-time {
+            font-size: 1.1em;
+            color: rgba(255, 255, 255, 0.85);
+            text-align: center;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            font-weight: 300;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+            font-family: 'Courier New', monospace;
         }
 
         .entries-grid {
@@ -782,15 +882,15 @@
         <!-- 背景模糊层 -->
         <div id="bgOverlay"></div>
         
-        <!-- 背景纯享按钮 -->
-        <div class="fullscreen-hint" id="fullscreenHint" onclick="toggleFullscreen()">🖼️ 背景纯享</div>
-        
         <!-- 开发者模式标识 -->
         <div class="dev-mode-indicator" id="devModeIndicator">🔓 开发者模式</div>
         
         <div class="container">
             <h1 class="title">欢迎来到雨落的世界！</h1>
             <p class="intro-text">— 听，下雨了。—</p>
+            
+            <!-- 时间显示 -->
+            <p class="current-time" id="currentTime">现在是 --:--:--</p>
 
             <!-- 第一行：有关雨落们的事 -->
             <p class="section-label">——有关雨落们的事</p>
@@ -803,7 +903,6 @@
                         快来快来！
                     </p>
                     <button class="entry-btn" onclick="window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;">点击进入</button>
-                    <div class="card-time" id="time1"></div>
                 </div>
 
                 <!-- 雨落们的档案馆（暂未开放） -->
@@ -815,7 +914,6 @@
                         <span style="color: #8a9a9f; font-size: 0.85em; margin-top: 8px; display: block;">🔒 暂未对外开放</span>
                     </p>
                     <button class="entry-btn" style="background: linear-gradient(135deg, #a0a0a0, #b0b0b0); cursor: not-allowed;" id="archiveBtn">暂未开放</button>
-                    <div class="card-time" id="time2"></div>
                 </div>
             </div>
 
@@ -830,7 +928,6 @@
                         探索人格的奥秘～
                     </p>
                     <button class="entry-btn">开始测试</button>
-                    <div class="card-time" id="time3"></div>
                 </div>
 
                 <!-- 绘境 · 标签配方库 -->
@@ -841,7 +938,6 @@
                         来试试吗？
                     </p>
                     <button class="entry-btn">进入绘境</button>
-                    <div class="card-time" id="time4"></div>
                 </div>
             </div>
 
@@ -857,9 +953,20 @@
         <!-- 切换背景按钮 -->
         <button class="switch-bg-btn" onclick="switchBackground()">🖼️ 切换背景</button>
         
-        <!-- 神秘暗号输入框 -->
-        <div class="secret-code-container">
-            <input type="text" class="secret-code-input" id="secretCodeInput" placeholder="输入暗号..." onkeypress="checkSecretCode(event)">
+        <!-- 背景纯享按钮 -->
+        <button class="fullscreen-btn" onclick="toggleFullscreen()">🖼️ 背景纯享</button>
+        
+        <!-- 神秘暗号按钮 -->
+        <button class="secret-code-btn" onclick="openSecretModal()">🔐 点击输入神秘暗号…</button>
+    </div>
+
+    <!-- 神秘暗号弹窗 -->
+    <div class="secret-modal" id="secretModal" onclick="closeSecretModal(event)">
+        <div class="secret-modal-content">
+            <span class="secret-modal-close" onclick="closeSecretModal(event)">×</span>
+            <h3 class="secret-modal-title">🔐 输入神秘暗号</h3>
+            <input type="text" class="secret-modal-input" id="secretModalInput" placeholder="请输入暗号…" onkeypress="checkSecretModalCode(event)">
+            <button class="secret-modal-btn" onclick="submitSecretCode()">确认</button>
         </div>
     </div>
 
@@ -1104,20 +1211,17 @@
             // 转换为北京时间（UTC+8）
             const beijingTime = new Date(now.getTime() + (8 - now.getTimezoneOffset() / 60) * 60 * 60 * 1000);
             
-            const year = beijingTime.getFullYear();
-            const month = String(beijingTime.getMonth() + 1).padStart(2, '0');
-            const date = String(beijingTime.getDate()).padStart(2, '0');
             const hours = String(beijingTime.getHours()).padStart(2, '0');
             const minutes = String(beijingTime.getMinutes()).padStart(2, '0');
             const seconds = String(beijingTime.getSeconds()).padStart(2, '0');
             
-            const timeString = `${year}.${month}.${date} ${hours}:${minutes}:${seconds}`;
+            const timeString = `${hours}:${minutes}:${seconds}`;
             
-            // 更新所有时间显示
-            const timeElements = document.querySelectorAll('.card-time');
-            timeElements.forEach(el => {
-                el.textContent = timeString;
-            });
+            // 更新时间显示
+            const timeElement = document.getElementById('currentTime');
+            if (timeElement) {
+                timeElement.textContent = `现在是 ${timeString}`;
+            }
         }
 
         // 每秒更新时间
@@ -1129,55 +1233,100 @@
         let isFullscreen = false;
         function toggleFullscreen() {
             const mainScreen = document.getElementById('main-screen');
-            const fullscreenHint = document.getElementById('fullscreenHint');
+            const fullscreenBtn = document.querySelector('.fullscreen-btn');
             
             isFullscreen = !isFullscreen;
             
             if (isFullscreen) {
                 mainScreen.classList.add('fullscreen-bg');
-                fullscreenHint.textContent = '❌ 退出纯享';
+                fullscreenBtn.textContent = '❌ 退出纯享';
                 // 隐藏其他元素
                 document.querySelector('.container').style.opacity = '0';
                 document.querySelector('.play-btn').style.display = 'none';
                 document.querySelector('.switch-bg-btn').style.display = 'none';
-                document.querySelector('.secret-code-container').style.display = 'none';
+                document.querySelector('.secret-code-btn').style.display = 'none';
+                document.querySelector('.fullscreen-btn').style.display = 'none';
             } else {
                 mainScreen.classList.remove('fullscreen-bg');
-                fullscreenHint.textContent = '🖼️ 背景纯享';
+                fullscreenBtn.textContent = '🖼️ 背景纯享';
                 // 显示其他元素
                 document.querySelector('.container').style.opacity = '1';
                 document.querySelector('.play-btn').style.display = 'block';
                 document.querySelector('.switch-bg-btn').style.display = 'block';
-                document.querySelector('.secret-code-container').style.display = 'block';
+                document.querySelector('.secret-code-btn').style.display = 'block';
+                document.querySelector('.fullscreen-btn').style.display = 'block';
             }
         }
 
-        // 3. 神秘暗号验证
-        let devMode = false;
-        function checkSecretCode(event) {
+        // 3. 神秘暗号弹窗
+        function openSecretModal() {
+            const modal = document.getElementById('secretModal');
+            modal.classList.add('active');
+            document.getElementById('secretModalInput').value = '';
+            document.getElementById('secretModalInput').focus();
+        }
+
+        function closeSecretModal(event) {
+            if (event.target.id === 'secretModal') {
+                document.getElementById('secretModal').classList.remove('active');
+            }
+        }
+
+        function checkSecretModalCode(event) {
             if (event.key === 'Enter') {
-                const input = document.getElementById('secretCodeInput');
-                const code = input.value.trim();
+                submitSecretCode();
+            }
+        }
+
+        let devMode = false;
+        function submitSecretCode() {
+            const input = document.getElementById('secretModalInput');
+            const code = input.value.trim();
+            
+            if (code === '雨晴了') {
+                // 暗号正确，关闭弹窗
+                document.getElementById('secretModal').classList.remove('active');
                 
-                if (code === '雨晴了') {
-                    // 暗号正确，开启开发者模式
+                // 显示 Loading 页
+                const loadingScreen = document.getElementById('loading-screen');
+                const mainScreen = document.getElementById('main-screen');
+                const loadingText = document.getElementById('loadingText');
+                
+                loadingScreen.classList.remove('hidden');
+                loadingScreen.style.display = 'flex';
+                mainScreen.classList.remove('visible');
+                
+                // 修改 Loading 文字
+                loadingText.textContent = '观测站身份系统识别中…';
+                
+                // 2 秒后显示欢迎弹窗
+                setTimeout(function() {
+                    // 隐藏 Loading
+                    loadingScreen.classList.add('hidden');
+                    
+                    // 显示欢迎弹窗
+                    alert('🔓 识别成功！\n\n欢迎回家，明雨落！');
+                    
+                    // 开启开发者模式
                     devMode = true;
                     document.getElementById('devModeIndicator').classList.add('active');
-                    input.value = '';
-                    input.placeholder = '✅ 开发者模式已开启';
                     
                     // 解锁档案馆
                     unlockArchive();
                     
-                    alert('🔓 开发者模式已开启！\n所有未开放页面和功能现已解锁。');
-                } else {
-                    // 暗号错误
-                    input.value = '';
-                    input.placeholder = '❌ 暗号错误';
-                    setTimeout(() => {
-                        input.placeholder = '输入暗号...';
-                    }, 2000);
-                }
+                    // 显示主页
+                    setTimeout(function() {
+                        mainScreen.classList.add('visible');
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                }, 2000);
+            } else {
+                // 暗号错误
+                input.value = '';
+                input.placeholder = '❌ 暗号错误';
+                setTimeout(() => {
+                    input.placeholder = '请输入暗号…';
+                }, 2000);
             }
         }
 
