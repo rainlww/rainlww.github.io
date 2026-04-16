@@ -1637,11 +1637,9 @@
                 
                 // 2 秒后显示欢迎弹窗
                 setTimeout(function() {
-                    // 隐藏 Loading
+                    // 先隐藏 Loading，显示主页
                     loadingScreen.classList.add('hidden');
-                    
-                    // 显示欢迎弹窗
-                    alert('🔓 识别成功！\n\n欢迎回家，明雨落！');
+                    mainScreen.classList.add('visible');
                     
                     // 开启开发者模式
                     devMode = true;
@@ -1651,11 +1649,13 @@
                     // 解锁档案馆
                     unlockArchive();
                     
-                    // 显示主页
+                    // 完全隐藏 Loading 页
                     setTimeout(function() {
-                        mainScreen.classList.add('visible');
                         loadingScreen.style.display = 'none';
-                    }, 500);
+                        
+                        // 显示欢迎弹窗
+                        alert('🔓 识别成功！\n\n欢迎回家，明雨落！');
+                    }, 1000);
                 }, 2000);
             } else {
                 // 暗号错误
