@@ -482,35 +482,47 @@
             }
         };
 
-        // ========== 语义分析引擎（和 MBTI 一样的套路）==========
+        // ========== 语义分析引擎（精确版）==========
         // 每个类型有 pattern 数组，每个 pattern 有正则、权重、描述
-        // 权重可正可负：正向词加分，负向词减分
+        // 5 级权重：5（核心特质）/3（重要特质）/2（次要特质）/1（边缘特质）/-2（负向特质）
         
         const semanticPatterns = {
             zh: {
                 1: [
-                    { pattern: /追求完美/g, weight: 3, desc: '追求完美' },
-                    { pattern: /完美主义/g, weight: 3, desc: '完美主义' },
-                    { pattern: /原则/g, weight: 2, desc: '有原则' },
-                    { pattern: /道德/g, weight: 2, desc: '道德感' },
-                    { pattern: /标准/g, weight: 2, desc: '高标准' },
-                    { pattern: /正确/g, weight: 2, desc: '注重对错' },
-                    { pattern: /应该/g, weight: 2, desc: '应该思维' },
-                    { pattern: /必须/g, weight: 2, desc: '必须思维' },
+                    // 核心特质（×5）
+                    { pattern: /追求完美/g, weight: 5, desc: '追求完美' },
+                    { pattern: /完美主义/g, weight: 5, desc: '完美主义' },
+                    { pattern: /完美主义者/g, weight: 5, desc: '完美主义者' },
+                    // 重要特质（×3）
+                    { pattern: /原则/g, weight: 3, desc: '有原则' },
+                    { pattern: /道德/g, weight: 3, desc: '道德感' },
+                    { pattern: /标准/g, weight: 3, desc: '高标准' },
+                    { pattern: /应该/g, weight: 3, desc: '应该思维' },
+                    { pattern: /必须/g, weight: 3, desc: '必须思维' },
+                    { pattern: /对错/g, weight: 3, desc: '注重对错' },
+                    // 次要特质（×2）
                     { pattern: /批评/g, weight: 2, desc: '爱批评' },
                     { pattern: /挑剔/g, weight: 2, desc: '挑剔' },
-                    { pattern: /改进/g, weight: 1, desc: '追求改进' },
-                    { pattern: /秩序/g, weight: 1, desc: '注重秩序' },
-                    { pattern: /责任/g, weight: 1, desc: '责任感' },
-                    { pattern: /自律/g, weight: 1, desc: '自律' },
+                    { pattern: /改进/g, weight: 2, desc: '追求改进' },
+                    { pattern: /秩序/g, weight: 2, desc: '注重秩序' },
+                    { pattern: /责任/g, weight: 2, desc: '责任感' },
+                    { pattern: /自律/g, weight: 2, desc: '自律' },
+                    // 边缘特质（×1）
                     { pattern: /理想/g, weight: 1, desc: '理想主义' },
                     { pattern: /公正/g, weight: 1, desc: '追求公正' },
                     { pattern: /规范/g, weight: 1, desc: '遵守规范' },
                     { pattern: /严谨/g, weight: 1, desc: '严谨' },
                     { pattern: /正直/g, weight: 1, desc: '正直' },
                     { pattern: /规则/g, weight: 1, desc: '遵守规则' },
+                    { pattern: /正确/g, weight: 1, desc: '正确' },
+                    { pattern: /错误/g, weight: 1, desc: '错误' },
+                    { pattern: /整洁/g, weight: 1, desc: '整洁' },
+                    { pattern: /条理/g, weight: 1, desc: '条理' },
+                    // 负向特质（-2）
                     { pattern: /差不多/g, weight: -2, desc: '不接受差不多' },
-                    { pattern: /随意/g, weight: -2, desc: '不随意' }
+                    { pattern: /随意/g, weight: -2, desc: '不随意' },
+                    { pattern: /凑合/g, weight: -2, desc: '不凑合' },
+                    { pattern: /马虎/g, weight: -2, desc: '不马虎' }
                 ],
                 2: [
                     { pattern: /帮助他人/g, weight: 3, desc: '帮助他人' },
@@ -936,6 +948,113 @@
             '#34495e', '#e67e22', '#c0392b', '#95a5a6'
         ];
 
+        // 语义相似度词组（相似词匹配）
+        const semanticSimilarity = {
+            zh: [
+                // 1 号完美主义
+                { type: 1, words: ['完美', '完美主义', '追求完美', '完美主义者'] },
+                { type: 1, words: ['应该', '应该这样', '应该那样', '就应该'] },
+                { type: 1, words: ['必须', '必须要', '必须这样'] },
+                { type: 1, words: ['对错', '对与错', '是非', '正确错误'] },
+                { type: 1, words: ['批评', '挑剔', '指责', '挑剔别人'] },
+                // 2 号给予者
+                { type: 2, words: ['帮助', '帮助别人', '帮助他人', '乐于助人'] },
+                { type: 2, words: ['关心', '关心别人', '关心他人'] },
+                { type: 2, words: ['付出', '为别人付出', '无私奉献'] },
+                { type: 2, words: ['被需要', '被人需要', '需要我'] },
+                { type: 2, words: ['善良', '心软', '心善'] },
+                // 3 号成就者
+                { type: 3, words: ['成功', '成功的', '追求成功'] },
+                { type: 3, words: ['成就', '成就感', '取得成就'] },
+                { type: 3, words: ['目标', '目标导向', '有目标'] },
+                { type: 3, words: ['效率', '高效', '高效率'] },
+                { type: 3, words: ['认可', '被认可', '被人认可', '被肯定'] },
+                // 4 号浪漫主义者
+                { type: 4, words: ['独特', '特别的', '与众不同', '不一样'] },
+                { type: 4, words: ['敏感', '很敏感', '过于敏感'] },
+                { type: 4, words: ['情感', '情感丰富', '情绪化'] },
+                { type: 4, words: ['孤独', '孤独感', '感到孤独'] },
+                { type: 4, words: ['缺失', '缺失感', '缺少什么'] },
+                // 5 号观察者
+                { type: 5, words: ['知识', '求知', '学习知识'] },
+                { type: 5, words: ['思考', '爱思考', '喜欢思考', '独自思考'] },
+                { type: 5, words: ['独处', '一个人', '喜欢独处', '享受独处'] },
+                { type: 5, words: ['分析', '分析能力', '善于分析'] },
+                { type: 5, words: ['隐私', '私人空间', '个人空间'] },
+                // 6 号忠诚者
+                { type: 6, words: ['安全', '安全感', '追求安全'] },
+                { type: 6, words: ['担心', '担忧', '容易担心'] },
+                { type: 6, words: ['焦虑', '焦虑感', '容易焦虑'] },
+                { type: 6, words: ['怀疑', '怀疑别人', '不信任'] },
+                { type: 6, words: ['准备', '提前准备', '做好准备'] },
+                // 7 号热情者
+                { type: 7, words: ['快乐', '开心', '追求快乐'] },
+                { type: 7, words: ['自由', '追求自由', '自由自在'] },
+                { type: 7, words: ['新鲜', '新鲜感', '喜欢新鲜'] },
+                { type: 7, words: ['体验', '体验新事物', '追求体验'] },
+                { type: 7, words: ['逃避', '逃避痛苦', '不想面对'] },
+                // 8 号挑战者
+                { type: 8, words: ['控制', '掌控', '控制欲'] },
+                { type: 8, words: ['力量', '强大', '有力量'] },
+                { type: 8, words: ['保护', '保护别人', '保护欲'] },
+                { type: 8, words: ['直接', '直来直去', '直接表达'] },
+                { type: 8, words: ['挑战', '喜欢挑战', '迎接挑战'] },
+                // 9 号调停者
+                { type: 9, words: ['和平', '追求和平', '和平相处'] },
+                { type: 9, words: ['和谐', '追求和谐', '和谐相处'] },
+                { type: 9, words: ['平静', '内心平静', '追求平静'] },
+                { type: 9, words: ['冲突', '避免冲突', '不喜欢冲突'] },
+                { type: 9, words: ['随和', '随遇而安', '好相处'] }
+            ],
+            en: [
+                // Type 1 Perfectionist
+                { type: 1, words: ['perfect', 'perfectionist', 'perfectionism'] },
+                { type: 1, words: ['should', 'must', 'have to'] },
+                { type: 1, words: ['right', 'wrong', 'right or wrong'] },
+                { type: 1, words: ['critic', 'critical', 'criticize'] },
+                // Type 2 Giver
+                { type: 2, words: ['help', 'help others', 'helpful'] },
+                { type: 2, words: ['care', 'care about', 'caring'] },
+                { type: 2, words: ['give', 'giving', 'generous'] },
+                { type: 2, words: ['needed', 'be needed', 'want to be needed'] },
+                // Type 3 Achiever
+                { type: 3, words: ['success', 'successful', 'achieve'] },
+                { type: 3, words: ['goal', 'goal-oriented', 'goals'] },
+                { type: 3, words: ['efficient', 'efficiency', 'productive'] },
+                { type: 3, words: ['recognition', 'recognized', 'be recognized'] },
+                // Type 4 Romantic
+                { type: 4, words: ['unique', 'special', 'different'] },
+                { type: 4, words: ['sensitive', 'very sensitive'] },
+                { type: 4, words: ['emotion', 'emotional', 'feelings'] },
+                { type: 4, words: ['lonely', 'loneliness', 'feel lonely'] },
+                // Type 5 Observer
+                { type: 5, words: ['knowledge', 'learn', 'understand'] },
+                { type: 5, words: ['think', 'thinking', 'love to think'] },
+                { type: 5, words: ['alone', 'solitude', 'alone time'] },
+                { type: 5, words: ['analyze', 'analysis', 'analytical'] },
+                // Type 6 Loyalist
+                { type: 6, words: ['security', 'safe', 'feel safe'] },
+                { type: 6, words: ['worry', 'worried', 'worrying'] },
+                { type: 6, words: ['anxiety', 'anxious', 'feel anxious'] },
+                { type: 6, words: ['doubt', 'doubtful', 'skeptical'] },
+                // Type 7 Enthusiast
+                { type: 7, words: ['happy', 'happiness', 'joy'] },
+                { type: 7, words: ['freedom', 'free', 'feel free'] },
+                { type: 7, words: ['new', 'new things', 'novelty'] },
+                { type: 7, words: ['experience', 'experiences', 'try new'] },
+                // Type 8 Challenger
+                { type: 8, words: ['control', 'controlling', 'in control'] },
+                { type: 8, words: ['power', 'powerful', 'strength'] },
+                { type: 8, words: ['protect', 'protective', 'protect others'] },
+                { type: 8, words: ['direct', 'straightforward', 'blunt'] },
+                // Type 9 Peacemaker
+                { type: 9, words: ['peace', 'peaceful', 'inner peace'] },
+                { type: 9, words: ['harmony', 'harmonious', 'in harmony'] },
+                { type: 9, words: ['calm', 'calmness', 'tranquil'] },
+                { type: 9, words: ['conflict', 'avoid conflict', 'conflicts'] }
+            ]
+        };
+
         // 翼型（相邻类型）
         function getWingTypes(mainType) {
             if (mainType === 1) return [9, 2];
@@ -1181,36 +1300,43 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
             }, 400);
         }
 
-        // 执行实际分析
+        // 执行实际分析（精确版）
         function performAnalysis(text) {
             const analyzeBtn = document.getElementById('analyzeBtn');
             const loadingSection = document.getElementById('loadingSection');
             const t = i18n[currentLang];
 
             try {
-                // ========== 第一步：基础分（避免 0%） ==========
-                // 每种类型先给基础分 15 分，确保所有类型都有占比
-                const baseScore = 15;
+                // ========== 第一步：文本预处理 ==========
+                // 转小写（英文），去除标点
+                let processedText = text;
+                if (currentLang === 'en') {
+                    processedText = text.toLowerCase();
+                }
+                
+                // ========== 第二步：基础分（避免 0%） ==========
+                // 每种类型先给基础分 10 分（降低基础分，让关键词影响更大）
+                const baseScore = 10;
                 const scores = {};
                 for (let i = 1; i <= 9; i++) {
                     scores[i] = baseScore;
                 }
 
-                // ========== 第二步：关键词匹配加分 ==========
+                // ========== 第三步：关键词匹配加分（5 级权重） ==========
                 const patterns = semanticPatterns[currentLang];
                 Object.keys(patterns).forEach(type => {
                     const typePatterns = patterns[type];
                     typePatterns.forEach(({ pattern, weight, desc }) => {
-                        const matches = text.match(pattern);
+                        const matches = processedText.match(pattern);
                         if (matches) {
-                            // 正向词加分，负向词减分（但不低于基础分的一半）
+                            // 5 级权重：5/3/2/1/-2
                             if (weight > 0) {
                                 scores[type] += weight;
                             } else {
                                 // 负向词：减少其他类型的分数（相对加分）
                                 for (let i = 1; i <= 9; i++) {
                                     if (i !== type) {
-                                        scores[i] += Math.abs(weight) * 0.5;
+                                        scores[i] += Math.abs(weight) * 0.3;
                                     }
                                 }
                             }
@@ -1218,14 +1344,31 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
                     });
                 });
 
-                // ========== 第三步：计算百分比 ==========
+                // ========== 第四步：语义相似度加分 ==========
+                // 相似词组：一组词表达相似含义，匹配任意一个都给该类型加分
+                const similarGroups = semanticSimilarity[currentLang];
+                similarGroups.forEach(group => {
+                    let matchCount = 0;
+                    group.words.forEach(word => {
+                        const regex = new RegExp(word, 'gi');
+                        if (processedText.match(regex)) {
+                            matchCount++;
+                        }
+                    });
+                    // 匹配到组内任意词，给对应类型加分（每组 +2 分）
+                    if (matchCount > 0) {
+                        scores[group.type] += 2;
+                    }
+                });
+
+                // ========== 第五步：计算百分比 ==========
                 const total = Object.values(scores).reduce((a, b) => a + b, 0);
                 const percentages = {};
                 for (let i = 1; i <= 9; i++) {
                     percentages[i] = Math.round((scores[i] / total) * 100);
                 }
 
-                // ========== 第四步：找出主导类型 ==========
+                // ========== 第六步：找出主导类型 ==========
                 let maxScore = 0;
                 let mainType = 1;
                 for (let i = 1; i <= 9; i++) {
@@ -1235,7 +1378,7 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
                     }
                 }
 
-                // ========== 第五步：计算翼型（相邻类型中较高的） ==========
+                // ========== 第七步：计算翼型（相邻类型中较高的） ==========
                 const wingTypes = getWingTypes(mainType);
                 let wingScore = 0;
                 let wingType = 0;
@@ -1246,11 +1389,11 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
                     }
                 });
 
-                // ========== 第六步：压力/安全方向 ==========
+                // ========== 第八步：压力/安全方向 ==========
                 const stressType = stressDirections[mainType];
                 const secureType = secureDirections[mainType];
 
-                // ========== 第七步：生成专业报告 ==========
+                // ========== 第九步：生成专业报告 ==========
                 const report = generateReport(mainType, wingType, percentages, stressType, secureType);
 
                 // 显示结果
