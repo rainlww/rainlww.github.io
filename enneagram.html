@@ -135,14 +135,27 @@
             transform: none;
         }
 
+        .btn-analyze.hidden {
+            display: none;
+        }
+
         /* 加载动画 */
         .loading-section {
+            display: none;
             margin-top: 25px;
             text-align: center;
             padding: 25px;
             background: linear-gradient(135deg, rgba(154, 122, 138, 0.05), rgba(170, 138, 154, 0.05));
             border-radius: 15px;
             border: 2px solid rgba(154, 122, 138, 0.2);
+        }
+
+        .loading-section:not(.hidden) {
+            display: block;
+        }
+
+        .loading-section.hidden {
+            display: none;
         }
 
         .loading-text {
