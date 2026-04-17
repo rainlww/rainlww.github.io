@@ -378,48 +378,63 @@
 
         function analyzePersonality() {
             const text = document.getElementById('selfDesc').value.trim();
+            const analyzeBtn = document.getElementById('analyzeBtn');
             
             if (text.length < 50) {
                 alert('请详细描述你自己，至少 50 字哦～');
                 return;
             }
+            
+            // 禁用按钮防止重复点击
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = '分析中…';
 
-            // 计算各类型得分
-            const scores = {};
-            for (let i = 1; i <= 9; i++) {
-                scores[i] = 0;
-            }
-
-            // 统计关键词匹配
-            typeKeywords.forEach((keywords, type) => {
-                keywords.forEach(keyword => {
-                    const regex = new RegExp(keyword, 'gi');
-                    const matches = text.match(regex);
-                    if (matches) {
-                        scores[type] += matches.length;
-                    }
-                });
-            });
-
-            // 计算总分和百分比
-            const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
-            const percentages = {};
-            for (let i = 1; i <= 9; i++) {
-                percentages[i] = Math.round((scores[i] / total) * 100);
-            }
-
-            // 找出主导类型
-            let maxScore = 0;
-            let mainType = 1;
-            for (let i = 1; i <= 9; i++) {
-                if (scores[i] > maxScore) {
-                    maxScore = scores[i];
-                    mainType = i;
+            try {
+                // 计算各类型得分
+                const scores = {};
+                for (let i = 1; i <= 9; i++) {
+                    scores[i] = 0;
                 }
-            }
 
-            // 显示结果
-            showResult(percentages, mainType);
+                // 统计关键词匹配
+                Object.keys(typeKeywords).forEach(type => {
+                    const keywords = typeKeywords[type];
+                    keywords.forEach(keyword => {
+                        const regex = new RegExp(keyword, 'gi');
+                        const matches = text.match(regex);
+                        if (matches) {
+                            scores[type] += matches.length;
+                        }
+                    });
+                });
+
+                // 计算总分和百分比
+                const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+                const percentages = {};
+                for (let i = 1; i <= 9; i++) {
+                    percentages[i] = Math.round((scores[i] / total) * 100);
+                }
+
+                // 找出主导类型
+                let maxScore = 0;
+                let mainType = 1;
+                for (let i = 1; i <= 9; i++) {
+                    if (scores[i] > maxScore) {
+                        maxScore = scores[i];
+                        mainType = i;
+                    }
+                }
+
+                // 显示结果
+                showResult(percentages, mainType);
+            } catch (e) {
+                console.error('分析出错:', e);
+                alert('分析过程中出现错误，请重试');
+            } finally {
+                // 恢复按钮
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = '开始分析';
+            }
         }
 
         function showResult(percentages, mainType) {

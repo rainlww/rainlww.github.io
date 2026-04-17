@@ -257,10 +257,42 @@
             background: #fff;
         }
 
+        /* 退出纯享按钮（纯享模式下显示） */
+        #exitFullscreenBtn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #5a7d8a;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: none;
+            font-weight: 600;
+            display: none;
+            opacity: 0;
+        }
+
+        #exitFullscreenBtn:hover {
+            transform: scale(1.05);
+            background: #fff;
+        }
+
         /* 背景纯享模式 */
         #main-screen.fullscreen-bg {
             background-size: contain !important;
             background-position: center !important;
+        }
+
+        /* 平板端背景纯享适配 */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            #main-screen.fullscreen-bg {
+                background-size: cover !important;
+            }
         }
 
         /* 神秘暗号按钮 */
@@ -1252,6 +1284,9 @@
             <div class="floating-option-item" onclick="toggleFullscreen()" id="fullscreenOption">🖼️ 背景纯享</div>
             <div class="floating-option-item" onclick="switchBackground()">🖼️ 切换背景</div>
         </div>
+        
+        <!-- 退出纯享按钮（纯享模式下点击屏幕显示） -->
+        <button id="exitFullscreenBtn" onclick="toggleFullscreen()">❌ 退出纯享</button>
     </div>
 
     <!-- 神秘暗号弹窗 -->
@@ -1553,6 +1588,9 @@
                 document.querySelector('.secret-code-area').style.display = 'none';
                 document.querySelector('.floating-buttons').style.display = 'none';
                 floatingOptions.classList.remove('active');
+                
+                // 显示退出纯享按钮（点击屏幕时显示）
+                showExitFullscreenBtn();
             } else {
                 mainScreen.classList.remove('fullscreen-bg');
                 // 恢复按钮文字
@@ -1564,8 +1602,45 @@
                 document.querySelector('.play-btn').style.display = 'block';
                 document.querySelector('.secret-code-area').style.display = 'block';
                 document.querySelector('.floating-buttons').style.display = 'block';
+                hideExitFullscreenBtn();
             }
         }
+        
+        // 显示退出纯享按钮
+        function showExitFullscreenBtn() {
+            const exitBtn = document.getElementById('exitFullscreenBtn');
+            if (exitBtn) {
+                exitBtn.style.display = 'block';
+                exitBtn.style.opacity = '1';
+            }
+        }
+        
+        // 隐藏退出纯享按钮
+        function hideExitFullscreenBtn() {
+            const exitBtn = document.getElementById('exitFullscreenBtn');
+            if (exitBtn) {
+                exitBtn.style.opacity = '0';
+                setTimeout(() => {
+                    exitBtn.style.display = 'none';
+                }, 300);
+            }
+        }
+        
+        // 点击屏幕显示退出按钮
+        document.addEventListener('click', function(event) {
+            if (isFullscreen) {
+                const exitBtn = document.getElementById('exitFullscreenBtn');
+                if (exitBtn && !exitBtn.contains(event.target)) {
+                    showExitFullscreenBtn();
+                    // 3 秒后自动隐藏
+                    setTimeout(() => {
+                        if (isFullscreen) {
+                            hideExitFullscreenBtn();
+                        }
+                    }, 3000);
+                }
+            }
+        });
 
         // 3. 悬浮选项弹窗
         function toggleFloatingOptions() {
