@@ -323,29 +323,32 @@
         <div class="tutorial">
             <h2>使用教程</h2>
             <ol>
-                <li><span class="tutorial-step">步骤 1：</span>在捏 Ta 平台找到角色页面，复制链接</li>
-                <li><span class="tutorial-step">步骤 2：</span>将链接粘贴到下方输入框（支持短链）</li>
-                <li><span class="tutorial-step">步骤 3：</span>点击"解析链接"按钮</li>
-                <li><span class="tutorial-step">步骤 4：</span>查看解析结果，点击 UUID 即可复制</li>
+                <li><span class="tutorial-step">步骤 1：</span>在捏 Ta 平台找到角色页面</li>
+                <li><span class="tutorial-step">步骤 2：</span>复制浏览器地址栏的<strong>完整链接</strong>（推荐）</li>
+                <li><span class="tutorial-step">步骤 3：</span>将链接粘贴到下方输入框</li>
+                <li><span class="tutorial-step">步骤 4：</span>点击"提取 UUID"按钮，点击 UUID 即可复制</li>
             </ol>
             <div class="tutorial-tip">
-                提示：支持标准链接和短链（t.nieta.art/xxx），自动识别并解析
+                提示：请使用完整链接（nieta.art/character/xxx），短链可能无法解析
             </div>
         </div>
 
         <div class="input-group">
             <label for="roleLink">角色链接：</label>
-            <input type="text" id="roleLink" placeholder="粘贴角色链接或短链..." onkeypress="if(event.key==='Enter') parseLink()">
+            <input type="text" id="roleLink" placeholder="粘贴角色完整链接..." onkeypress="if(event.key==='Enter') parseLink()">
             <div class="example-links">
                 <p>链接格式示例：</p>
                 <span class="example-link">https://nieta.art/character/bd1a9f8f-8c88-4f3f-b4d8-2f8af36a0d1b</span>
-                <span class="example-link" style="margin-top: 8px;">https://t.nieta.art/LB4nC1Iq（短链）</span>
             </div>
         </div>
 
         <div class="btn-group">
-            <button class="btn btn-primary" onclick="parseLink()" id="parseBtn">解析链接</button>
+            <button class="btn btn-primary" onclick="parseLink()" id="parseBtn">提取 UUID</button>
             <button class="btn btn-secondary" onclick="clearAll()">清空</button>
+        </div>
+        
+        <div class="tutorial-tip" style="background: rgba(90, 125, 138, 0.08); margin-top: 15px;">
+            <strong>短链用户注意：</strong>如果使用的是短链（t.nieta.art/xxx），请先在浏览器打开短链，然后复制跳转后的完整链接再粘贴到此处。
         </div>
 
         <div class="loading" id="loading">
@@ -412,23 +415,20 @@
             loading.classList.add('show');
 
             try {
-                // 先尝试直接提取 UUID
+                // 直接提取 UUID
                 const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
                 const uuidMatch = link.match(uuidRegex);
 
-                if (uuidMatch && link.includes('nieta.art/character/')) {
-                    // 标准链接，直接提取
+                if (uuidMatch) {
+                    // 找到 UUID，显示结果
                     const uuid = uuidMatch[0];
                     showSimpleResult(uuid, link);
-                } else if (link.includes('t.nieta.art') || link.includes('t.nieta')) {
-                    // 短链，需要解析
-                    await parseShortLink(link);
                 } else {
-                    // 其他链接，尝试提取 UUID
-                    if (uuidMatch) {
-                        showSimpleResult(uuidMatch[0], link);
+                    // 未找到 UUID
+                    if (link.includes('t.nieta.art') || link.includes('t.nieta')) {
+                        showError('短链无法直接提取 UUID。请先在浏览器打开短链，复制跳转后的完整链接（nieta.art/character/xxx），再粘贴到此处。');
                     } else {
-                        showError('未找到有效的 UUID 格式，请检查链接是否正确');
+                        showError('未找到有效的 UUID 格式，请检查链接是否正确。格式应为：nieta.art/character/xxxx-xxxx-xxxx-xxxx');
                     }
                 }
             } catch (e) {
@@ -442,92 +442,16 @@
             }
         }
 
-        // 解析短链
-        async function parseShortLink(shortUrl) {
-            try {
-                // 方案 1：使用 CORS 代理 + 外部 API 解析短链
-                const apiUrl = 'https://nieta-shortlink-parser.xiyomi-congito-kant999.workers.dev/?url=' + encodeURIComponent(shortUrl);
-                const corsProxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(apiUrl);
-                
-                const response = await fetch(corsProxy, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('API 请求失败：' + response.status);
-                }
-
-                const data = await response.json();
-                
-                // 检查 API 返回的数据是否有效
-                if (data && data.charUuid) {
-                    showFullResult(data);
-                    return;
-                } else {
-                    throw new Error('API 返回数据不完整');
-                }
-            } catch (e) {
-                console.error('短链解析失败:', e);
-                
-                // 降级处理：尝试通过 CORS 代理跟随重定向
-                try {
-                    const corsProxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(shortUrl);
-                    
-                    const response = await fetch(corsProxy, {
-                        method: 'GET',
-                        redirect: 'follow'
-                    });
-                    
-                    // 从最终 URL 中提取 UUID
-                    const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
-                    const match = response.url.match(uuidRegex);
-                    
-                    if (match) {
-                        showSimpleResult(match[0], shortUrl);
-                        return;
-                    }
-                } catch (e2) {
-                    console.error('代理重定向解析也失败:', e2);
-                }
-                
-                // 最后尝试：直接从短链中提取
-                const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
-                const match = shortUrl.match(uuidRegex);
-                if (match) {
-                    showSimpleResult(match[0], shortUrl);
-                } else {
-                    throw new Error('短链解析失败。建议：1. 直接使用标准链接（nieta.art/character/xxx）2. 在角色页面复制完整链接');
-                }
-            }
-        }
-
-        // 显示简单结果（仅 UUID）
+        // 显示结果
         function showSimpleResult(uuid, link) {
             const resultSection = document.getElementById('resultSection');
             
-            document.getElementById('linkType').textContent = link.includes('t.nieta') ? '短链' : '标准链接';
-            document.getElementById('charName').textContent = '（无法获取）';
-            document.getElementById('authorName').textContent = '（无法获取）';
-            document.getElementById('createTime').textContent = '（无法获取）';
+            document.getElementById('linkType').textContent = '标准链接';
+            document.getElementById('charName').textContent = '（仅支持完整链接）';
+            document.getElementById('authorName').textContent = '（仅支持完整链接）';
+            document.getElementById('createTime').textContent = '（仅支持完整链接）';
             document.getElementById('charUuid').textContent = uuid;
-            document.getElementById('shareUuid').textContent = '（无法获取）';
-            
-            resultSection.classList.add('show');
-        }
-
-        // 显示完整结果
-        function showFullResult(data) {
-            const resultSection = document.getElementById('resultSection');
-            
-            document.getElementById('linkType').textContent = data.linkType || '短链';
-            document.getElementById('charName').textContent = data.charName || '（无法获取）';
-            document.getElementById('authorName').textContent = data.authorName || '（无法获取）';
-            document.getElementById('createTime').textContent = data.createTime || '（无法获取）';
-            document.getElementById('charUuid').textContent = data.charUuid || '（无法获取）';
-            document.getElementById('shareUuid').textContent = data.shareUuid || '（无法获取）';
+            document.getElementById('shareUuid').textContent = '（仅支持完整链接）';
             
             resultSection.classList.add('show');
         }
