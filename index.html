@@ -1379,16 +1379,10 @@
             mainScreen.style.backgroundImage = bgUrl;
         }
 
-        // 切换背景
+        // 切换背景（快速，无动画）
         function switchBackground() {
             currentBgIndex = (currentBgIndex + 1) % backgrounds.length;
-            const mainScreen = document.getElementById('main-screen');
-            
-            mainScreen.style.opacity = '0.7';
-            setTimeout(function() {
-                setBackground(currentBgIndex);
-                mainScreen.style.opacity = '1';
-            }, 150);
+            setBackground(currentBgIndex);
         }
 
         // 显示弹窗
