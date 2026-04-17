@@ -135,6 +135,41 @@
             transform: none;
         }
 
+        /* 加载动画 */
+        .loading-section {
+            margin-top: 25px;
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(154, 122, 138, 0.05), rgba(170, 138, 154, 0.05));
+            border-radius: 15px;
+            border: 2px solid rgba(154, 122, 138, 0.2);
+        }
+
+        .loading-text {
+            font-size: 0.95em;
+            color: #9a7a8a;
+            margin-bottom: 15px;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .loading-bar-container {
+            width: 280px;
+            height: 8px;
+            background: rgba(154, 122, 138, 0.2);
+            border-radius: 4px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .loading-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #9a7a8a, #aa8a9a, #ba9aaa);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
         .result-section {
             display: none;
         }
@@ -366,6 +401,14 @@
 （可以从性格特点、行为模式、内心感受、人际关系等方面描述）"></textarea>
             <p class="input-hint" id="inputHint">💡 描述越详细，分析越准确。建议 100 字以上。</p>
             <button class="btn-analyze" onclick="analyzePersonality()" id="analyzeBtn">开始分析</button>
+            
+            <!-- 加载动画 -->
+            <div class="loading-section hidden" id="loadingSection">
+                <div class="loading-text" id="loadingText">九型人格分析中，让我读懂你的内心……</div>
+                <div class="loading-bar-container">
+                    <div class="loading-bar" id="loadingBar"></div>
+                </div>
+            </div>
         </div>
 
         <div class="result-section" id="resultSection">
@@ -1063,10 +1106,31 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
             document.getElementById('resultDesc').textContent = typeDescs[currentLang][mainType];
         }
 
+        // 有趣的加载文字
+        const loadingMessages = {
+            zh: [
+                '九型人格分析中，让我读懂你的内心……',
+                '分析你的核心动机和恐惧……',
+                '探索你的人格分布……',
+                '计算翼型和动态方向……',
+                '生成专业报告……'
+            ],
+            en: [
+                'Analyzing your Enneagram type, let me understand your heart…',
+                'Analyzing your core motivations and fears…',
+                'Exploring your personality distribution…',
+                'Calculating wing type and dynamic directions…',
+                'Generating professional report…'
+            ]
+        };
+
         // 分析人格（专业版语义分析引擎）
         function analyzePersonality() {
             const text = document.getElementById('selfDesc').value.trim();
             const analyzeBtn = document.getElementById('analyzeBtn');
+            const loadingSection = document.getElementById('loadingSection');
+            const loadingBar = document.getElementById('loadingBar');
+            const loadingText = document.getElementById('loadingText');
             const t = i18n[currentLang];
             
             if (text.length < 50) {
@@ -1074,9 +1138,41 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
                 return;
             }
             
-            // 禁用按钮防止重复点击
-            analyzeBtn.disabled = true;
-            analyzeBtn.textContent = t.analyzing;
+            // 隐藏按钮，显示加载动画
+            analyzeBtn.classList.add('hidden');
+            loadingSection.classList.remove('hidden');
+            loadingBar.style.width = '0%';
+            
+            // 加载动画
+            let progress = 0;
+            let msgIndex = 0;
+            const loadingInterval = setInterval(() => {
+                progress += Math.random() * 15 + 5;
+                if (progress > 100) progress = 100;
+                loadingBar.style.width = progress + '%';
+                
+                // 根据进度切换文字
+                const newMsgIndex = Math.floor(progress / 25);
+                if (newMsgIndex > msgIndex && newMsgIndex < loadingMessages[currentLang].length) {
+                    msgIndex = newMsgIndex;
+                    loadingText.textContent = loadingMessages[currentLang][msgIndex];
+                }
+                
+                if (progress >= 100) {
+                    clearInterval(loadingInterval);
+                    setTimeout(() => {
+                        // 执行分析
+                        performAnalysis(text);
+                    }, 500);
+                }
+            }, 400);
+        }
+
+        // 执行实际分析
+        function performAnalysis(text) {
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const loadingSection = document.getElementById('loadingSection');
+            const t = i18n[currentLang];
 
             try {
                 // ========== 第一步：基础分（避免 0%） ==========
@@ -1150,9 +1246,10 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
                 console.error('分析出错:', e);
                 alert(t.error);
             } finally {
-                // 恢复按钮
-                analyzeBtn.disabled = false;
+                // 恢复按钮，隐藏加载
+                analyzeBtn.classList.remove('hidden');
                 analyzeBtn.textContent = t.analyzeBtn;
+                loadingSection.classList.add('hidden');
             }
         }
 
