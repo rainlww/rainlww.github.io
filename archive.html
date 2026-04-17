@@ -83,7 +83,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
-            justify-content: center;
+            justify-content: flex-start;
         }
 
         .filter-tag {
@@ -127,16 +127,316 @@
             font-style: italic;
         }
 
-        /* 人物区 */
+        /* 人物卡片区 */
         .characters-section {
             min-height: 300px;
         }
 
+        .characters-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .characters-grid .character-card {
+            flex: 0 0 calc(33.333% - 17px); /* 每行 3 个，减去 gap */
+            min-width: 200px;
+        }
+
+        @media (max-width: 768px) {
+            .characters-grid .character-card {
+                flex: 0 0 calc(50% - 13px); /* 平板每行 2 个 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .characters-grid .character-card {
+                flex: 0 0 100%; /* 手机每行 1 个 */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .characters-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        /* 人物卡片 - 竖版长方形 */
+        .character-card {
+            background: rgba(255, 255, 255, 0.6);
+            border: 2px solid rgba(154, 122, 138, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(154, 122, 138, 0.15);
+            /* 确保可见 */
+            min-height: 300px;
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(154, 122, 138, 0.25);
+            border-color: rgba(154, 122, 138, 0.6);
+        }
+
+        .character-card-cover {
+            width: 100%;
+            padding-top: 133%; /* 3:4 比例 */
+            background: linear-gradient(135deg, #e8d5e8 0%, #d5c2d5 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-card-cover > * {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .character-card-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .character-card-cover .placeholder {
+            font-size: 3em;
+            color: rgba(154, 122, 138, 0.4);
+        }
+
+        .character-card-name {
+            padding: 15px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .character-card-name-text {
+            font-size: 1.1em;
+            color: #5a4a5a;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .character-card-tags {
+            padding: 10px 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: flex-start;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .character-card-tag {
+            font-size: 0.75em;
+            color: #7a6a7a;
+            background: rgba(154, 122, 138, 0.2);
+            padding: 3px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(154, 122, 138, 0.2);
+        }
+
+        /* 空状态提示 */
         .empty-message {
             text-align: center;
             padding: 60px 20px;
             color: #9a7a8a;
             font-size: 1em;
+        }
+
+        /* 人物档案弹窗 */
+        .character-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .character-modal.active {
+            display: flex;
+        }
+
+        .character-modal-content {
+            background: linear-gradient(135deg, #f5e6f0 0%, #e8d5e8 100%);
+            border-radius: 20px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .character-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2em;
+            color: #5a4a5a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .character-modal-close:hover {
+            color: #7a6a7a;
+            transform: scale(1.2);
+        }
+
+        .character-modal-cover {
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 比例 */
+            background: linear-gradient(135deg, #e8d5e8 0%, #d5c2d5 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-modal-cover > * {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .character-modal-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .character-modal-cover .placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4em;
+            color: rgba(154, 122, 138, 0.4);
+        }
+
+        .character-modal-body {
+            padding: 30px;
+        }
+
+        .character-modal-name {
+            font-size: 2em;
+            color: #5a4a5a;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .character-modal-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .character-modal-tag {
+            font-size: 0.85em;
+            color: #7a6a7a;
+            background: rgba(154, 122, 138, 0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            border: 1px solid rgba(154, 122, 138, 0.3);
+        }
+
+        .character-modal-section {
+            margin-bottom: 25px;
+        }
+
+        .character-modal-section-title {
+            font-size: 1.1em;
+            color: #5a4a5a;
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(154, 122, 138, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .character-modal-section-content {
+            font-size: 0.95em;
+            color: #6a5a6a;
+            line-height: 1.8;
+        }
+
+        .character-modal-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #9a7a8a, #aa8a9a);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .character-modal-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(154, 122, 138, 0.4);
+        }
+
+        .character-modal-related {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .character-modal-related-item {
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            font-size: 0.9em;
+            color: #5a4a5a;
+            border: 1px solid rgba(154, 122, 138, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .character-modal-content {
+                max-height: 95vh;
+            }
+            .character-modal-body {
+                padding: 20px;
+            }
+            .character-modal-name {
+                font-size: 1.6em;
+            }
+            .character-modal-cover {
+                aspect-ratio: 4/3;
+            }
         }
 
         .back-link {
@@ -198,15 +498,114 @@
 
         <!-- 人物区 -->
         <div class="characters-section">
-            <div class="empty-message">
-                轻若还没有记录呢……目前是空的……
+            <div class="characters-grid" id="charactersGrid">
+                <!-- 人物卡片 1: 明雨落 -->
+                <div class="character-card" onclick="openCharacterModal('ming-yuluo')">
+                    <div class="character-card-cover">
+                        <div class="placeholder">📷</div>
+                    </div>
+                    <div class="character-card-name">
+                        <div class="character-card-name-text">明雨落</div>
+                    </div>
+                    <div class="character-card-tags">
+                        <span class="character-card-tag">0601 号观测站</span>
+                        <span class="character-card-tag">明雨落</span>
+                    </div>
+                </div>
+                
+                <!-- 人物卡片 2: 雨落 -->
+                <div class="character-card" onclick="openCharacterModal('yuluo')">
+                    <div class="character-card-cover">
+                        <div class="placeholder">📷</div>
+                    </div>
+                    <div class="character-card-name">
+                        <div class="character-card-name-text">雨落</div>
+                    </div>
+                    <div class="character-card-tags">
+                        <span class="character-card-tag">明雨落</span>
+                    </div>
+                </div>
+                
+                <!-- 人物卡片 3: 荷穆勒夏 -->
+                <div class="character-card" onclick="openCharacterModal('homulesha')">
+                    <div class="character-card-cover">
+                        <div class="placeholder">📷</div>
+                    </div>
+                    <div class="character-card-name">
+                        <div class="character-card-name-text">荷穆勒夏</div>
+                    </div>
+                    <div class="character-card-tags">
+                        <span class="character-card-tag">荷穆勒</span>
+                        <span class="character-card-tag">明雨落</span>
+                    </div>
+                </div>
             </div>
         </div>
 
         <a href="index.html" class="back-link">← 返回主页</a>
     </div>
 
+    <!-- 人物档案弹窗 -->
+    <div class="character-modal" id="characterModal" onclick="closeCharacterModal(event)">
+        <div class="character-modal-content">
+            <span class="character-modal-close" onclick="closeCharacterModal(event)">×</span>
+            <div class="character-modal-cover" id="modalCover">
+                <div class="placeholder">📷</div>
+            </div>
+            <div class="character-modal-body">
+                <h2 class="character-modal-name" id="modalName">-</h2>
+                <div class="character-modal-tags" id="modalTags"></div>
+                
+                <div class="character-modal-section">
+                    <h3 class="character-modal-section-title">📜 简介</h3>
+                    <div class="character-modal-section-content" id="modalDescription">-</div>
+                </div>
+                
+                <div class="character-modal-section" id="modalLinkSection" style="display: none;">
+                    <h3 class="character-modal-section-title">🔗 捏 Ta 链接</h3>
+                    <a href="#" class="character-modal-link" id="modalLink" target="_blank">查看角色</a>
+                </div>
+                
+                <div class="character-modal-section" id="modalRelatedSection">
+                    <h3 class="character-modal-section-title">👥 相关人物</h3>
+                    <div class="character-modal-related" id="modalRelated"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ========== 人物数据 ==========
+        const characters = [
+            {
+                id: "ming-yuluo",
+                name: "明雨落",
+                cover: "", // 封面图链接，空则显示占位符
+                tags: ["0601 号观测站", "明雨落"],
+                nietaLink: "", // 捏 Ta 链接，空则不显示
+                description: "（简介待填写）",
+                related: [] // 相关人物
+            },
+            {
+                id: "yuluo",
+                name: "雨落",
+                cover: "",
+                tags: ["明雨落"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: []
+            },
+            {
+                id: "homulesha",
+                name: "荷穆勒夏",
+                cover: "",
+                tags: ["荷穆勒", "明雨落"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: []
+            }
+        ];
+
         // 预置标签
         const presetTags = [
             "0601 号观测站",
@@ -223,16 +622,33 @@
         // 初始化
         function init() {
             renderFilterTags();
+            // 不再调用 renderCharacters()，卡片已经硬编码在 HTML 中
         }
 
-        // 渲染筛选标签
-        function renderFilterTags() {
-            const container = document.getElementById('filterTags');
-            container.innerHTML = presetTags.map(tag => `
-                <div class="filter-tag" data-tag="${tag}" onclick="toggleTag('${tag}')">
-                    ${tag}
-                </div>
-            `).join('');
+        // 渲染人物卡片（用于筛选功能）
+        function renderCharacters() {
+            const grid = document.getElementById('charactersGrid');
+            if (!grid) return;
+            
+            // 根据筛选标签过滤人物
+            let filtered = characters;
+            if (selectedTags.length > 0) {
+                filtered = characters.filter(char => 
+                    selectedTags.some(tag => char.tags.includes(tag))
+                );
+            }
+
+            // 获取所有卡片
+            const cards = grid.querySelectorAll('.character-card');
+            cards.forEach(card => {
+                const charId = card.getAttribute('onclick').match(/'([^']+)'/)[1];
+                const char = characters.find(c => c.id === charId);
+                if (filtered.includes(char)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
 
         // 切换标签选中状态
@@ -251,6 +667,33 @@
 
             // 检查是否选中荷穆勒
             updateHomuleshaNotice();
+
+            // 筛选人物卡片
+            filterCharacters();
+        }
+
+        // 筛选人物卡片
+        function filterCharacters() {
+            const cards = document.querySelectorAll('.character-card');
+            cards.forEach(card => {
+                const onclick = card.getAttribute('onclick');
+                if (!onclick) return;
+                const match = onclick.match(/'([^']+)'/);
+                if (!match) return;
+                const charId = match[1];
+                const char = characters.find(c => c.id === charId);
+                if (!char) return;
+
+                // 如果没有选中标签，显示所有卡片
+                if (selectedTags.length === 0) {
+                    card.style.display = 'block';
+                    return;
+                }
+
+                // 检查卡片是否有选中的标签
+                const hasSelectedTag = selectedTags.some(tag => char.tags.includes(tag));
+                card.style.display = hasSelectedTag ? 'block' : 'none';
+            });
         }
 
         // 更新荷穆勒提示
@@ -286,8 +729,69 @@
             });
         }
 
+        // 打开人物档案弹窗
+        function openCharacterModal(charId) {
+            const char = characters.find(c => c.id === charId);
+            if (!char) return;
+
+            // 设置封面
+            const coverEl = document.getElementById('modalCover');
+            if (char.cover) {
+                coverEl.innerHTML = `<img src="${char.cover}" alt="${char.name}">`;
+            } else {
+                coverEl.innerHTML = '<div class="placeholder">📷</div>';
+            }
+
+            // 设置名字
+            document.getElementById('modalName').textContent = char.name;
+
+            // 设置标签
+            const tagsEl = document.getElementById('modalTags');
+            tagsEl.innerHTML = char.tags.map(tag => 
+                `<span class="character-modal-tag">${tag}</span>`
+            ).join('');
+
+            // 设置简介
+            document.getElementById('modalDescription').textContent = char.description;
+
+            // 设置捏 Ta 链接（如果有）
+            const linkSection = document.getElementById('modalLinkSection');
+            const linkEl = document.getElementById('modalLink');
+            if (char.nietaLink) {
+                linkSection.style.display = 'block';
+                linkEl.href = char.nietaLink;
+            } else {
+                linkSection.style.display = 'none';
+            }
+
+            // 设置相关人物
+            const relatedSection = document.getElementById('modalRelatedSection');
+            const relatedEl = document.getElementById('modalRelated');
+            if (char.related && char.related.length > 0) {
+                relatedSection.style.display = 'block';
+                relatedEl.innerHTML = char.related.map(name => 
+                    `<span class="character-modal-related-item">${name}</span>`
+                ).join('');
+            } else {
+                relatedSection.style.display = 'none';
+            }
+
+            // 显示弹窗
+            document.getElementById('characterModal').classList.add('active');
+        }
+
+        // 关闭人物档案弹窗
+        function closeCharacterModal(event) {
+            if (event.target.id === 'characterModal' || event.target.className === 'character-modal-close') {
+                document.getElementById('characterModal').classList.remove('active');
+            }
+        }
+
         // 页面加载时初始化
-        init();
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('档案馆页面加载完成');
+            init();
+        });
     </script>
 </body>
 </html>
