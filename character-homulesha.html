@@ -125,13 +125,50 @@
             color: #333;
         }
 
-        /* 章节 */
-        .wiki-section {
+        /* 目录导航 */
+        .toc {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px 20px;
             margin-bottom: 30px;
         }
 
+        .toc-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            margin-bottom: 6px;
+        }
+
+        .toc-list a {
+            color: #9a7a8a;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+
+        .toc-list a:hover {
+            color: #7a6a7a;
+            text-decoration: underline;
+        }
+
+        /* 章节 */
+        .wiki-section {
+            margin-bottom: 40px;
+            scroll-margin-top: 20px;
+        }
+
         .wiki-section-title {
-            font-size: 1.5em;
+            font-size: 1.6em;
             color: #333;
             font-weight: bold;
             margin-bottom: 15px;
@@ -165,12 +202,12 @@
         /* 链接按钮 */
         .wiki-link {
             display: inline-block;
-            padding: 8px 20px;
+            padding: 10px 24px;
             background: linear-gradient(135deg, #9a7a8a, #aa8a9a);
             color: #fff;
             text-decoration: none;
             border-radius: 4px;
-            font-size: 0.9em;
+            font-size: 0.95em;
             transition: all 0.3s ease;
             margin-top: 10px;
         }
@@ -188,12 +225,34 @@
         }
 
         .related-item {
-            padding: 6px 14px;
+            padding: 8px 16px;
             background: #f5f5f5;
             border-radius: 4px;
-            font-size: 0.9em;
+            font-size: 0.95em;
             color: #555;
             border: 1px solid #e0e0e0;
+        }
+
+        /* 立绘展示区 */
+        .character-artwork {
+            text-align: center;
+            margin: 30px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #f5e6f0 0%, #e8d5e8 100%);
+            border-radius: 8px;
+        }
+
+        .character-artwork img {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .character-artwork .placeholder {
+            font-size: 6em;
+            color: rgba(154, 122, 138, 0.4);
+            padding: 50px;
         }
 
         /* 移动端适配 */
@@ -210,7 +269,10 @@
                 font-size: 2em;
             }
             .wiki-section-title {
-                font-size: 1.3em;
+                font-size: 1.4em;
+            }
+            .character-artwork img {
+                max-height: 300px;
             }
         }
     </style>
@@ -219,27 +281,54 @@
     <div class="container">
         <a href="archive.html" class="back-link">← 返回档案馆</a>
         
-        <h1 class="page-title">荷穆勒夏</h1>
+        <h1 class="page-title" id="pageTitle">荷穆勒夏</h1>
         
         <div class="wiki-layout">
             <!-- 左侧：主要内容区 -->
             <div class="wiki-main">
-                <div class="wiki-section">
-                    <h2 class="wiki-section-title">📜 简介</h2>
-                    <div class="wiki-section-content" id="description">
+                <!-- 目录 -->
+                <div class="toc">
+                    <div class="toc-title">📑 目录</div>
+                    <ul class="toc-list">
+                        <li><a href="#artwork">🖼️ 立绘展示</a></li>
+                        <li><a href="#description">📜 角色简介</a></li>
+                        <li><a href="#related">👥 相关人物</a></li>
+                        <li><a href="#external">🔗 外部链接</a></li>
+                    </ul>
+                </div>
+
+                <!-- 立绘展示 -->
+                <div class="wiki-section" id="artwork">
+                    <h2 class="wiki-section-title">🖼️ 立绘展示</h2>
+                    <div class="character-artwork">
+                        <div id="artworkImage">
+                            <div class="placeholder">📷</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 角色简介 -->
+                <div class="wiki-section" id="description">
+                    <h2 class="wiki-section-title">📜 角色简介</h2>
+                    <div class="wiki-section-content" id="descriptionContent">
                         （简介待填写）
                     </div>
                 </div>
-                
-                <div class="wiki-section" id="linkSection" style="display: none;">
-                    <h2 class="wiki-section-title">🔗 捏 Ta 链接</h2>
-                    <a href="#" class="wiki-link" id="characterLink" target="_blank">查看角色</a>
-                </div>
-                
-                <div class="wiki-section">
+
+                <!-- 相关人物 -->
+                <div class="wiki-section" id="related">
                     <h2 class="wiki-section-title">👥 相关人物</h2>
                     <div class="related-list" id="relatedList">
                         <span class="related-item">（暂无）</span>
+                    </div>
+                </div>
+
+                <!-- 外部链接 -->
+                <div class="wiki-section" id="external">
+                    <h2 class="wiki-section-title">🔗 外部链接</h2>
+                    <div id="externalLinks">
+                        <a href="#" class="wiki-link" id="nietaLink" target="_blank" style="display: none;">查看捏 Ta 角色</a>
+                        <p style="color: #999; font-size: 0.9em; margin-top: 10px;" id="noLink" style="display: none;">暂无外部链接</p>
                     </div>
                 </div>
             </div>
@@ -256,14 +345,14 @@
                         <td id="infoName">-</td>
                     </tr>
                     <tr>
+                        <th>档案馆编号</th>
+                        <td id="infoId">-</td>
+                    </tr>
+                    <tr>
                         <th>标签</th>
                         <td>
                             <div class="wiki-tags" id="infoTags"></div>
                         </td>
-                    </tr>
-                    <tr>
-                        <th>档案馆编号</th>
-                        <td id="infoId">-</td>
                     </tr>
                 </table>
             </div>
@@ -285,7 +374,7 @@
         // 初始化页面
         window.addEventListener('DOMContentLoaded', function() {
             // 设置页面标题
-            document.querySelector('.page-title').textContent = character.name;
+            document.getElementById('pageTitle').textContent = character.name;
 
             // 设置信息框图片
             const imageEl = document.getElementById('infoboxImage');
@@ -293,8 +382,17 @@
                 imageEl.innerHTML = `<img src="${character.cover}" alt="${character.name}">`;
             }
 
+            // 设置立绘展示区图片
+            const artworkEl = document.getElementById('artworkImage');
+            if (character.cover) {
+                artworkEl.innerHTML = `<img src="${character.cover}" alt="${character.name}">`;
+            }
+
             // 设置信息框名字
             document.getElementById('infoName').textContent = character.name;
+
+            // 设置信息框编号
+            document.getElementById('infoId').textContent = character.id;
 
             // 设置信息框标签
             const tagsEl = document.getElementById('infoTags');
@@ -302,16 +400,17 @@
                 `<span class="wiki-tag">${tag}</span>`
             ).join('');
 
-            // 设置信息框编号
-            document.getElementById('infoId').textContent = character.id;
-
             // 设置简介
-            document.getElementById('description').textContent = character.description;
+            document.getElementById('descriptionContent').textContent = character.description;
 
             // 设置捏 Ta 链接
             if (character.nietaLink) {
-                document.getElementById('linkSection').style.display = 'block';
-                document.getElementById('characterLink').href = character.nietaLink;
+                document.getElementById('nietaLink').style.display = 'inline-block';
+                document.getElementById('nietaLink').href = character.nietaLink;
+                document.getElementById('noLink').style.display = 'none';
+            } else {
+                document.getElementById('nietaLink').style.display = 'none';
+                document.getElementById('noLink').style.display = 'block';
             }
 
             // 设置相关人物
