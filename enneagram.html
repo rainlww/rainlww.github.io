@@ -264,10 +264,28 @@
             margin-bottom: 15px;
         }
 
+        .result-detail h4 {
+            font-size: 1.15em;
+            color: #5a4a5a;
+            margin: 20px 0 12px 0;
+            padding-left: 10px;
+            border-left: 3px solid #9a7a8a;
+        }
+
+        .result-detail h4:first-child {
+            margin-top: 0;
+        }
+
         .result-detail p {
             font-size: 1.05em;
             color: #7a6a7a;
             line-height: 2;
+            margin-bottom: 10px;
+        }
+
+        .result-detail strong {
+            color: #5a4a5a;
+            font-weight: 600;
         }
 
         .btn-restart {
@@ -862,6 +880,134 @@
             '#34495e', '#e67e22', '#c0392b', '#95a5a6'
         ];
 
+        // 翼型（相邻类型）
+        function getWingTypes(mainType) {
+            if (mainType === 1) return [9, 2];
+            if (mainType === 9) return [8, 1];
+            return [mainType - 1, mainType + 1];
+        }
+
+        // 压力方向（不健康状态下趋向的类型）
+        const stressDirections = {
+            1: 4, 2: 8, 3: 9, 4: 2, 5: 7, 6: 3, 7: 1, 8: 5, 9: 6
+        };
+
+        // 安全方向（健康状态下趋向的类型）
+        const secureDirections = {
+            1: 7, 2: 4, 3: 6, 4: 1, 5: 8, 6: 9, 7: 5, 8: 2, 9: 3
+        };
+
+        // 核心动机和恐惧
+        const coreMotivations = {
+            zh: {
+                1: { motivation: '追求完美，做正确的事', fear: '犯错、堕落、不完美' },
+                2: { motivation: '被爱、被需要', fear: '不被爱、不被需要' },
+                3: { motivation: '成功、被认可', fear: '失败、无价值' },
+                4: { motivation: '独特、被理解', fear: '平凡、被误解' },
+                5: { motivation: '理解世界、掌握知识', fear: '无知、无能、被侵犯' },
+                6: { motivation: '安全、稳定', fear: '危险、不确定、无支持' },
+                7: { motivation: '快乐、自由体验', fear: '痛苦、被限制' },
+                8: { motivation: '掌控、保护自己和他人', fear: '被控制、受伤害' },
+                9: { motivation: '和平、和谐', fear: '冲突、分离' }
+            },
+            en: {
+                1: { motivation: 'Pursue perfection, do what\'s right', fear: 'Making mistakes, being corrupt/imperfect' },
+                2: { motivation: 'Be loved, be needed', fear: 'Being unloved, unwanted' },
+                3: { motivation: 'Succeed, be recognized', fear: 'Failure, being worthless' },
+                4: { motivation: 'Be unique, be understood', fear: 'Being ordinary, misunderstood' },
+                5: { motivation: 'Understand the world, master knowledge', fear: 'Ignorance, incompetence, intrusion' },
+                6: { motivation: 'Security, stability', fear: 'Danger, uncertainty, lack of support' },
+                7: { motivation: 'Happiness, freedom to experience', fear: 'Pain, being limited' },
+                8: { motivation: 'Control, protect self and others', fear: 'Being controlled, harmed' },
+                9: { motivation: 'Peace, harmony', fear: 'Conflict, separation' }
+            }
+        };
+
+        // 成长建议
+        const growthAdvice = {
+            zh: {
+                1: '学习接纳不完美，对自己和他人更宽容。记住：完成比完美更重要。',
+                2: '学会关注自己的需求，适度说"不"。真正的爱包括爱自己。',
+                3: '放慢脚步，关注内心感受。成功之外，还有更深层的价值。',
+                4: '走出情绪漩涡，行动比沉溺更有力量。平凡中也有美。',
+                5: '走出思考，投入行动和关系。知识需要实践才有意义。',
+                6: '信任自己的判断，减少过度担忧。风险可控，你有能力应对。',
+                7: '学会专注和坚持，深度体验比广度更重要。痛苦也是成长。',
+                8: '学习示弱和倾听，柔软也是力量。保护不等于控制。',
+                9: '学会表达立场，适度冲突有助于关系。你的声音很重要。'
+            },
+            en: {
+                1: 'Learn to accept imperfection, be more forgiving to yourself and others. Remember: done is better than perfect.',
+                2: 'Learn to attend to your own needs, say "no" appropriately. True love includes loving yourself.',
+                3: 'Slow down, attend to your inner feelings. Beyond success, there\'s deeper value.',
+                4: 'Step out of emotional whirlpools, action is more powerful than dwelling. There\'s beauty in the ordinary.',
+                5: 'Step out of thinking, engage in action and relationships. Knowledge needs practice to be meaningful.',
+                6: 'Trust your own judgment, reduce excessive worry. Risks are manageable, you have the ability to cope.',
+                7: 'Learn to focus and persist, depth is more important than breadth. Pain is also growth.',
+                8: 'Learn to show vulnerability and listen, softness is also strength. Protection doesn\'t equal control.',
+                9: 'Learn to express your stance, moderate conflict helps relationships. Your voice matters.'
+            }
+        };
+
+        // 生成专业报告
+        function generateReport(mainType, wingType, percentages, stressType, secureType) {
+            const t = i18n[currentLang];
+            
+            let report = '';
+            
+            if (currentLang === 'zh') {
+                report = `
+<h4>🎯 主导类型：Type ${mainType} - ${typeNames.zh[mainType]}</h4>
+<p>你的主导人格类型是<strong>${typeNames.zh[mainType]}</strong>，这是你最核心的行为模式和动机。</p>
+
+<h4>🦋 翼型：Type ${wingType} - ${typeNames.zh[wingType]}</h4>
+<p>你的翼型是<strong>${typeNames.zh[wingType]}</strong>。翼型是相邻类型中对你的影响，它让你的主导类型更加丰富和个性化。</p>
+<p><strong>${mainType}w${wingType}</strong>：${typeNames.zh[mainType]}带${typeNames.zh[wingType]}翼型。</p>
+
+<h4>💫 核心动机与恐惧</h4>
+<p><strong>核心动机：</strong>${coreMotivations.zh[mainType].motivation}</p>
+<p><strong>核心恐惧：</strong>${coreMotivations.zh[mainType].fear}</p>
+
+<h4>🔄 动态变化方向</h4>
+<p><strong>压力状态（不健康）：</strong>趋向 Type ${stressType} - ${typeNames.zh[stressType]} 的负面特质</p>
+<p><strong>安全状态（健康）：</strong>趋向 Type ${secureType} - ${typeNames.zh[secureType]} 的积极特质</p>
+
+<h4>🌱 成长建议</h4>
+<p>${growthAdvice.zh[mainType]}</p>
+
+<h4>📊 类型分布说明</h4>
+<p>九型人格理论认为，每个人都拥有全部九种类型的特质，只是程度不同。你的分布图显示了各类型的相对强度。</p>
+<p><strong>主导类型</strong>（最高百分比）是你最核心的模式，<strong>翼型</strong>（相邻类型中较高的）影响你的表达方式。</p>
+`;
+            } else {
+                report = `
+<h4>🎯 Dominant Type: Type ${mainType} - ${typeNames.en[mainType]}</h4>
+<p>Your dominant personality type is <strong>${typeNames.en[mainType]}</strong>, this is your core behavioral pattern and motivation.</p>
+
+<h4>🦋 Wing Type: Type ${wingType} - ${typeNames.en[wingType]}</h4>
+<p>Your wing type is <strong>${typeNames.en[wingType]}</strong>. The wing is the adjacent type that influences you, making your dominant type more rich and personalized.</p>
+<p><strong>${mainType}w${wingType}</strong>: ${typeNames.en[mainType]} with ${typeNames.en[wingType]} wing.</p>
+
+<h4>💫 Core Motivation & Fear</h4>
+<p><strong>Core Motivation:</strong> ${coreMotivations.en[mainType].motivation}</p>
+<p><strong>Core Fear:</strong> ${coreMotivations.en[mainType].fear}</p>
+
+<h4>🔄 Dynamic Directions</h4>
+<p><strong>Stress Direction (Unhealthy):</strong> Move toward negative traits of Type ${stressType} - ${typeNames.en[stressType]}</p>
+<p><strong>Secure Direction (Healthy):</strong> Move toward positive traits of Type ${secureType} - ${typeNames.en[secureType]}</p>
+
+<h4>🌱 Growth Advice</h4>
+<p>${growthAdvice.en[mainType]}</p>
+
+<h4>📊 Distribution Explanation</h4>
+<p>Enneagram theory suggests that everyone possesses all nine types, just in different degrees. Your distribution shows the relative strength of each type.</p>
+<p><strong>Dominant Type</strong> (highest percentage) is your core pattern, <strong>Wing Type</strong> (higher of adjacent types) influences your expression style.</p>
+`;
+            }
+            
+            return report;
+        }
+
         // 初始化语言（从 localStorage 读取）
         function initLang() {
             const saved = localStorage.getItem('siteLang');
@@ -917,7 +1063,7 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
             document.getElementById('resultDesc').textContent = typeDescs[currentLang][mainType];
         }
 
-        // 分析人格（语义分析引擎）
+        // 分析人格（专业版语义分析引擎）
         function analyzePersonality() {
             const text = document.getElementById('selfDesc').value.trim();
             const analyzeBtn = document.getElementById('analyzeBtn');
@@ -933,32 +1079,44 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
             analyzeBtn.textContent = t.analyzing;
 
             try {
-                // 计算各类型得分
+                // ========== 第一步：基础分（避免 0%） ==========
+                // 每种类型先给基础分 15 分，确保所有类型都有占比
+                const baseScore = 15;
                 const scores = {};
                 for (let i = 1; i <= 9; i++) {
-                    scores[i] = 0;
+                    scores[i] = baseScore;
                 }
 
-                // 统计关键词匹配（带权重，和 MBTI 一样的套路）
+                // ========== 第二步：关键词匹配加分 ==========
                 const patterns = semanticPatterns[currentLang];
                 Object.keys(patterns).forEach(type => {
                     const typePatterns = patterns[type];
                     typePatterns.forEach(({ pattern, weight, desc }) => {
                         const matches = text.match(pattern);
                         if (matches) {
-                            scores[type] += weight;
+                            // 正向词加分，负向词减分（但不低于基础分的一半）
+                            if (weight > 0) {
+                                scores[type] += weight;
+                            } else {
+                                // 负向词：减少其他类型的分数（相对加分）
+                                for (let i = 1; i <= 9; i++) {
+                                    if (i !== type) {
+                                        scores[i] += Math.abs(weight) * 0.5;
+                                    }
+                                }
+                            }
                         }
                     });
                 });
 
-                // 计算总分和百分比
-                const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+                // ========== 第三步：计算百分比 ==========
+                const total = Object.values(scores).reduce((a, b) => a + b, 0);
                 const percentages = {};
                 for (let i = 1; i <= 9; i++) {
                     percentages[i] = Math.round((scores[i] / total) * 100);
                 }
 
-                // 找出主导类型
+                // ========== 第四步：找出主导类型 ==========
                 let maxScore = 0;
                 let mainType = 1;
                 for (let i = 1; i <= 9; i++) {
@@ -968,8 +1126,26 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
                     }
                 }
 
+                // ========== 第五步：计算翼型（相邻类型中较高的） ==========
+                const wingTypes = getWingTypes(mainType);
+                let wingScore = 0;
+                let wingType = 0;
+                wingTypes.forEach(w => {
+                    if (scores[w] > wingScore) {
+                        wingScore = scores[w];
+                        wingType = w;
+                    }
+                });
+
+                // ========== 第六步：压力/安全方向 ==========
+                const stressType = stressDirections[mainType];
+                const secureType = secureDirections[mainType];
+
+                // ========== 第七步：生成专业报告 ==========
+                const report = generateReport(mainType, wingType, percentages, stressType, secureType);
+
                 // 显示结果
-                showResult(percentages, mainType);
+                showResult(percentages, mainType, wingType, report);
             } catch (e) {
                 console.error('分析出错:', e);
                 alert(t.error);
@@ -981,7 +1157,7 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
         }
 
         // 显示结果
-        function showResult(percentages, mainType) {
+        function showResult(percentages, mainType, wingType, report) {
             document.getElementById('inputSection').style.display = 'none';
             document.getElementById('resultSection').classList.add('show');
 
@@ -995,9 +1171,9 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
                 cumulativeDeg += deg;
             }
 
-            // 设置主导类型
-            document.getElementById('mainType').textContent = `Type ${mainType}`;
-            document.getElementById('mainTypeLabel').textContent = i18n[currentLang].mainTypeLabel;
+            // 设置主导类型和翼型
+            document.getElementById('mainType').textContent = `${mainType}w${wingType}`;
+            document.getElementById('mainTypeLabel').textContent = i18n[currentLang].mainTypeLabel + ' · 翼型 ' + wingType;
 
             // 生成图例
             const legend = document.getElementById('legend');
@@ -1009,16 +1185,19 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
             sorted.forEach(([type, percent]) => {
                 const item = document.createElement('div');
                 item.className = 'legend-item';
+                const isMain = parseInt(type) === mainType;
+                const isWing = parseInt(type) === wingType;
                 item.innerHTML = `
                     <div class="legend-color" style="background: ${typeColors[type - 1]}"></div>
-                    <span class="legend-text">Type ${type} - ${typeNames[currentLang][type]}</span>
+                    <span class="legend-text">Type ${type} - ${typeNames[currentLang][type]}${isMain ? ' (主导)' : ''}${isWing && !isMain ? ' (翼型)' : ''}</span>
                     <span class="legend-percent">${percent}%</span>
                 `;
                 legend.appendChild(item);
             });
 
-            // 设置主导类型描述
-            updateResultText(mainType);
+            // 显示专业报告
+            const resultDesc = document.getElementById('resultDesc');
+            resultDesc.innerHTML = report;
         }
 
         // 重新开始
