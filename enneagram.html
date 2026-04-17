@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>九型人格测试</title>
+    <title>九型人格分析</title>
     <style>
         * {
             margin: 0;
@@ -27,8 +27,37 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border: 2px solid rgba(154, 122, 138, 0.3);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #5a4a5a;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            background: rgba(154, 122, 138, 0.2);
+            border-color: #9a7a8a;
+            font-weight: 600;
+        }
+
+        .lang-btn:hover {
+            background: rgba(154, 122, 138, 0.15);
+        }
+
         h1 {
-            font-size: 2.2em;
+            font-size: 2em;
             color: #5a4a5a;
             text-align: center;
             margin-bottom: 15px;
@@ -55,21 +84,21 @@
             font-weight: 600;
         }
 
-        .input-section textarea {
+        textarea {
             width: 100%;
             min-height: 200px;
             padding: 20px;
             border: 2px solid rgba(154, 122, 138, 0.3);
             border-radius: 15px;
             font-size: 1em;
+            resize: vertical;
             outline: none;
             transition: all 0.3s ease;
-            resize: vertical;
             font-family: inherit;
             line-height: 1.8;
         }
 
-        .input-section textarea:focus {
+        textarea:focus {
             border-color: rgba(154, 122, 138, 0.8);
             box-shadow: 0 4px 15px rgba(154, 122, 138, 0.2);
         }
@@ -87,17 +116,17 @@
             background: linear-gradient(135deg, #9a7a8a, #aa8a9a);
             color: #fff;
             border: none;
-            border-radius: 25px;
+            border-radius: 30px;
             font-size: 1.1em;
             cursor: pointer;
+            margin-top: 20px;
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
         }
 
         .btn-analyze:hover {
             transform: scale(1.02);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 20px rgba(154, 122, 138, 0.4);
         }
 
         .btn-analyze:disabled {
@@ -108,7 +137,6 @@
 
         .result-section {
             display: none;
-            margin-top: 40px;
         }
 
         .result-section.show {
@@ -122,7 +150,7 @@
         }
 
         .result-title {
-            font-size: 1.8em;
+            font-size: 1.5em;
             color: #5a4a5a;
             text-align: center;
             margin-bottom: 30px;
@@ -140,25 +168,17 @@
             height: 100%;
             border-radius: 50%;
             background: conic-gradient(
-                #e74c5a 0deg,
-                #e74c5a var(--t1-deg),
-                #f39c12 var(--t1-deg),
-                #f39c12 var(--t2-deg),
-                #3498db var(--t2-deg),
-                #3498db var(--t3-deg),
-                #9b59b6 var(--t3-deg),
-                #9b59b6 var(--t4-deg),
-                #1abc9c var(--t4-deg),
-                #1abc9c var(--t5-deg),
-                #34495e var(--t5-deg),
-                #34495e var(--t6-deg),
-                #e67e22 var(--t6-deg),
-                #e67e22 var(--t7-deg),
-                #c0392b var(--t7-deg),
-                #c0392b var(--t8-deg),
-                #95a5a6 var(--t8-deg),
-                #95a5a6 360deg
+                #e74c5a 0deg var(--t1-deg, 0deg),
+                #f39c12 var(--t1-deg, 0deg) var(--t2-deg, 0deg),
+                #3498db var(--t2-deg, 0deg) var(--t3-deg, 0deg),
+                #9b59b6 var(--t3-deg, 0deg) var(--t4-deg, 0deg),
+                #1abc9c var(--t4-deg, 0deg) var(--t5-deg, 0deg),
+                #34495e var(--t5-deg, 0deg) var(--t6-deg, 0deg),
+                #e67e22 var(--t6-deg, 0deg) var(--t7-deg, 0deg),
+                #c0392b var(--t7-deg, 0deg) var(--t8-deg, 0deg),
+                #95a5a6 var(--t8-deg, 0deg) var(--t9-deg, 0deg)
             );
+            transition: all 0.5s ease;
         }
 
         .chart-center {
@@ -166,9 +186,9 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.95);
+            width: 140px;
+            height: 140px;
+            background: #fff;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -179,19 +199,17 @@
 
         .chart-center-type {
             font-size: 2.5em;
-            font-weight: bold;
+            font-weight: 700;
             color: #9a7a8a;
         }
 
         .chart-center-label {
-            font-size: 0.85em;
+            font-size: 0.9em;
             color: #7a6a7a;
+            margin-top: 5px;
         }
 
         .legend {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
             margin-bottom: 30px;
         }
 
@@ -199,66 +217,75 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 8px 12px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
             background: rgba(154, 122, 138, 0.08);
-            border-radius: 8px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .legend-item:hover {
+            background: rgba(154, 122, 138, 0.15);
+            transform: translateX(5px);
         }
 
         .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
             flex-shrink: 0;
         }
 
         .legend-text {
-            font-size: 0.9em;
+            flex: 1;
+            font-size: 0.95em;
             color: #5a4a5a;
         }
 
         .legend-percent {
-            font-size: 0.9em;
+            font-size: 1em;
             color: #9a7a8a;
-            font-weight: 600;
-            margin-left: auto;
+            font-weight: 700;
+            min-width: 50px;
+            text-align: right;
         }
 
         .result-detail {
             background: rgba(154, 122, 138, 0.08);
-            padding: 25px;
+            padding: 30px;
             border-radius: 15px;
-            margin-bottom: 20px;
-            border-left: 4px solid #9a7a8a;
+            margin-bottom: 25px;
+            border-left: 5px solid #9a7a8a;
         }
 
         .result-detail h3 {
-            font-size: 1.3em;
+            font-size: 1.4em;
             color: #5a4a5a;
             margin-bottom: 15px;
         }
 
         .result-detail p {
-            font-size: 1em;
+            font-size: 1.05em;
             color: #7a6a7a;
-            line-height: 1.8;
-            margin-bottom: 10px;
+            line-height: 2;
         }
 
         .btn-restart {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #a0a0a0, #b0b0b0);
+            background: linear-gradient(135deg, #7a8a9a, #8a9aaa);
             color: #fff;
             border: none;
-            border-radius: 25px;
-            font-size: 1em;
+            border-radius: 30px;
+            font-size: 1.1em;
             cursor: pointer;
             font-weight: 600;
-            margin-top: 20px;
+            transition: all 0.3s ease;
         }
 
         .btn-restart:hover {
-            background: linear-gradient(135deg, #909090, #a0a0a0);
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(122, 138, 154, 0.4);
         }
 
         .back-link {
@@ -267,7 +294,8 @@
             margin-top: 20px;
             color: #9a7a8a;
             text-decoration: none;
-            font-size: 0.95em;
+            font-size: 1em;
+            transition: all 0.3s ease;
         }
 
         .back-link:hover {
@@ -279,7 +307,7 @@
                 padding: 30px 20px;
             }
             h1 {
-                font-size: 1.8em;
+                font-size: 1.6em;
             }
             .chart-container {
                 width: 250px;
@@ -292,32 +320,44 @@
             .chart-center-type {
                 font-size: 2em;
             }
+            .lang-switch {
+                position: relative;
+                top: 0;
+                right: 0;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>✨ 九型人格分析</h1>
-        <p class="subtitle">描述你自己，让我来读懂你的内心</p>
+        <div class="lang-switch">
+            <button class="lang-btn active" onclick="setLang('zh')" id="langZh">中文</button>
+            <button class="lang-btn" onclick="setLang('en')" id="langEn">English</button>
+        </div>
+
+        <h1 id="title">✨ 九型人格分析</h1>
+        <p class="subtitle" id="subtitle">描述你自己，让我来读懂你的内心</p>
 
         <div class="input-section" id="inputSection">
-            <label for="selfDesc">请用一段话描述你自己：</label>
+            <label for="selfDesc" id="descLabel">请用一段话描述你自己：</label>
             <textarea id="selfDesc" placeholder="例如：
 我是一个比较内向的人，喜欢独处思考。在工作中我追求完美，常常会因为细节不够好而焦虑。我很在意别人的看法，希望能被认可和喜爱。面对冲突时，我倾向于避免正面冲突，但内心会有自己的想法和坚持。我有很多兴趣爱好，但常常三分钟热度...
 
 （可以从性格特点、行为模式、内心感受、人际关系等方面描述）"></textarea>
-            <p class="input-hint">💡 描述越详细，分析越准确。建议 100 字以上。</p>
+            <p class="input-hint" id="inputHint">💡 描述越详细，分析越准确。建议 100 字以上。</p>
             <button class="btn-analyze" onclick="analyzePersonality()" id="analyzeBtn">开始分析</button>
         </div>
 
         <div class="result-section" id="resultSection">
-            <h2 class="result-title">你的九型人格分布</h2>
+            <h2 class="result-title" id="resultTitle">你的九型人格分布</h2>
             
             <div class="chart-container">
                 <div class="pie-chart" id="pieChart"></div>
                 <div class="chart-center">
                     <div class="chart-center-type" id="mainType">Type 4</div>
-                    <div class="chart-center-label">主导类型</div>
+                    <div class="chart-center-label" id="mainTypeLabel">主导类型</div>
                 </div>
             </div>
 
@@ -328,35 +368,178 @@
                 <p id="resultDesc"></p>
             </div>
 
-            <button class="btn-restart" onclick="restartTest()">🔄 重新分析</button>
-            <a href="index.html" class="back-link">← 返回主页</a>
+            <button class="btn-restart" onclick="restartTest()" id="restartBtn">🔄 重新分析</button>
+            <a href="index.html" class="back-link" id="backLink">← 返回主页</a>
         </div>
     </div>
 
     <script>
-        // 九型人格关键词
-        const typeKeywords = {
-            1: ['完美', '原则', '正确', '道德', '标准', '批评', '改进', '秩序', '责任', '自律', '理想', '公正', '规范', '严谨', '正直'],
-            2: ['帮助', '关心', '爱', '需要', '付出', '温暖', '善良', '他人', '给予', '认可', '感激', '关系', '体贴', '支持', '奉献'],
-            3: ['成功', '成就', '目标', '效率', '形象', '认可', '竞争', '优秀', '表现', '价值', '进步', '结果', '领先', '荣誉', '胜利'],
-            4: ['独特', '特别', '不同', '深度', '真实', '缺失', '羡慕', '艺术', '情感', '敏感', '内省', '意义', '浪漫', '悲伤', '美'],
-            5: ['知识', '理解', '独立', '思考', '分析', '观察', '学习', '研究', '空间', '隐私', '理性', '专注', '探索', '智慧', '距离'],
-            6: ['安全', '担心', '忠诚', '准备', '风险', '怀疑', '信任', '责任', '团体', '规则', '警惕', '支持', '可靠', '焦虑', '承诺'],
-            7: ['快乐', '自由', '体验', '新鲜', '可能', '冒险', '乐观', '选择', '有趣', '逃避', '计划', '热情', '多样', '享受', '好奇'],
-            8: ['控制', '力量', '保护', '直接', '挑战', '领导', '强势', '正义', '对抗', '支配', '自信', '行动', '权威', '果断', '真相'],
-            9: ['和平', '和谐', '平静', '舒适', '避免', '融合', '接纳', '耐心', '稳定', '随和', '调解', '惰性', '包容', '安逸', '平衡']
+        // 语言配置
+        let currentLang = 'zh';
+        
+        const i18n = {
+            zh: {
+                title: '✨ 九型人格分析',
+                subtitle: '描述你自己，让我来读懂你的内心',
+                descLabel: '请用一段话描述你自己：',
+                inputHint: '💡 描述越详细，分析越准确。建议 100 字以上。',
+                analyzeBtn: '开始分析',
+                analyzing: '分析中…',
+                resultTitle: '你的九型人格分布',
+                mainTypeLabel: '主导类型',
+                restartBtn: '🔄 重新分析',
+                backLink: '← 返回主页',
+                shortDesc: '请详细描述你自己，至少 50 字哦～',
+                error: '分析过程中出现错误，请重试'
+            },
+            en: {
+                title: '✨ Enneagram Analysis',
+                subtitle: 'Describe yourself, let me understand your heart',
+                descLabel: 'Please describe yourself in a paragraph:',
+                inputHint: '💡 The more detailed your description, the more accurate the analysis. 100+ characters recommended.',
+                analyzeBtn: 'Start Analysis',
+                analyzing: 'Analyzing…',
+                resultTitle: 'Your Enneagram Distribution',
+                mainTypeLabel: 'Dominant Type',
+                restartBtn: '🔄 Restart',
+                backLink: '← Back to Home',
+                shortDesc: 'Please describe yourself in detail, at least 50 characters.',
+                error: 'An error occurred during analysis. Please try again.'
+            }
         };
 
+        // 九型人格关键词（中英文）
+        const typeKeywords = {
+            zh: {
+                1: [
+                    // 核心词（权重 2）
+                    { words: ['完美', '原则', '正确', '道德', '标准'], weight: 2 },
+                    // 次要词（权重 1）
+                    { words: ['批评', '改进', '秩序', '责任', '自律', '理想', '公正', '规范', '严谨', '正直', '规则', '对错', '应该', '必须'], weight: 1 }
+                ],
+                2: [
+                    { words: ['帮助', '关心', '爱', '需要', '付出', '温暖'], weight: 2 },
+                    { words: ['善良', '他人', '给予', '认可', '感激', '关系', '体贴', '支持', '奉献', '照顾', '温柔', '善解人意', '被需要'], weight: 1 }
+                ],
+                3: [
+                    { words: ['成功', '成就', '目标', '效率', '形象'], weight: 2 },
+                    { words: ['认可', '竞争', '优秀', '表现', '价值', '进步', '结果', '领先', '荣誉', '胜利', '野心', '地位', '榜样'], weight: 1 }
+                ],
+                4: [
+                    { words: ['独特', '特别', '不同', '深度', '真实', '缺失'], weight: 2 },
+                    { words: ['羡慕', '艺术', '情感', '敏感', '内省', '意义', '浪漫', '悲伤', '美', '孤独', '理解', '灵魂', '忧郁'], weight: 1 }
+                ],
+                5: [
+                    { words: ['知识', '理解', '独立', '思考', '分析'], weight: 2 },
+                    { words: ['观察', '学习', '研究', '空间', '隐私', '理性', '专注', '探索', '智慧', '距离', '独处', '逻辑', '系统'], weight: 1 }
+                ],
+                6: [
+                    { words: ['安全', '担心', '忠诚', '准备', '风险'], weight: 2 },
+                    { words: ['怀疑', '信任', '责任', '团体', '规则', '警惕', '支持', '可靠', '焦虑', '承诺', '谨慎', '最坏', '计划'], weight: 1 }
+                ],
+                7: [
+                    { words: ['快乐', '自由', '体验', '新鲜', '可能'], weight: 2 },
+                    { words: ['冒险', '乐观', '选择', '有趣', '逃避', '计划', '热情', '多样', '享受', '好奇', '创意', '忙碌', '新鲜感'], weight: 1 }
+                ],
+                8: [
+                    { words: ['控制', '力量', '保护', '直接', '挑战'], weight: 2 },
+                    { words: ['领导', '强势', '正义', '对抗', '支配', '自信', '行动', '权威', '果断', '真相', '弱者', '公平', '掌控'], weight: 1 }
+                ],
+                9: [
+                    { words: ['和平', '和谐', '平静', '舒适', '避免'], weight: 2 },
+                    { words: ['融合', '接纳', '耐心', '稳定', '随和', '调解', '惰性', '包容', '安逸', '平衡', '冲突', '顺其自然', '温和'], weight: 1 }
+                ]
+            },
+            en: {
+                1: [
+                    { words: ['perfect', 'principle', 'right', 'moral', 'standard'], weight: 2 },
+                    { words: ['critic', 'improve', 'order', 'responsibility', 'discipline', 'ideal', 'fair', 'rule', 'strict', 'honest', 'should', 'must'], weight: 1 }
+                ],
+                2: [
+                    { words: ['help', 'care', 'love', 'need', 'give', 'warm'], weight: 2 },
+                    { words: ['kind', 'others', 'appreciation', 'relationship', 'support', 'dedication', 'gentle', 'needed', 'understanding'], weight: 1 }
+                ],
+                3: [
+                    { words: ['success', 'achievement', 'goal', 'efficient', 'image'], weight: 2 },
+                    { words: ['recognition', 'compete', 'excellent', 'value', 'progress', 'result', 'honor', 'win', 'ambitious', 'status'], weight: 1 }
+                ],
+                4: [
+                    { words: ['unique', 'special', 'different', 'depth', 'authentic', 'missing'], weight: 2 },
+                    { words: ['envy', 'art', 'emotion', 'sensitive', 'introspect', 'meaning', 'romantic', 'sad', 'beauty', 'lonely', 'understand', 'soul'], weight: 1 }
+                ],
+                5: [
+                    { words: ['knowledge', 'understand', 'independent', 'think', 'analyze'], weight: 2 },
+                    { words: ['observe', 'learn', 'research', 'space', 'privacy', 'rational', 'focus', 'explore', 'wisdom', 'distance', 'logic', 'system'], weight: 1 }
+                ],
+                6: [
+                    { words: ['security', 'worry', 'loyal', 'prepare', 'risk'], weight: 2 },
+                    { words: ['doubt', 'trust', 'responsibility', 'group', 'rule', 'alert', 'support', 'reliable', 'anxiety', 'commit', 'cautious', 'plan'], weight: 1 }
+                ],
+                7: [
+                    { words: ['happy', 'freedom', 'experience', 'new', 'possibility'], weight: 2 },
+                    { words: ['adventure', 'optimistic', 'choice', 'fun', 'escape', 'plan', 'enthusiasm', 'variety', 'enjoy', 'curious', 'creative', 'busy'], weight: 1 }
+                ],
+                8: [
+                    { words: ['control', 'power', 'protect', 'direct', 'challenge'], weight: 2 },
+                    { words: ['lead', 'strong', 'justice', 'confront', 'dominate', 'confident', 'action', 'authority', 'decisive', 'truth', 'weak', 'fair'], weight: 1 }
+                ],
+                9: [
+                    { words: ['peace', 'harmony', 'calm', 'comfortable', 'avoid'], weight: 2 },
+                    { words: ['blend', 'accept', 'patience', 'stable', 'easygoing', 'mediate', 'lazy', 'inclusive', 'easy', 'balance', 'conflict', 'gentle'], weight: 1 }
+                ]
+            }
+        };
+
+        // 类型名称
         const typeNames = {
-            1: '完美主义者',
-            2: '给予者',
-            3: '成就者',
-            4: '浪漫主义者',
-            5: '观察者',
-            6: '忠诚者',
-            7: '热情者',
-            8: '挑战者',
-            9: '调停者'
+            zh: {
+                1: '完美主义者',
+                2: '给予者',
+                3: '成就者',
+                4: '浪漫主义者',
+                5: '观察者',
+                6: '忠诚者',
+                7: '热情者',
+                8: '挑战者',
+                9: '调停者'
+            },
+            en: {
+                1: 'Perfectionist',
+                2: 'Giver',
+                3: 'Achiever',
+                4: 'Romantic',
+                5: 'Observer',
+                6: 'Loyalist',
+                7: 'Enthusiast',
+                8: 'Challenger',
+                9: 'Peacemaker'
+            }
+        };
+
+        // 类型描述
+        const typeDescs = {
+            zh: {
+                1: "你追求完美，有强烈的道德感和原则性。你对自己和他人都有很高的标准，希望世界变得更好。你善于发现错误并纠正它们，但有时可能过于批判和僵化。",
+                2: "你温暖、慷慨，总是把他人需求放在自己之前。你渴望被爱和被需要，通过帮助他人来获得价值感。你有很强的同理心，但有时可能忽视自己的需求。",
+                3: "你目标明确，效率高，渴望成功和被认可。你善于适应环境，展现他人想看到的一面。你有强大的执行力，但有时可能过度工作和忽视感受。",
+                4: "你敏感、富有创造力，渴望独特和深度。你容易感到与他人不同，情绪波动较大。你有艺术天赋和深度思考能力，但有时可能沉溺于过去和缺失感。",
+                5: "你理性、独立，渴望理解和掌握知识。你需要大量独处时间，情感上保持距离。你有强大的分析能力，但有时可能过度思考和情感疏离。",
+                6: "你忠诚、可靠，重视安全和稳定。你善于预见风险，为可能的困难做准备。你有很强的责任感，但有时可能过度担忧和犹豫不决。",
+                7: "你乐观、热情，渴望体验和自由。你善于发现可能性，避免痛苦和限制。你有创造力和适应力，但有时可能承诺困难和逃避痛苦。",
+                8: "你强势、自信，渴望控制和力量。你保护自己和身边的人，直面冲突。你有领导力和保护欲，但有时可能过度控制和难以示弱。",
+                9: "你平和、包容，渴望和谐与平静。你善于理解各方立场，避免冲突。你有倾听能力和包容心，但有时可能逃避冲突和难以做决定。"
+            },
+            en: {
+                1: "You pursue perfection with strong moral principles. You have high standards for yourself and others, wanting to make the world better. You're good at finding and fixing errors, but may be overly critical.",
+                2: "You're warm and generous, always putting others' needs before your own. You crave being loved and needed, gaining value through helping. You have strong empathy, but may neglect your own needs.",
+                3: "You're goal-oriented and efficient, craving success and recognition. You adapt well to environments, showing what others want to see. You have strong execution, but may overwork and ignore feelings.",
+                4: "You're sensitive and creative, craving uniqueness and depth. You feel different from others with mood swings. You have artistic talent and deep thinking, but may dwell on the past and feelings of lack.",
+                5: "You're rational and independent, craving understanding and knowledge. You need alone time and keep emotional distance. You have strong analytical abilities, but may overthink and emotionally detach.",
+                6: "You're loyal and reliable, valuing security and stability. You're good at foreseeing risks and preparing for difficulties. You have strong responsibility, but may worry excessively and hesitate.",
+                7: "You're optimistic and enthusiastic, craving experiences and freedom. You're good at finding possibilities and avoiding pain. You have creativity and adaptability, but may struggle with commitment.",
+                8: "You're strong and confident, craving control and power. You protect yourself and loved ones, facing conflicts directly. You have leadership and protective instincts, but may be overly controlling.",
+                9: "You're peaceful and inclusive, craving harmony and calm. You're good at understanding all sides and avoiding conflict. You have listening skills and tolerance, but may avoid conflicts and struggle with decisions."
+            }
         };
 
         const typeColors = [
@@ -364,30 +547,67 @@
             '#34495e', '#e67e22', '#c0392b', '#95a5a6'
         ];
 
-        const typeDescs = {
-            1: "你追求完美，有强烈的道德感和原则性。你对自己和他人都有很高的标准，希望世界变得更好。你善于发现错误并纠正它们，但有时可能过于批判和僵化。",
-            2: "你温暖、慷慨，总是把他人需求放在自己之前。你渴望被爱和被需要，通过帮助他人来获得价值感。你有很强的同理心，但有时可能忽视自己的需求。",
-            3: "你目标明确，效率高，渴望成功和被认可。你善于适应环境，展现他人想看到的一面。你有强大的执行力，但有时可能过度工作和忽视感受。",
-            4: "你敏感、富有创造力，渴望独特和深度。你容易感到与他人不同，情绪波动较大。你有艺术天赋和深度思考能力，但有时可能沉溺于过去和缺失感。",
-            5: "你理性、独立，渴望理解和掌握知识。你需要大量独处时间，情感上保持距离。你有强大的分析能力，但有时可能过度思考和情感疏离。",
-            6: "你忠诚、可靠，重视安全和稳定。你善于预见风险，为可能的困难做准备。你有很强的责任感，但有时可能过度担忧和犹豫不决。",
-            7: "你乐观、热情，渴望体验和自由。你善于发现可能性，避免痛苦和限制。你有创造力和适应力，但有时可能承诺困难和逃避痛苦。",
-            8: "你强势、自信，渴望控制和力量。你保护自己和身边的人，直面冲突。你有领导力和保护欲，但有时可能过度控制和难以示弱。",
-            9: "你平和、包容，渴望和谐与平静。你善于理解各方立场，避免冲突。你有倾听能力和包容心，但有时可能逃避冲突和难以做决定。"
-        };
+        // 设置语言
+        function setLang(lang) {
+            currentLang = lang;
+            
+            // 更新按钮状态
+            document.getElementById('langZh').classList.toggle('active', lang === 'zh');
+            document.getElementById('langEn').classList.toggle('active', lang === 'en');
+            
+            // 更新界面文字
+            document.getElementById('title').textContent = i18n[lang].title;
+            document.getElementById('subtitle').textContent = i18n[lang].subtitle;
+            document.getElementById('descLabel').textContent = i18n[lang].descLabel;
+            document.getElementById('inputHint').textContent = i18n[lang].inputHint;
+            document.getElementById('analyzeBtn').textContent = i18n[lang].analyzeBtn;
+            document.getElementById('resultTitle').textContent = i18n[lang].resultTitle;
+            document.getElementById('mainTypeLabel').textContent = i18n[lang].mainTypeLabel;
+            document.getElementById('restartBtn').textContent = i18n[lang].restartBtn;
+            document.getElementById('backLink').textContent = i18n[lang].backLink;
+            
+            // 更新 placeholder
+            const textarea = document.getElementById('selfDesc');
+            if (lang === 'zh') {
+                textarea.placeholder = `例如：
+我是一个比较内向的人，喜欢独处思考。在工作中我追求完美，常常会因为细节不够好而焦虑。我很在意别人的看法，希望能被认可和喜爱。面对冲突时，我倾向于避免正面冲突，但内心会有自己的想法和坚持。我有很多兴趣爱好，但常常三分钟热度...
 
+（可以从性格特点、行为模式、内心感受、人际关系等方面描述）`;
+            } else {
+                textarea.placeholder = `For example:
+I'm a relatively introverted person who enjoys solitary thinking. At work, I pursue perfection and often feel anxious about details not being good enough. I care about others' opinions and hope to be recognized and liked. When facing conflicts, I tend to avoid direct confrontation, but I have my own thoughts and convictions. I have many interests, but often lose interest quickly...
+
+(You can describe personality traits, behavioral patterns, inner feelings, interpersonal relationships, etc.)`;
+            }
+            
+            // 如果已经有结果，更新结果文字
+            const resultSection = document.getElementById('resultSection');
+            if (resultSection.classList.contains('show')) {
+                const mainType = document.getElementById('mainType').textContent.replace('Type ', '');
+                updateResultText(parseInt(mainType));
+            }
+        }
+
+        // 更新结果文字
+        function updateResultText(mainType) {
+            document.getElementById('resultName').textContent = `Type ${mainType} - ${typeNames[currentLang][mainType]}`;
+            document.getElementById('resultDesc').textContent = typeDescs[currentLang][mainType];
+        }
+
+        // 分析人格
         function analyzePersonality() {
             const text = document.getElementById('selfDesc').value.trim();
             const analyzeBtn = document.getElementById('analyzeBtn');
+            const t = i18n[currentLang];
             
             if (text.length < 50) {
-                alert('请详细描述你自己，至少 50 字哦～');
+                alert(t.shortDesc);
                 return;
             }
             
             // 禁用按钮防止重复点击
             analyzeBtn.disabled = true;
-            analyzeBtn.textContent = '分析中…';
+            analyzeBtn.textContent = t.analyzing;
 
             try {
                 // 计算各类型得分
@@ -396,15 +616,18 @@
                     scores[i] = 0;
                 }
 
-                // 统计关键词匹配
-                Object.keys(typeKeywords).forEach(type => {
-                    const keywords = typeKeywords[type];
-                    keywords.forEach(keyword => {
-                        const regex = new RegExp(keyword, 'gi');
-                        const matches = text.match(regex);
-                        if (matches) {
-                            scores[type] += matches.length;
-                        }
+                // 统计关键词匹配（带权重）
+                const keywords = typeKeywords[currentLang];
+                Object.keys(keywords).forEach(type => {
+                    const groups = keywords[type];
+                    groups.forEach(group => {
+                        group.words.forEach(word => {
+                            const regex = new RegExp(word, 'gi');
+                            const matches = text.match(regex);
+                            if (matches) {
+                                scores[type] += matches.length * group.weight;
+                            }
+                        });
                     });
                 });
 
@@ -429,14 +652,15 @@
                 showResult(percentages, mainType);
             } catch (e) {
                 console.error('分析出错:', e);
-                alert('分析过程中出现错误，请重试');
+                alert(t.error);
             } finally {
                 // 恢复按钮
                 analyzeBtn.disabled = false;
-                analyzeBtn.textContent = '开始分析';
+                analyzeBtn.textContent = t.analyzeBtn;
             }
         }
 
+        // 显示结果
         function showResult(percentages, mainType) {
             document.getElementById('inputSection').style.display = 'none';
             document.getElementById('resultSection').classList.add('show');
@@ -453,6 +677,7 @@
 
             // 设置主导类型
             document.getElementById('mainType').textContent = `Type ${mainType}`;
+            document.getElementById('mainTypeLabel').textContent = i18n[currentLang].mainTypeLabel;
 
             // 生成图例
             const legend = document.getElementById('legend');
@@ -466,17 +691,17 @@
                 item.className = 'legend-item';
                 item.innerHTML = `
                     <div class="legend-color" style="background: ${typeColors[type - 1]}"></div>
-                    <span class="legend-text">Type ${type} - ${typeNames[type]}</span>
+                    <span class="legend-text">Type ${type} - ${typeNames[currentLang][type]}</span>
                     <span class="legend-percent">${percent}%</span>
                 `;
                 legend.appendChild(item);
             });
 
             // 设置主导类型描述
-            document.getElementById('resultName').textContent = `Type ${mainType} - ${typeNames[mainType]}`;
-            document.getElementById('resultDesc').textContent = typeDescs[mainType];
+            updateResultText(mainType);
         }
 
+        // 重新开始
         function restartTest() {
             document.getElementById('inputSection').style.display = 'block';
             document.getElementById('resultSection').classList.remove('show');
