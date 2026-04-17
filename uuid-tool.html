@@ -445,32 +445,66 @@
         // 解析短链
         async function parseShortLink(shortUrl) {
             try {
-                // 使用外部 API 解析短链
-                const response = await fetch('https://nieta-shortlink-parser.xiyomi-congito-kant999.workers.dev/', {
-                    method: 'POST',
+                // 方案 1：使用外部 API 解析短链（GET 请求）
+                const apiUrl = 'https://nieta-shortlink-parser.xiyomi-congito-kant999.workers.dev/?url=' + encodeURIComponent(shortUrl);
+                
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        url: shortUrl
-                    })
+                        'Accept': 'application/json',
+                    }
                 });
 
                 if (!response.ok) {
-                    throw new Error('API 请求失败');
+                    throw new Error('API 请求失败：' + response.status);
                 }
 
                 const data = await response.json();
-                showFullResult(data);
+                
+                // 检查 API 返回的数据是否有效
+                if (data && data.charUuid) {
+                    showFullResult(data);
+                    return;
+                } else {
+                    throw new Error('API 返回数据不完整');
+                }
             } catch (e) {
                 console.error('短链解析失败:', e);
-                // 降级处理：尝试直接提取 UUID
+                
+                // 降级处理：尝试通过重定向获取真实链接
+                try {
+                    // 创建一个临时的重定向请求
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 5000);
+                    
+                    const response = await fetch(shortUrl, {
+                        method: 'HEAD',
+                        redirect: 'follow',
+                        signal: controller.signal
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    const finalUrl = response.url;
+                    
+                    // 从重定向后的 URL 中提取 UUID
+                    const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+                    const match = finalUrl.match(uuidRegex);
+                    
+                    if (match) {
+                        showSimpleResult(match[0], shortUrl);
+                        return;
+                    }
+                } catch (e2) {
+                    console.error('重定向解析也失败:', e2);
+                }
+                
+                // 最后尝试：直接从短链中提取（虽然通常不会有 UUID）
                 const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
                 const match = shortUrl.match(uuidRegex);
                 if (match) {
                     showSimpleResult(match[0], shortUrl);
                 } else {
-                    throw new Error('短链解析失败，且无法提取 UUID');
+                    throw new Error('短链解析失败：API 不可用且无法从重定向提取 UUID。建议：1. 直接使用标准链接 2. 在角色页面复制完整链接');
                 }
             }
         }
