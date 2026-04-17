@@ -408,84 +408,399 @@
             }
         };
 
-        // 九型人格关键词（中英文）
-        const typeKeywords = {
+        // ========== 语义分析引擎（和 MBTI 一样的套路）==========
+        // 每个类型有 pattern 数组，每个 pattern 有正则、权重、描述
+        // 权重可正可负：正向词加分，负向词减分
+        
+        const semanticPatterns = {
             zh: {
                 1: [
-                    // 核心词（权重 2）
-                    { words: ['完美', '原则', '正确', '道德', '标准'], weight: 2 },
-                    // 次要词（权重 1）
-                    { words: ['批评', '改进', '秩序', '责任', '自律', '理想', '公正', '规范', '严谨', '正直', '规则', '对错', '应该', '必须'], weight: 1 }
+                    { pattern: /追求完美/g, weight: 3, desc: '追求完美' },
+                    { pattern: /完美主义/g, weight: 3, desc: '完美主义' },
+                    { pattern: /原则/g, weight: 2, desc: '有原则' },
+                    { pattern: /道德/g, weight: 2, desc: '道德感' },
+                    { pattern: /标准/g, weight: 2, desc: '高标准' },
+                    { pattern: /正确/g, weight: 2, desc: '注重对错' },
+                    { pattern: /应该/g, weight: 2, desc: '应该思维' },
+                    { pattern: /必须/g, weight: 2, desc: '必须思维' },
+                    { pattern: /批评/g, weight: 2, desc: '爱批评' },
+                    { pattern: /挑剔/g, weight: 2, desc: '挑剔' },
+                    { pattern: /改进/g, weight: 1, desc: '追求改进' },
+                    { pattern: /秩序/g, weight: 1, desc: '注重秩序' },
+                    { pattern: /责任/g, weight: 1, desc: '责任感' },
+                    { pattern: /自律/g, weight: 1, desc: '自律' },
+                    { pattern: /理想/g, weight: 1, desc: '理想主义' },
+                    { pattern: /公正/g, weight: 1, desc: '追求公正' },
+                    { pattern: /规范/g, weight: 1, desc: '遵守规范' },
+                    { pattern: /严谨/g, weight: 1, desc: '严谨' },
+                    { pattern: /正直/g, weight: 1, desc: '正直' },
+                    { pattern: /规则/g, weight: 1, desc: '遵守规则' },
+                    { pattern: /差不多/g, weight: -2, desc: '不接受差不多' },
+                    { pattern: /随意/g, weight: -2, desc: '不随意' }
                 ],
                 2: [
-                    { words: ['帮助', '关心', '爱', '需要', '付出', '温暖'], weight: 2 },
-                    { words: ['善良', '他人', '给予', '认可', '感激', '关系', '体贴', '支持', '奉献', '照顾', '温柔', '善解人意', '被需要'], weight: 1 }
+                    { pattern: /帮助他人/g, weight: 3, desc: '帮助他人' },
+                    { pattern: /关心别人/g, weight: 3, desc: '关心别人' },
+                    { pattern: /付出/g, weight: 2, desc: '乐于付出' },
+                    { pattern: /温暖/g, weight: 2, desc: '温暖' },
+                    { pattern: /善良/g, weight: 2, desc: '善良' },
+                    { pattern: /体贴/g, weight: 2, desc: '体贴' },
+                    { pattern: /被需要/g, weight: 2, desc: '渴望被需要' },
+                    { pattern: /被爱/g, weight: 2, desc: '渴望被爱' },
+                    { pattern: /给予/g, weight: 2, desc: '给予型' },
+                    { pattern: /他人需求/g, weight: 2, desc: '关注他人需求' },
+                    { pattern: /认可/g, weight: 1, desc: '渴望认可' },
+                    { pattern: /感激/g, weight: 1, desc: '需要感激' },
+                    { pattern: /关系/g, weight: 1, desc: '重视关系' },
+                    { pattern: /支持/g, weight: 1, desc: '支持他人' },
+                    { pattern: /奉献/g, weight: 1, desc: '奉献精神' },
+                    { pattern: /照顾/g, weight: 1, desc: '照顾他人' },
+                    { pattern: /温柔/g, weight: 1, desc: '温柔' },
+                    { pattern: /善解人意/g, weight: 1, desc: '善解人意' },
+                    { pattern: /冷漠/g, weight: -2, desc: '不冷漠' },
+                    { pattern: /自私/g, weight: -2, desc: '不自私' }
                 ],
                 3: [
-                    { words: ['成功', '成就', '目标', '效率', '形象'], weight: 2 },
-                    { words: ['认可', '竞争', '优秀', '表现', '价值', '进步', '结果', '领先', '荣誉', '胜利', '野心', '地位', '榜样'], weight: 1 }
+                    { pattern: /追求成功/g, weight: 3, desc: '追求成功' },
+                    { pattern: /成就/g, weight: 2, desc: '重视成就' },
+                    { pattern: /目标/g, weight: 2, desc: '目标导向' },
+                    { pattern: /效率/g, weight: 2, desc: '注重效率' },
+                    { pattern: /形象/g, weight: 2, desc: '注重形象' },
+                    { pattern: /竞争/g, weight: 2, desc: '竞争意识' },
+                    { pattern: /优秀/g, weight: 2, desc: '追求优秀' },
+                    { pattern: /表现/g, weight: 2, desc: '注重表现' },
+                    { pattern: /价值/g, weight: 1, desc: '追求价值' },
+                    { pattern: /进步/g, weight: 1, desc: '追求进步' },
+                    { pattern: /结果/g, weight: 1, desc: '结果导向' },
+                    { pattern: /领先/g, weight: 1, desc: '想要领先' },
+                    { pattern: /荣誉/g, weight: 1, desc: '重视荣誉' },
+                    { pattern: /胜利/g, weight: 1, desc: '渴望胜利' },
+                    { pattern: /野心/g, weight: 1, desc: '有野心' },
+                    { pattern: /地位/g, weight: 1, desc: '重视地位' },
+                    { pattern: /榜样/g, weight: 1, desc: '想当榜样' },
+                    { pattern: /懒散/g, weight: -2, desc: '不懒散' },
+                    { pattern: /失败/g, weight: -2, desc: '害怕失败' }
                 ],
                 4: [
-                    { words: ['独特', '特别', '不同', '深度', '真实', '缺失'], weight: 2 },
-                    { words: ['羡慕', '艺术', '情感', '敏感', '内省', '意义', '浪漫', '悲伤', '美', '孤独', '理解', '灵魂', '忧郁'], weight: 1 }
+                    { pattern: /独特/g, weight: 3, desc: '追求独特' },
+                    { pattern: /特别/g, weight: 3, desc: '想要特别' },
+                    { pattern: /与众不同/g, weight: 3, desc: '与众不同' },
+                    { pattern: /深度/g, weight: 2, desc: '追求深度' },
+                    { pattern: /真实/g, weight: 2, desc: '追求真实' },
+                    { pattern: /缺失/g, weight: 2, desc: '缺失感' },
+                    { pattern: /敏感/g, weight: 2, desc: '敏感' },
+                    { pattern: /情感/g, weight: 2, desc: '情感丰富' },
+                    { pattern: /内省/g, weight: 2, desc: '内省' },
+                    { pattern: /意义/g, weight: 2, desc: '追求意义' },
+                    { pattern: /艺术/g, weight: 1, desc: '艺术气质' },
+                    { pattern: /浪漫/g, weight: 1, desc: '浪漫' },
+                    { pattern: /悲伤/g, weight: 1, desc: '容易悲伤' },
+                    { pattern: /美/g, weight: 1, desc: '追求美' },
+                    { pattern: /孤独/g, weight: 1, desc: '孤独感' },
+                    { pattern: /理解/g, weight: 1, desc: '渴望被理解' },
+                    { pattern: /灵魂/g, weight: 1, desc: '灵魂深处' },
+                    { pattern: /忧郁/g, weight: 1, desc: '忧郁气质' },
+                    { pattern: /羡慕/g, weight: 1, desc: '容易羡慕' },
+                    { pattern: /肤浅/g, weight: -2, desc: '讨厌肤浅' },
+                    { pattern: /普通/g, weight: -2, desc: '不想普通' }
                 ],
                 5: [
-                    { words: ['知识', '理解', '独立', '思考', '分析'], weight: 2 },
-                    { words: ['观察', '学习', '研究', '空间', '隐私', '理性', '专注', '探索', '智慧', '距离', '独处', '逻辑', '系统'], weight: 1 }
+                    { pattern: /追求知识/g, weight: 3, desc: '追求知识' },
+                    { pattern: /理解/g, weight: 2, desc: '追求理解' },
+                    { pattern: /独立/g, weight: 2, desc: '独立' },
+                    { pattern: /思考/g, weight: 2, desc: '喜欢思考' },
+                    { pattern: /分析/g, weight: 2, desc: '分析能力' },
+                    { pattern: /观察/g, weight: 2, desc: '观察者' },
+                    { pattern: /学习/g, weight: 2, desc: '热爱学习' },
+                    { pattern: /研究/g, weight: 2, desc: '喜欢研究' },
+                    { pattern: /空间/g, weight: 2, desc: '需要空间' },
+                    { pattern: /隐私/g, weight: 2, desc: '重视隐私' },
+                    { pattern: /理性/g, weight: 1, desc: '理性' },
+                    { pattern: /专注/g, weight: 1, desc: '专注' },
+                    { pattern: /探索/g, weight: 1, desc: '探索未知' },
+                    { pattern: /智慧/g, weight: 1, desc: '追求智慧' },
+                    { pattern: /距离/g, weight: 1, desc: '保持距离' },
+                    { pattern: /独处/g, weight: 1, desc: '喜欢独处' },
+                    { pattern: /逻辑/g, weight: 1, desc: '逻辑思维' },
+                    { pattern: /系统/g, weight: 1, desc: '系统思维' },
+                    { pattern: /社交/g, weight: -2, desc: '不爱社交' },
+                    { pattern: /情绪化/g, weight: -2, desc: '不情绪化' }
                 ],
                 6: [
-                    { words: ['安全', '担心', '忠诚', '准备', '风险'], weight: 2 },
-                    { words: ['怀疑', '信任', '责任', '团体', '规则', '警惕', '支持', '可靠', '焦虑', '承诺', '谨慎', '最坏', '计划'], weight: 1 }
+                    { pattern: /安全感/g, weight: 3, desc: '追求安全' },
+                    { pattern: /担心/g, weight: 3, desc: '容易担心' },
+                    { pattern: /焦虑/g, weight: 3, desc: '焦虑' },
+                    { pattern: /忠诚/g, weight: 2, desc: '忠诚' },
+                    { pattern: /准备/g, weight: 2, desc: '提前准备' },
+                    { pattern: /风险/g, weight: 2, desc: '预见风险' },
+                    { pattern: /怀疑/g, weight: 2, desc: '容易怀疑' },
+                    { pattern: /信任/g, weight: 2, desc: '重视信任' },
+                    { pattern: /责任/g, weight: 1, desc: '责任感' },
+                    { pattern: /团体/g, weight: 1, desc: '重视团体' },
+                    { pattern: /规则/g, weight: 1, desc: '遵守规则' },
+                    { pattern: /警惕/g, weight: 1, desc: '警惕' },
+                    { pattern: /支持/g, weight: 1, desc: '需要支持' },
+                    { pattern: /可靠/g, weight: 1, desc: '可靠' },
+                    { pattern: /承诺/g, weight: 1, desc: '重视承诺' },
+                    { pattern: /谨慎/g, weight: 1, desc: '谨慎' },
+                    { pattern: /最坏/g, weight: 1, desc: '做最坏打算' },
+                    { pattern: /计划/g, weight: 1, desc: '做计划' },
+                    { pattern: /冒险/g, weight: -2, desc: '不喜冒险' },
+                    { pattern: /冲动/g, weight: -2, desc: '不冲动' }
                 ],
                 7: [
-                    { words: ['快乐', '自由', '体验', '新鲜', '可能'], weight: 2 },
-                    { words: ['冒险', '乐观', '选择', '有趣', '逃避', '计划', '热情', '多样', '享受', '好奇', '创意', '忙碌', '新鲜感'], weight: 1 }
+                    { pattern: /快乐/g, weight: 3, desc: '追求快乐' },
+                    { pattern: /自由/g, weight: 3, desc: '追求自由' },
+                    { pattern: /体验/g, weight: 3, desc: '追求体验' },
+                    { pattern: /新鲜/g, weight: 2, desc: '喜欢新鲜' },
+                    { pattern: /可能/g, weight: 2, desc: '看到可能性' },
+                    { pattern: /冒险/g, weight: 2, desc: '喜欢冒险' },
+                    { pattern: /乐观/g, weight: 2, desc: '乐观' },
+                    { pattern: /选择/g, weight: 2, desc: '需要选择' },
+                    { pattern: /有趣/g, weight: 2, desc: '追求有趣' },
+                    { pattern: /热情/g, weight: 1, desc: '热情' },
+                    { pattern: /多样/g, weight: 1, desc: '多样化' },
+                    { pattern: /享受/g, weight: 1, desc: '享受生活' },
+                    { pattern: /好奇/g, weight: 1, desc: '好奇心' },
+                    { pattern: /创意/g, weight: 1, desc: '有创意' },
+                    { pattern: /忙碌/g, weight: 1, desc: '保持忙碌' },
+                    { pattern: /新鲜感/g, weight: 1, desc: '需要新鲜感' },
+                    { pattern: /逃避/g, weight: 1, desc: '逃避痛苦' },
+                    { pattern: /痛苦/g, weight: -2, desc: '避免痛苦' },
+                    { pattern: /限制/g, weight: -2, desc: '讨厌限制' },
+                    { pattern: /束缚/g, weight: -2, desc: '讨厌束缚' }
                 ],
                 8: [
-                    { words: ['控制', '力量', '保护', '直接', '挑战'], weight: 2 },
-                    { words: ['领导', '强势', '正义', '对抗', '支配', '自信', '行动', '权威', '果断', '真相', '弱者', '公平', '掌控'], weight: 1 }
+                    { pattern: /控制/g, weight: 3, desc: '追求控制' },
+                    { pattern: /力量/g, weight: 3, desc: '追求力量' },
+                    { pattern: /保护/g, weight: 2, desc: '保护欲' },
+                    { pattern: /直接/g, weight: 2, desc: '直接' },
+                    { pattern: /挑战/g, weight: 2, desc: '喜欢挑战' },
+                    { pattern: /领导/g, weight: 2, desc: '领导力' },
+                    { pattern: /强势/g, weight: 2, desc: '强势' },
+                    { pattern: /正义/g, weight: 2, desc: '正义感' },
+                    { pattern: /对抗/g, weight: 2, desc: '不避对抗' },
+                    { pattern: /自信/g, weight: 2, desc: '自信' },
+                    { pattern: /行动/g, weight: 1, desc: '行动派' },
+                    { pattern: /权威/g, weight: 1, desc: '权威性' },
+                    { pattern: /果断/g, weight: 1, desc: '果断' },
+                    { pattern: /真相/g, weight: 1, desc: '追求真相' },
+                    { pattern: /弱者/g, weight: 1, desc: '保护弱者' },
+                    { pattern: /公平/g, weight: 1, desc: '追求公平' },
+                    { pattern: /掌控/g, weight: 1, desc: '掌控局面' },
+                    { pattern: /支配/g, weight: 1, desc: '支配欲' },
+                    { pattern: /示弱/g, weight: -2, desc: '不愿示弱' },
+                    { pattern: /软弱/g, weight: -2, desc: '讨厌软弱' }
                 ],
                 9: [
-                    { words: ['和平', '和谐', '平静', '舒适', '避免'], weight: 2 },
-                    { words: ['融合', '接纳', '耐心', '稳定', '随和', '调解', '惰性', '包容', '安逸', '平衡', '冲突', '顺其自然', '温和'], weight: 1 }
+                    { pattern: /和平/g, weight: 3, desc: '追求和平' },
+                    { pattern: /和谐/g, weight: 3, desc: '追求和谐' },
+                    { pattern: /平静/g, weight: 3, desc: '追求平静' },
+                    { pattern: /舒适/g, weight: 2, desc: '追求舒适' },
+                    { pattern: /避免冲突/g, weight: 3, desc: '避免冲突' },
+                    { pattern: /接纳/g, weight: 2, desc: '接纳' },
+                    { pattern: /耐心/g, weight: 2, desc: '耐心' },
+                    { pattern: /稳定/g, weight: 2, desc: '追求稳定' },
+                    { pattern: /随和/g, weight: 2, desc: '随和' },
+                    { pattern: /调解/g, weight: 2, desc: '调解者' },
+                    { pattern: /包容/g, weight: 2, desc: '包容' },
+                    { pattern: /平衡/g, weight: 2, desc: '追求平衡' },
+                    { pattern: /温和/g, weight: 1, desc: '温和' },
+                    { pattern: /融合/g, weight: 1, desc: '融入' },
+                    { pattern: /安逸/g, weight: 1, desc: '追求安逸' },
+                    { pattern: /顺其自然/g, weight: 1, desc: '顺其自然' },
+                    { pattern: /倾听/g, weight: 1, desc: '善于倾听' },
+                    { pattern: /理解/g, weight: 1, desc: '理解他人' },
+                    { pattern: /冲突/g, weight: -2, desc: '讨厌冲突' },
+                    { pattern: /争吵/g, weight: -2, desc: '讨厌争吵' }
                 ]
             },
             en: {
                 1: [
-                    { words: ['perfect', 'principle', 'right', 'moral', 'standard'], weight: 2 },
-                    { words: ['critic', 'improve', 'order', 'responsibility', 'discipline', 'ideal', 'fair', 'rule', 'strict', 'honest', 'should', 'must'], weight: 1 }
+                    { pattern: /perfection/g, weight: 3, desc: 'perfectionist' },
+                    { pattern: /principle/g, weight: 2, desc: 'principled' },
+                    { pattern: /moral/g, weight: 2, desc: 'moral' },
+                    { pattern: /standard/g, weight: 2, desc: 'high standards' },
+                    { pattern: /right/g, weight: 2, desc: 'right/wrong' },
+                    { pattern: /should/g, weight: 2, desc: 'should thinking' },
+                    { pattern: /must/g, weight: 2, desc: 'must thinking' },
+                    { pattern: /critic/g, weight: 2, desc: 'critical' },
+                    { pattern: /improve/g, weight: 1, desc: 'improvement' },
+                    { pattern: /order/g, weight: 1, desc: 'orderly' },
+                    { pattern: /responsibility/g, weight: 1, desc: 'responsible' },
+                    { pattern: /discipline/g, weight: 1, desc: 'disciplined' },
+                    { pattern: /ideal/g, weight: 1, desc: 'idealistic' },
+                    { pattern: /fair/g, weight: 1, desc: 'fairness' },
+                    { pattern: /rule/g, weight: 1, desc: 'rules' },
+                    { pattern: /strict/g, weight: 1, desc: 'strict' },
+                    { pattern: /honest/g, weight: 1, desc: 'honest' },
+                    { pattern: /casual/g, weight: -2, desc: 'not casual' },
+                    { pattern: /lazy/g, weight: -2, desc: 'not lazy' }
                 ],
                 2: [
-                    { words: ['help', 'care', 'love', 'need', 'give', 'warm'], weight: 2 },
-                    { words: ['kind', 'others', 'appreciation', 'relationship', 'support', 'dedication', 'gentle', 'needed', 'understanding'], weight: 1 }
+                    { pattern: /help others/g, weight: 3, desc: 'helpful' },
+                    { pattern: /care/g, weight: 2, desc: 'caring' },
+                    { pattern: /give/g, weight: 2, desc: 'giving' },
+                    { pattern: /warm/g, weight: 2, desc: 'warm' },
+                    { pattern: /kind/g, weight: 2, desc: 'kind' },
+                    { pattern: /needed/g, weight: 2, desc: 'needed' },
+                    { pattern: /loved/g, weight: 2, desc: 'loved' },
+                    { pattern: /others' needs/g, weight: 2, desc: 'others-focused' },
+                    { pattern: /appreciation/g, weight: 1, desc: 'appreciation' },
+                    { pattern: /relationship/g, weight: 1, desc: 'relationships' },
+                    { pattern: /support/g, weight: 1, desc: 'supportive' },
+                    { pattern: /dedication/g, weight: 1, desc: 'dedicated' },
+                    { pattern: /gentle/g, weight: 1, desc: 'gentle' },
+                    { pattern: /understanding/g, weight: 1, desc: 'understanding' },
+                    { pattern: /cold/g, weight: -2, desc: 'not cold' },
+                    { pattern: /selfish/g, weight: -2, desc: 'not selfish' }
                 ],
                 3: [
-                    { words: ['success', 'achievement', 'goal', 'efficient', 'image'], weight: 2 },
-                    { words: ['recognition', 'compete', 'excellent', 'value', 'progress', 'result', 'honor', 'win', 'ambitious', 'status'], weight: 1 }
+                    { pattern: /success/g, weight: 3, desc: 'success-driven' },
+                    { pattern: /achievement/g, weight: 2, desc: 'achievement' },
+                    { pattern: /goal/g, weight: 2, desc: 'goal-oriented' },
+                    { pattern: /efficient/g, weight: 2, desc: 'efficient' },
+                    { pattern: /image/g, weight: 2, desc: 'image-conscious' },
+                    { pattern: /compete/g, weight: 2, desc: 'competitive' },
+                    { pattern: /excellent/g, weight: 2, desc: 'excellence' },
+                    { pattern: /recognition/g, weight: 2, desc: 'recognition' },
+                    { pattern: /value/g, weight: 1, desc: 'value' },
+                    { pattern: /progress/g, weight: 1, desc: 'progress' },
+                    { pattern: /result/g, weight: 1, desc: 'results' },
+                    { pattern: /honor/g, weight: 1, desc: 'honor' },
+                    { pattern: /win/g, weight: 1, desc: 'winning' },
+                    { pattern: /ambitious/g, weight: 1, desc: 'ambitious' },
+                    { pattern: /status/g, weight: 1, desc: 'status' },
+                    { pattern: /role model/g, weight: 1, desc: 'role model' },
+                    { pattern: /failure/g, weight: -2, desc: 'fears failure' }
                 ],
                 4: [
-                    { words: ['unique', 'special', 'different', 'depth', 'authentic', 'missing'], weight: 2 },
-                    { words: ['envy', 'art', 'emotion', 'sensitive', 'introspect', 'meaning', 'romantic', 'sad', 'beauty', 'lonely', 'understand', 'soul'], weight: 1 }
+                    { pattern: /unique/g, weight: 3, desc: 'unique' },
+                    { pattern: /special/g, weight: 3, desc: 'special' },
+                    { pattern: /different/g, weight: 3, desc: 'different' },
+                    { pattern: /depth/g, weight: 2, desc: 'depth' },
+                    { pattern: /authentic/g, weight: 2, desc: 'authentic' },
+                    { pattern: /missing/g, weight: 2, desc: 'missing something' },
+                    { pattern: /sensitive/g, weight: 2, desc: 'sensitive' },
+                    { pattern: /emotion/g, weight: 2, desc: 'emotional' },
+                    { pattern: /introspect/g, weight: 2, desc: 'introspective' },
+                    { pattern: /meaning/g, weight: 2, desc: 'meaning' },
+                    { pattern: /art/g, weight: 1, desc: 'artistic' },
+                    { pattern: /romantic/g, weight: 1, desc: 'romantic' },
+                    { pattern: /sad/g, weight: 1, desc: 'melancholic' },
+                    { pattern: /beauty/g, weight: 1, desc: 'beauty' },
+                    { pattern: /lonely/g, weight: 1, desc: 'lonely' },
+                    { pattern: /understand/g, weight: 1, desc: 'want understanding' },
+                    { pattern: /soul/g, weight: 1, desc: 'soulful' },
+                    { pattern: /envy/g, weight: 1, desc: 'envious' },
+                    { pattern: /shallow/g, weight: -2, desc: 'hates shallow' },
+                    { pattern: /ordinary/g, weight: -2, desc: 'not ordinary' }
                 ],
                 5: [
-                    { words: ['knowledge', 'understand', 'independent', 'think', 'analyze'], weight: 2 },
-                    { words: ['observe', 'learn', 'research', 'space', 'privacy', 'rational', 'focus', 'explore', 'wisdom', 'distance', 'logic', 'system'], weight: 1 }
+                    { pattern: /knowledge/g, weight: 3, desc: 'knowledge-seeking' },
+                    { pattern: /understand/g, weight: 2, desc: 'understanding' },
+                    { pattern: /independent/g, weight: 2, desc: 'independent' },
+                    { pattern: /think/g, weight: 2, desc: 'thinking' },
+                    { pattern: /analyze/g, weight: 2, desc: 'analytical' },
+                    { pattern: /observe/g, weight: 2, desc: 'observant' },
+                    { pattern: /learn/g, weight: 2, desc: 'learning' },
+                    { pattern: /research/g, weight: 2, desc: 'research' },
+                    { pattern: /space/g, weight: 2, desc: 'needs space' },
+                    { pattern: /privacy/g, weight: 2, desc: 'privacy' },
+                    { pattern: /rational/g, weight: 1, desc: 'rational' },
+                    { pattern: /focus/g, weight: 1, desc: 'focused' },
+                    { pattern: /explore/g, weight: 1, desc: 'exploring' },
+                    { pattern: /wisdom/g, weight: 1, desc: 'wisdom' },
+                    { pattern: /distance/g, weight: 1, desc: 'distant' },
+                    { pattern: /alone/g, weight: 1, desc: 'alone time' },
+                    { pattern: /logic/g, weight: 1, desc: 'logical' },
+                    { pattern: /system/g, weight: 1, desc: 'systematic' },
+                    { pattern: /social/g, weight: -2, desc: 'not social' },
+                    { pattern: /emotional/g, weight: -2, desc: 'not emotional' }
                 ],
                 6: [
-                    { words: ['security', 'worry', 'loyal', 'prepare', 'risk'], weight: 2 },
-                    { words: ['doubt', 'trust', 'responsibility', 'group', 'rule', 'alert', 'support', 'reliable', 'anxiety', 'commit', 'cautious', 'plan'], weight: 1 }
+                    { pattern: /security/g, weight: 3, desc: 'security' },
+                    { pattern: /worry/g, weight: 3, desc: 'worrying' },
+                    { pattern: /anxiety/g, weight: 3, desc: 'anxious' },
+                    { pattern: /loyal/g, weight: 2, desc: 'loyal' },
+                    { pattern: /prepare/g, weight: 2, desc: 'prepared' },
+                    { pattern: /risk/g, weight: 2, desc: 'risk-aware' },
+                    { pattern: /doubt/g, weight: 2, desc: 'doubting' },
+                    { pattern: /trust/g, weight: 2, desc: 'trust' },
+                    { pattern: /responsibility/g, weight: 1, desc: 'responsible' },
+                    { pattern: /group/g, weight: 1, desc: 'group-oriented' },
+                    { pattern: /rule/g, weight: 1, desc: 'rules' },
+                    { pattern: /alert/g, weight: 1, desc: 'alert' },
+                    { pattern: /support/g, weight: 1, desc: 'needs support' },
+                    { pattern: /reliable/g, weight: 1, desc: 'reliable' },
+                    { pattern: /commit/g, weight: 1, desc: 'committed' },
+                    { pattern: /cautious/g, weight: 1, desc: 'cautious' },
+                    { pattern: /plan/g, weight: 1, desc: 'planning' },
+                    { pattern: /adventure/g, weight: -2, desc: 'not adventurous' },
+                    { pattern: /impulsive/g, weight: -2, desc: 'not impulsive' }
                 ],
                 7: [
-                    { words: ['happy', 'freedom', 'experience', 'new', 'possibility'], weight: 2 },
-                    { words: ['adventure', 'optimistic', 'choice', 'fun', 'escape', 'plan', 'enthusiasm', 'variety', 'enjoy', 'curious', 'creative', 'busy'], weight: 1 }
+                    { pattern: /happy/g, weight: 3, desc: 'happy' },
+                    { pattern: /freedom/g, weight: 3, desc: 'freedom' },
+                    { pattern: /experience/g, weight: 3, desc: 'experiences' },
+                    { pattern: /new/g, weight: 2, desc: 'new things' },
+                    { pattern: /possibility/g, weight: 2, desc: 'possibilities' },
+                    { pattern: /adventure/g, weight: 2, desc: 'adventurous' },
+                    { pattern: /optimistic/g, weight: 2, desc: 'optimistic' },
+                    { pattern: /choice/g, weight: 2, desc: 'choices' },
+                    { pattern: /fun/g, weight: 2, desc: 'fun' },
+                    { pattern: /enthusiasm/g, weight: 1, desc: 'enthusiastic' },
+                    { pattern: /variety/g, weight: 1, desc: 'variety' },
+                    { pattern: /enjoy/g, weight: 1, desc: 'enjoyment' },
+                    { pattern: /curious/g, weight: 1, desc: 'curious' },
+                    { pattern: /creative/g, weight: 1, desc: 'creative' },
+                    { pattern: /busy/g, weight: 1, desc: 'busy' },
+                    { pattern: /escape/g, weight: 1, desc: 'escaping' },
+                    { pattern: /pain/g, weight: -2, desc: 'avoids pain' },
+                    { pattern: /limit/g, weight: -2, desc: 'hates limits' },
+                    { pattern: /restriction/g, weight: -2, desc: 'hates restrictions' }
                 ],
                 8: [
-                    { words: ['control', 'power', 'protect', 'direct', 'challenge'], weight: 2 },
-                    { words: ['lead', 'strong', 'justice', 'confront', 'dominate', 'confident', 'action', 'authority', 'decisive', 'truth', 'weak', 'fair'], weight: 1 }
+                    { pattern: /control/g, weight: 3, desc: 'control' },
+                    { pattern: /power/g, weight: 3, desc: 'power' },
+                    { pattern: /protect/g, weight: 2, desc: 'protective' },
+                    { pattern: /direct/g, weight: 2, desc: 'direct' },
+                    { pattern: /challenge/g, weight: 2, desc: 'challenging' },
+                    { pattern: /lead/g, weight: 2, desc: 'leadership' },
+                    { pattern: /strong/g, weight: 2, desc: 'strong' },
+                    { pattern: /justice/g, weight: 2, desc: 'justice' },
+                    { pattern: /confront/g, weight: 2, desc: 'confronting' },
+                    { pattern: /confident/g, weight: 2, desc: 'confident' },
+                    { pattern: /action/g, weight: 1, desc: 'action' },
+                    { pattern: /authority/g, weight: 1, desc: 'authority' },
+                    { pattern: /decisive/g, weight: 1, desc: 'decisive' },
+                    { pattern: /truth/g, weight: 1, desc: 'truth' },
+                    { pattern: /weak/g, weight: 1, desc: 'protects weak' },
+                    { pattern: /fair/g, weight: 1, desc: 'fairness' },
+                    { pattern: /dominate/g, weight: 1, desc: 'dominating' },
+                    { pattern: /weakness/g, weight: -2, desc: 'hates weakness' },
+                    { pattern: /vulnerable/g, weight: -2, desc: 'not vulnerable' }
                 ],
                 9: [
-                    { words: ['peace', 'harmony', 'calm', 'comfortable', 'avoid'], weight: 2 },
-                    { words: ['blend', 'accept', 'patience', 'stable', 'easygoing', 'mediate', 'lazy', 'inclusive', 'easy', 'balance', 'conflict', 'gentle'], weight: 1 }
+                    { pattern: /peace/g, weight: 3, desc: 'peace' },
+                    { pattern: /harmony/g, weight: 3, desc: 'harmony' },
+                    { pattern: /calm/g, weight: 3, desc: 'calm' },
+                    { pattern: /comfortable/g, weight: 2, desc: 'comfort' },
+                    { pattern: /avoid conflict/g, weight: 3, desc: 'conflict-avoidant' },
+                    { pattern: /accept/g, weight: 2, desc: 'accepting' },
+                    { pattern: /patience/g, weight: 2, desc: 'patient' },
+                    { pattern: /stable/g, weight: 2, desc: 'stable' },
+                    { pattern: /easygoing/g, weight: 2, desc: 'easygoing' },
+                    { pattern: /mediate/g, weight: 2, desc: 'mediating' },
+                    { pattern: /inclusive/g, weight: 2, desc: 'inclusive' },
+                    { pattern: /balance/g, weight: 2, desc: 'balance' },
+                    { pattern: /gentle/g, weight: 1, desc: 'gentle' },
+                    { pattern: /blend/g, weight: 1, desc: 'blending' },
+                    { pattern: /easy/g, weight: 1, desc: 'easy' },
+                    { pattern: /listen/g, weight: 1, desc: 'listening' },
+                    { pattern: /understand/g, weight: 1, desc: 'understanding' },
+                    { pattern: /conflict/g, weight: -2, desc: 'hates conflict' },
+                    { pattern: /argue/g, weight: -2, desc: 'hates arguing' }
                 ]
             }
         };
@@ -547,9 +862,17 @@
             '#34495e', '#e67e22', '#c0392b', '#95a5a6'
         ];
 
+        // 初始化语言（从 localStorage 读取）
+        function initLang() {
+            const saved = localStorage.getItem('siteLang');
+            const lang = saved || 'zh';
+            setLang(lang);
+        }
+
         // 设置语言
         function setLang(lang) {
             currentLang = lang;
+            localStorage.setItem('siteLang', lang);
             
             // 更新按钮状态
             document.getElementById('langZh').classList.toggle('active', lang === 'zh');
@@ -594,7 +917,7 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
             document.getElementById('resultDesc').textContent = typeDescs[currentLang][mainType];
         }
 
-        // 分析人格
+        // 分析人格（语义分析引擎）
         function analyzePersonality() {
             const text = document.getElementById('selfDesc').value.trim();
             const analyzeBtn = document.getElementById('analyzeBtn');
@@ -616,18 +939,15 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
                     scores[i] = 0;
                 }
 
-                // 统计关键词匹配（带权重）
-                const keywords = typeKeywords[currentLang];
-                Object.keys(keywords).forEach(type => {
-                    const groups = keywords[type];
-                    groups.forEach(group => {
-                        group.words.forEach(word => {
-                            const regex = new RegExp(word, 'gi');
-                            const matches = text.match(regex);
-                            if (matches) {
-                                scores[type] += matches.length * group.weight;
-                            }
-                        });
+                // 统计关键词匹配（带权重，和 MBTI 一样的套路）
+                const patterns = semanticPatterns[currentLang];
+                Object.keys(patterns).forEach(type => {
+                    const typePatterns = patterns[type];
+                    typePatterns.forEach(({ pattern, weight, desc }) => {
+                        const matches = text.match(pattern);
+                        if (matches) {
+                            scores[type] += weight;
+                        }
                     });
                 });
 
@@ -707,6 +1027,11 @@ I'm a relatively introverted person who enjoys solitary thinking. At work, I pur
             document.getElementById('resultSection').classList.remove('show');
             document.getElementById('selfDesc').value = '';
         }
+
+        // 页面加载时初始化语言
+        window.onload = function() {
+            initLang();
+        };
     </script>
 </body>
 </html>
