@@ -445,10 +445,11 @@
         // 解析短链
         async function parseShortLink(shortUrl) {
             try {
-                // 方案 1：使用外部 API 解析短链（GET 请求）
+                // 方案 1：使用 CORS 代理 + 外部 API 解析短链
                 const apiUrl = 'https://nieta-shortlink-parser.xiyomi-congito-kant999.workers.dev/?url=' + encodeURIComponent(shortUrl);
+                const corsProxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(apiUrl);
                 
-                const response = await fetch(apiUrl, {
+                const response = await fetch(corsProxy, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
@@ -471,40 +472,34 @@
             } catch (e) {
                 console.error('短链解析失败:', e);
                 
-                // 降级处理：尝试通过重定向获取真实链接
+                // 降级处理：尝试通过 CORS 代理跟随重定向
                 try {
-                    // 创建一个临时的重定向请求
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 5000);
+                    const corsProxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(shortUrl);
                     
-                    const response = await fetch(shortUrl, {
-                        method: 'HEAD',
-                        redirect: 'follow',
-                        signal: controller.signal
+                    const response = await fetch(corsProxy, {
+                        method: 'GET',
+                        redirect: 'follow'
                     });
                     
-                    clearTimeout(timeoutId);
-                    const finalUrl = response.url;
-                    
-                    // 从重定向后的 URL 中提取 UUID
+                    // 从最终 URL 中提取 UUID
                     const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
-                    const match = finalUrl.match(uuidRegex);
+                    const match = response.url.match(uuidRegex);
                     
                     if (match) {
                         showSimpleResult(match[0], shortUrl);
                         return;
                     }
                 } catch (e2) {
-                    console.error('重定向解析也失败:', e2);
+                    console.error('代理重定向解析也失败:', e2);
                 }
                 
-                // 最后尝试：直接从短链中提取（虽然通常不会有 UUID）
+                // 最后尝试：直接从短链中提取
                 const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
                 const match = shortUrl.match(uuidRegex);
                 if (match) {
                     showSimpleResult(match[0], shortUrl);
                 } else {
-                    throw new Error('短链解析失败：API 不可用且无法从重定向提取 UUID。建议：1. 直接使用标准链接 2. 在角色页面复制完整链接');
+                    throw new Error('短链解析失败。建议：1. 直接使用标准链接（nieta.art/character/xxx）2. 在角色页面复制完整链接');
                 }
             }
         }
