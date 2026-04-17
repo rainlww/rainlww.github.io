@@ -234,6 +234,38 @@
             pointer-events: none;
         }
 
+        /* 语言切换按钮 */
+        .lang-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 5px;
+            z-index: 1002;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border: 2px solid rgba(90, 125, 138, 0.3);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            color: #5a7d8a;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .lang-btn.active {
+            background: rgba(90, 125, 138, 0.2);
+            border-color: #5a7d8a;
+            font-weight: 600;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
         /* 背景纯享按钮 */
         .fullscreen-btn {
             position: fixed;
@@ -1179,6 +1211,12 @@
         <!-- 背景模糊层 -->
         <div id="bgOverlay"></div>
         
+        <!-- 语言切换按钮 -->
+        <div class="lang-switch">
+            <button class="lang-btn active" onclick="setLang('zh')" id="langZh">中文</button>
+            <button class="lang-btn" onclick="setLang('en')" id="langEn">English</button>
+        </div>
+        
         <!-- 开发者模式标识 -->
         <div class="dev-mode-indicator" id="devModeIndicator">🔓 开发者模式</div>
         
@@ -1186,92 +1224,92 @@
         <button class="dev-exit-btn" id="devExitBtn" onclick="exitDevMode()">❌ 退出开发者模式</button>
         
         <div class="container">
-            <h1 class="title">欢迎来到雨落的世界！</h1>
-            <p class="intro-text">— 听，下雨了。—</p>
+            <h1 class="title" data-i18n="home-welcome">欢迎来到雨落的世界！</h1>
+            <p class="intro-text" data-i18n="home-intro">— 听，下雨了。—</p>
             
             <!-- 时间显示 -->
             <p class="current-time" id="currentTime">----.--.-- --:--:--</p>
 
             <!-- 第一行：有关雨落们的事 -->
-            <p class="section-label">——有关雨落们的事</p>
+            <p class="section-label" data-i18n="home-section1">——有关雨落们的事</p>
             <div class="entries-grid">
                 <!-- 雨落们的观测记录 -->
                 <div class="entry-card" onclick="window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;">
-                    <h2 class="entry-title">雨落们的观测记录</h2>
-                    <p class="entry-desc">
+                    <h2 class="entry-title" data-i18n="home-card1-title">雨落们的观测记录</h2>
+                    <p class="entry-desc" data-i18n="home-card1-desc">
                         这里存放着观测站，以及各个世界的精彩时刻！<br>
                         快来快来！
                     </p>
-                    <button class="entry-btn" onclick="window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;">点击进入</button>
+                    <button class="entry-btn" onclick="window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;" data-i18n="home-card1-btn">点击进入</button>
                 </div>
 
                 <!-- 雨落们的档案馆（暂未开放） -->
                 <div class="entry-card" id="archiveCard" style="opacity: 0.5; cursor: not-allowed;" onclick="tryUnlockArchive()">
-                    <h2 class="entry-title">雨落们的档案馆</h2>
-                    <p class="entry-desc">
+                    <h2 class="entry-title" data-i18n="home-card2-title">雨落们的档案馆</h2>
+                    <p class="entry-desc" data-i18n="home-card2-desc">
                         这是千万滴雨落下的瞬间。<br>
                         每一滴都反射着独特的光芒。<br>
-                        <span style="color: #8a9a9f; font-size: 0.85em; margin-top: 8px; display: block;" id="archiveLockText">🔒 暂未对外开放</span>
                     </p>
-                    <button class="entry-btn" id="archiveBtn" style="background: linear-gradient(135deg, #a0a0a0, #b0b0b0); cursor: not-allowed;">暂未开放</button>
+                    <span style="color: #8a9a9f; font-size: 0.85em; margin-top: 8px; display: block;" id="archiveLockText" data-i18n="home-card2-lock">🔒 暂未对外开放</span>
+                    <button class="entry-btn" id="archiveBtn" style="background: linear-gradient(135deg, #a0a0a0, #b0b0b0); cursor: not-allowed;" data-i18n="home-card2-btn">暂未开放</button>
                 </div>
             </div>
 
             <!-- 第二行：观测站的功能区 -->
-            <p class="section-label">——观测站的千奇百怪功能区</p>
+            <p class="section-label" data-i18n="home-section2">——观测站的千奇百怪功能区</p>
             <div class="entries-grid">
                 <!-- 测试·更深认识 ta -->
                 <div class="entry-card" onclick="navigateTo('test-choice.html')">
-                    <h2 class="entry-title">测试·更深认识 ta</h2>
-                    <p class="entry-desc">
+                    <h2 class="entry-title" data-i18n="home-card3-title">测试·更深认识 ta</h2>
+                    <p class="entry-desc" data-i18n="home-card3-desc">
                         MBTI / 九型人格 · 探索人格的奥秘<br>
                         发现更深层的自己～
                     </p>
-                    <button class="entry-btn">开始测试</button>
+                    <button class="entry-btn" data-i18n="home-card3-btn">开始测试</button>
                 </div>
 
                 <!-- 绘境 · 标签配方库 -->
                 <div class="entry-card" onclick="navigateTo('huijing.html')">
-                    <h2 class="entry-title">绘境 · 标签配方库</h2>
-                    <p class="entry-desc">
+                    <h2 class="entry-title" data-i18n="home-card4-title">绘境 · 标签配方库</h2>
+                    <p class="entry-desc" data-i18n="home-card4-desc">
                         这是一个神奇的 tag 生成器！指哪打哪，萌新福音！<br>
                         来试试吗？
                     </p>
-                    <button class="entry-btn">进入绘境</button>
+                    <button class="entry-btn" data-i18n="home-card4-btn">进入绘境</button>
                 </div>
             </div>
 
             <!-- 第三行：工具箱 -->
-            <p class="section-label">——观测站的秘密工具箱</p>
+            <p class="section-label" data-i18n="home-section3">——观测站的秘密工具箱</p>
             <div class="entries-grid">
                 <!-- 角色 UUID 识别工具 -->
                 <div class="entry-card" onclick="navigateTo('uuid-tool.html')">
-                    <h2 class="entry-title">角色 UUID 识别工具</h2>
-                    <p class="entry-desc">
+                    <h2 class="entry-title" data-i18n="home-card5-title">角色 UUID 识别工具</h2>
+                    <p class="entry-desc" data-i18n="home-card5-desc">
                         输入角色链接，自动提取 UUID<br>
                         快速、准确、一键复制
                     </p>
-                    <button class="entry-btn">使用工具</button>
+                    <button class="entry-btn" data-i18n="home-card5-btn">使用工具</button>
                 </div>
             </div>
 
             <div class="footer">
-                <p>雨落的世界 · 由 伊斯派菈 制作</p>
-                <p style="margin-top: 8px;">每一个世界，都是一段独特的旅程</p>
+                <p data-i18n="home-footer1">雨落的世界 · 由 伊斯派菈 制作</p>
+                <p style="margin-top: 8px;" data-i18n="home-footer2">每一个世界，都是一段独特的旅程</p>
             </div>
             
             <!-- 暗号专用区域 - 固定在 footer 上方 -->
             <div class="secret-code-area">
                 <div class="secret-code-box" onclick="openSecretModal()">
                     <span class="secret-code-prefix">——</span>
-                    <span class="secret-code-box-text">点击输入神秘暗号</span>
+                    <span class="secret-code-box-text" data-i18n="home-secret-btn">点击输入神秘暗号</span>
                     <span class="secret-code-suffix">——</span>
                 </div>
             </div>
         </div>
         
         <!-- 开始播放按钮 -->
-        <button class="play-btn" id="playBtn" onclick="showModal()">🎵 开始播放</button>
+        <button class="play-btn" id="playBtn" onclick="showModal()" data-i18n="home-play-btn">🎵 开始播放</button>
         
         <!-- 右下角悬浮按钮 -->
         <div class="floating-buttons">
@@ -1280,24 +1318,24 @@
         
         <!-- 悬浮选项弹窗 -->
         <div class="floating-options" id="floatingOptions">
-            <div class="floating-options-title">你想做什么？</div>
-            <div class="floating-option-item" onclick="toggleFullscreen()" id="fullscreenOption">🖼️ 背景纯享</div>
-            <div class="floating-option-item" onclick="switchBackground()">🖼️ 切换背景</div>
+            <div class="floating-options-title" data-i18n="home-floating-title">你想做什么？</div>
+            <div class="floating-option-item" onclick="toggleFullscreen()" id="fullscreenOption" data-i18n="home-fullscreen">🖼️ 背景纯享</div>
+            <div class="floating-option-item" onclick="switchBackground()" data-i18n="home-switch-bg">🖼️ 切换背景</div>
         </div>
         
         <!-- 退出纯享按钮（纯享模式下点击屏幕显示） -->
-        <button id="exitFullscreenBtn" onclick="toggleFullscreen()">❌ 退出纯享</button>
+        <button id="exitFullscreenBtn" onclick="toggleFullscreen()" data-i18n="home-exit-fullscreen">❌ 退出纯享</button>
     </div>
 
     <!-- 神秘暗号弹窗 -->
     <div class="secret-modal" id="secretModal" onclick="closeSecretModal(event)">
         <div class="secret-modal-content">
             <span class="secret-modal-close" onclick="closeSecretModal(event)">×</span>
-            <h3 class="secret-modal-title">🔐 输入神秘暗号</h3>
-            <input type="text" class="secret-modal-input" id="secretModalInput" placeholder="请输入暗号…" onkeypress="checkSecretModalCode(event)">
+            <h3 class="secret-modal-title" data-i18n="home-secret-modal-title">🔐 输入神秘暗号</h3>
+            <input type="text" class="secret-modal-input" id="secretModalInput" data-i18n="home-secret-modal-placeholder" placeholder="请输入暗号…" onkeypress="checkSecretModalCode(event)">
             <div class="secret-modal-buttons">
-                <button class="secret-modal-btn cancel" onclick="closeSecretModalDirect()">返回</button>
-                <button class="secret-modal-btn" onclick="submitSecretCode()">确定</button>
+                <button class="secret-modal-btn cancel" onclick="closeSecretModalDirect()" data-i18n="home-secret-modal-return">返回</button>
+                <button class="secret-modal-btn" onclick="submitSecretCode()" data-i18n="home-secret-modal-confirm">确定</button>
             </div>
         </div>
     </div>
@@ -1306,7 +1344,7 @@
     <div id="modal" onclick="closeModal(event)">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal(event)">×</span>
-            <div class="modal-text">
+            <div class="modal-text" data-i18n="home-music-modal">
                 谨以此音乐献给小椰果<br>
                 ——一直在等你回家的雨落
             </div>
@@ -1317,6 +1355,9 @@
     <audio id="bgMusic" loop preload="auto">
         <source src="bgm.mp3" type="audio/mpeg">
     </audio>
+
+    <!-- 国际化支持 -->
+    <script src="i18n.js"></script>
 
     <script>
         // 背景图片数组
@@ -1814,6 +1855,11 @@
             }
             // 否则不响应（被 opacity 和 cursor 覆盖）
         }
+        
+        // 页面加载时初始化语言
+        window.addEventListener('DOMContentLoaded', function() {
+            initLang();
+        });
     </script>
 </body>
 </html>
