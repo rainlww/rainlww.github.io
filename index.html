@@ -1520,26 +1520,32 @@
             const originalText = titleElement.textContent;
             if (!originalText) return;
             
-            titleElement.textContent = '';
+            // 先打出标题 + 两个空格
+            titleElement.textContent = originalText + '  ';
             
+            // 添加光标
             const cursor = document.createElement('span');
             cursor.className = 'cursor';
+            cursor.textContent = '|';
             titleElement.appendChild(cursor);
             
-            let charIndex = 0;
-            const typeInterval = setInterval(function() {
-                if (charIndex < originalText.length) {
-                    const textNode = document.createTextNode(originalText.charAt(charIndex));
-                    titleElement.insertBefore(textNode, cursor);
-                    charIndex++;
-                } else {
-                    clearInterval(typeInterval);
-                    // 3 秒后移除光标
-                    setTimeout(function() {
-                        cursor.style.display = 'none';
-                    }, 3000);
+            // 闪烁两下后删除空格和光标
+            let blinkCount = 0;
+            const blinkInterval = setInterval(function() {
+                blinkCount++;
+                cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
+                
+                // 闪烁两下后（即第 4 次切换，2 次完整闪烁）
+                if (blinkCount >= 4) {
+                    clearInterval(blinkInterval);
+                    // 删除两个空格
+                    titleElement.textContent = originalText;
+                    // 移除光标
+                    if (cursor.parentNode) {
+                        cursor.parentNode.removeChild(cursor);
+                    }
                 }
-            }, 80);
+            }, 300); // 300ms 切换一次，总共约 1.2 秒
         }
 
         // 页面加载
