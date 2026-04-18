@@ -1234,14 +1234,20 @@
             letter-spacing: 1px;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             max-width: 95%;
+        }
+
+        .loading-tips span:first-child {
             white-space: nowrap;
+            display: inline-block;
+        }
+
+        .loading-tips span:last-child {
+            display: inline-block;
         }
 
         @media (max-width: 768px) {
             .loading-tips {
                 font-size: 0.75em;
-                white-space: normal;
-                line-height: 1.6;
             }
         }
     </style>
@@ -1547,7 +1553,15 @@
             if (!tipsElement) return;
             
             const randomIndex = Math.floor(Math.random() * loadingTips.length);
-            tipsElement.textContent = loadingTips[randomIndex];
+            const tipText = loadingTips[randomIndex];
+            
+            // 分离 "Tips:" 和后面的内容
+            const match = tipText.match(/^Tips:\s*(.*)/);
+            if (match) {
+                tipsElement.innerHTML = '<span style="white-space: nowrap;">Tips:&nbsp;</span><span>' + match[1] + '</span>';
+            } else {
+                tipsElement.textContent = tipText;
+            }
         }
 
         // 打字机效果 - 逐字显示
