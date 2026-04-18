@@ -30,7 +30,7 @@
             text-align: center;
             margin-bottom: 30px;
             padding: 30px 20px;
-            background: linear-gradient(135deg, #f5e6f0 0%, #e8d5e8 100%);
+            background: linear-gradient(135deg, #FFF9C4 0%, #E3F2FD 100%);
             border-radius: 8px;
         }
 
@@ -166,7 +166,7 @@
             width: 100%;
             padding-top: 140%; /* 竖版比例 */
             position: relative;
-            background: linear-gradient(135deg, #f5e6f0 0%, #e8d5e8 100%);
+            background: linear-gradient(135deg, #FFF9C4 0%, #E3F2FD 100%);
             overflow: hidden;
         }
 
@@ -319,7 +319,7 @@
                 <input type="text" class="search-input" id="searchInput" placeholder="搜索角色或标签…" oninput="handleSearch()">
             </div>
             <div class="filter-tags" id="filterTags">
-                <!-- 标签由 JavaScript 动态生成 -->
+                <!-- 标签由 JavaScript 动态生成，可点击 -->
             </div>
         </div>
 
@@ -445,23 +445,9 @@
 
         // 切换标签选中状态
         function toggleTag(tag) {
-            const index = selectedTags.indexOf(tag);
-            if (index > -1) {
-                selectedTags.splice(index, 1);
-            } else {
-                selectedTags.push(tag);
-            }
-
-            // 更新 UI
-            document.querySelectorAll('.filter-tag').forEach(el => {
-                el.classList.toggle('active', selectedTags.includes(el.dataset.tag));
-            });
-
-            // 检查是否选中荷穆勒
-            updateHomuleshaNotice();
-
-            // 筛选人物卡片
-            filterCharacters();
+            // 点击标签跳转到标签页面
+            const tagPage = `tag-${tag}.html`;
+            window.location.href = tagPage;
         }
 
         // 筛选人物卡片
