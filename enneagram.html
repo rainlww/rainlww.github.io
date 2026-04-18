@@ -443,10 +443,7 @@
 
         <div class="input-section" id="textSection">
             <label for="selfDesc" id="descLabel">请输入 ta 的简介：</label>
-            <textarea id="selfDesc" placeholder="例如：
-我是一个比较内向的人，喜欢独处思考。在工作中我追求完美，常常会因为细节不够好而焦虑。我很在意别人的看法，希望能被认可和喜爱。面对冲突时，我倾向于避免正面冲突，但内心会有自己的想法和坚持。我有很多兴趣爱好，但常常三分钟热度...
-
-（可以从性格特点、行为模式、内心感受、人际关系等方面描述）"></textarea>
+            <textarea id="selfDesc" placeholder=""></textarea>
             <p class="input-hint" id="inputHint">💡 描述越详细，分析越准确。建议 100 字以上。</p>
             <button class="btn-analyze" onclick="analyzePersonality()" id="analyzeBtn">开始分析</button>
         </div>
@@ -1404,19 +1401,7 @@
             document.getElementById('restartBtn').textContent = i18n[lang].restartBtn;
             document.getElementById('backLink').textContent = i18n[lang].backLink;
             
-            // 更新 placeholder
-            const textarea = document.getElementById('selfDesc');
-            if (lang === 'zh') {
-                textarea.placeholder = `例如：
-我是一个比较内向的人，喜欢独处思考。在工作中我追求完美，常常会因为细节不够好而焦虑。我很在意别人的看法，希望能被认可和喜爱。面对冲突时，我倾向于避免正面冲突，但内心会有自己的想法和坚持。我有很多兴趣爱好，但常常三分钟热度...
-
-（可以从性格特点、行为模式、内心感受、人际关系等方面描述）`;
-            } else {
-                textarea.placeholder = `For example:
-I'm a relatively introverted person who enjoys solitary thinking. At work, I pursue perfection and often feel anxious about details not being good enough. I care about others' opinions and hope to be recognized and liked. When facing conflicts, I tend to avoid direct confrontation, but I have my own thoughts and convictions. I have many interests, but often lose interest quickly...
-
-(You can describe personality traits, behavioral patterns, inner feelings, interpersonal relationships, etc.)`;
-            }
+            // placeholder 保持为空
             
             // 如果已经有结果，更新结果文字
             const resultSection = document.getElementById('resultSection');
