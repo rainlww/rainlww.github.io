@@ -1632,6 +1632,7 @@
 
         // 页面加载
         window.addEventListener('DOMContentLoaded', function() {
+            console.log('平板端检测：', window.innerWidth);
             const loadingScreen = document.getElementById('loading-screen');
             const mainScreen = document.getElementById('main-screen');
             const loadingText = document.getElementById('loadingText');
@@ -1698,8 +1699,9 @@
                 };
             });
             
-            // 最多等 6 秒（延长加载时间，好好欣赏下雨和云层）
+            // 最多等 4 秒（平板端优化，避免卡住）
             setTimeout(function() {
+                console.log('加载超时，强制显示主页');
                 clearInterval(dotInterval);
                 
                 // 先淡出 Loading 页
