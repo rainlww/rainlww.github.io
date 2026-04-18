@@ -396,6 +396,7 @@
         // 人物数据
         const character = {
             id: "homulesha",
+            number: "0601-M10",
             name: "荷穆勒夏",
             cover: "homulesha-cover-new-opt.jpg?v=2",
             tags: ["荷穆勒", "明雨落"],
@@ -408,6 +409,16 @@
         window.addEventListener('DOMContentLoaded', function() {
             // 设置页面标题
             document.getElementById('pageTitle').textContent = character.name;
+
+            // 设置信息框名字和编号
+            document.getElementById('infoName').textContent = character.name;
+            document.getElementById('infoId').textContent = character.number || character.id;
+
+            // 设置信息框标签
+            const tagsEl = document.getElementById('infoTags');
+            if (tagsEl && character.tags) {
+                tagsEl.innerHTML = character.tags.map(tag => `<a href="tag-${tag}.html" class="wiki-tag" style="text-decoration: none; cursor: pointer;">${tag}</a>`).join('');
+            }
 
             // 设置信息框图片
             const imageEl = document.getElementById('infoboxImage');
