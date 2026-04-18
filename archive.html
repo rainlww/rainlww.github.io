@@ -498,6 +498,7 @@
         function filterCharacters() {
             const cards = document.querySelectorAll('.character-card');
             let hasResults = false;
+            let hasTagInAnyChar = false;
 
             cards.forEach(card => {
                 const onclick = card.getAttribute('onclick');
@@ -514,6 +515,13 @@
                     return;
                 }
 
+                // 检查选中的标签是否存在于任何角色中
+                selectedTags.forEach(tag => {
+                    if (char.tags.includes(tag)) {
+                        hasTagInAnyChar = true;
+                    }
+                });
+
                 // 交集筛选：必须包含所有选中的标签
                 const hasAllTags = selectedTags.every(tag => char.tags.includes(tag));
                 if (hasAllTags) {
@@ -527,7 +535,19 @@
             // 显示/隐藏空状态提示
             const emptyState = document.getElementById('emptyState');
             if (emptyState) {
-                emptyState.style.display = hasResults ? 'none' : 'block';
+                if (!hasResults) {
+                    emptyState.style.display = 'block';
+                    // 检查是标签下无角色还是交集为空
+                    if (!hasTagInAnyChar) {
+                        // 标签下无角色
+                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">啊哦……轻若还没有添加哦……</p>';
+                    } else {
+                        // 交集为空
+                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>';
+                    }
+                } else {
+                    emptyState.style.display = 'none';
+                }
             }
         }
 
