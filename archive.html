@@ -498,7 +498,6 @@
         function filterCharacters() {
             const cards = document.querySelectorAll('.character-card');
             let hasResults = false;
-            let hasTagInAnyChar = false;
 
             cards.forEach(card => {
                 const onclick = card.getAttribute('onclick');
@@ -515,13 +514,6 @@
                     return;
                 }
 
-                // 检查选中的标签是否存在于任何角色中
-                selectedTags.forEach(tag => {
-                    if (char.tags.includes(tag)) {
-                        hasTagInAnyChar = true;
-                    }
-                });
-
                 // 交集筛选：必须包含所有选中的标签
                 const hasAllTags = selectedTags.every(tag => char.tags.includes(tag));
                 if (hasAllTags) {
@@ -537,9 +529,12 @@
             if (emptyState) {
                 if (!hasResults) {
                     emptyState.style.display = 'block';
-                    // 检查是标签下无角色还是交集为空
-                    if (!hasTagInAnyChar) {
-                        // 标签下无角色
+                    // 检查是否有选中的标签不存在于任何角色中
+                    const allTags = characters.flatMap(c => c.tags);
+                    const hasUnaddedTag = selectedTags.some(tag => !allTags.includes(tag));
+                    
+                    if (hasUnaddedTag) {
+                        // 有标签尚未添加人物
                         emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">啊哦……轻若还没有添加哦……</p>';
                     } else {
                         // 交集为空
