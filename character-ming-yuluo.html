@@ -333,7 +333,7 @@
                     <ul class="toc-list">
                         <li><a href="#artwork">🖼️ 立绘展示</a></li>
                         <li><a href="#description">📜 角色简介</a></li>
-                        <li><a href="#related">👥 相关人物</a></li>
+                        <li><a href="#related">🌧️ 相关雨落</a></li>
                         <li><a href="#external">🔗 外部链接</a></li>
                     </ul>
                 </div>
@@ -380,8 +380,8 @@
 
                 <!-- 相关人物 -->
                 <div class="wiki-section" id="related">
-                    <h2 class="wiki-section-title">👥 相关人物</h2>
-                    <div class="related-list" id="relatedList">
+                    <h2 class="wiki-section-title">🌧️ 相关雨落</h2>
+                    <div class="related-list" id="relatedYuluoList">
                         <span class="related-item">（暂无）</span>
                     </div>
                 </div>
@@ -432,7 +432,7 @@
             tags: ["0601 号观测站", "明雨落"],
             nietaLink: "",
             description: "（简介待填写）",
-            related: []
+            relatedYuluo: []
         };
 
         // 初始化页面
@@ -469,8 +469,8 @@
             }
 
             // 设置相关人物
-            if (character.related && character.related.length > 0) {
-                document.getElementById('relatedList').innerHTML = character.related.map(name => 
+            if (character.relatedYuluo && character.relatedYuluo.length > 0) {
+                document.getElementById('relatedList').innerHTML = character.relatedYuluo.map(name => 
                     `<span class="related-item">${name}</span>`
                 ).join('');
             }
