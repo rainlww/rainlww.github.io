@@ -1573,7 +1573,10 @@
         // 打字机效果 - 逐字显示
         let typewriterDone = false;
         function typeWriterEffect() {
-            if (typewriterDone) return;
+            if (typewriterDone) {
+                console.log('打字机效果：已经执行过，跳过');
+                return;
+            }
             typewriterDone = true;
             
             const titleElement = document.querySelector('.title');
@@ -1589,6 +1592,12 @@
             }
             
             console.log('打字机效果开始执行，标题：', originalText);
+            
+            // 先清除可能存在的旧光标（防止平板端重复执行）
+            const existingCursors = titleElement.querySelectorAll('.cursor');
+            existingCursors.forEach(function(c) {
+                c.parentNode.removeChild(c);
+            });
             
             // 清空标题，准备逐字显示
             titleElement.textContent = '';
@@ -1731,8 +1740,11 @@
                 // 1 秒后完全移除 Loading 页（等过渡完成）
                 setTimeout(function() {
                     loadingScreen.style.display = 'none';
+                    // 启动打字机效果（typewriterDone 会防止重复执行）
+                    console.log('超时保护：启动打字机效果');
+                    typeWriterEffect();
                 }, 1000);
-            }, 4000);
+            }, 2000);
         });
 
         // 导航函数
