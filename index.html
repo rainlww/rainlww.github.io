@@ -1595,6 +1595,8 @@
                         mainScreen.classList.add('visible');
                         currentBgIndex = Math.floor(Math.random() * backgrounds.length);
                         setBackground(currentBgIndex);
+                        // 页面显示后执行打字机效果
+                        setTimeout(typeWriterEffect, 100);
                     }
                 };
                 img.onerror = function() {
@@ -1606,6 +1608,8 @@
                         mainScreen.classList.add('visible');
                         currentBgIndex = Math.floor(Math.random() * backgrounds.length);
                         setBackground(currentBgIndex);
+                        // 页面显示后执行打字机效果
+                        setTimeout(typeWriterEffect, 100);
                     }
                 };
             });
@@ -1918,15 +1922,8 @@
             // 否则不响应（被 opacity 和 cursor 覆盖）
         }
         
-        // 页面加载时初始化语言和打字机效果
-        window.addEventListener('DOMContentLoaded', function() {
-            console.log('DOMContentLoaded 触发');
-            initLang();
-            // 确保 DOM 完全渲染后执行打字机效果
-            requestAnimationFrame(function() {
-                setTimeout(typeWriterEffect, 50);
-            });
-        });
+        // 页面加载时初始化语言和打字机效果（合并到主监听器）
+        // 在图片加载完成后调用 typeWriterEffect
     </script>
 </body>
 </html>
