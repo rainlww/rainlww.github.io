@@ -56,6 +56,32 @@
             background: rgba(154, 122, 138, 0.15);
         }
 
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .tab-btn {
+            padding: 15px 25px;
+            border: 2px solid #e0d8da;
+            border-radius: 12px;
+            background: #fafbfc;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #aa8a9a, #ba9aaa);
+            color: #fff;
+            border-color: #aa8a9a;
+        }
+        .tab-btn:hover:not(.active) {
+            background: #f0f2f5;
+        }
+
         h1 {
             font-size: 2em;
             color: #5a4a5a;
@@ -406,14 +432,32 @@
         <h1 id="title">✨ 九型人格分析</h1>
         <p class="subtitle" id="subtitle">描述你自己，让我来读懂你的内心</p>
 
-        <div class="input-section" id="inputSection">
-            <label for="selfDesc" id="descLabel">请用一段话描述你自己：</label>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchEnneaTab('text')" id="textTabBtn">📝 粘贴简介</button>
+            <button class="tab-btn" onclick="switchEnneaTab('link')" id="linkTabBtn">🔗 Neta 链接</button>
+        </div>
+
+        <div class="input-section" id="textSection">
+            <label for="selfDesc" id="descLabel">请输入 ta 的简介：</label>
             <textarea id="selfDesc" placeholder="例如：
 我是一个比较内向的人，喜欢独处思考。在工作中我追求完美，常常会因为细节不够好而焦虑。我很在意别人的看法，希望能被认可和喜爱。面对冲突时，我倾向于避免正面冲突，但内心会有自己的想法和坚持。我有很多兴趣爱好，但常常三分钟热度...
 
 （可以从性格特点、行为模式、内心感受、人际关系等方面描述）"></textarea>
             <p class="input-hint" id="inputHint">💡 描述越详细，分析越准确。建议 100 字以上。</p>
             <button class="btn-analyze" onclick="analyzePersonality()" id="analyzeBtn">开始分析</button>
+        </div>
+
+        <div class="input-section hidden" id="linkSection">
+            <label id="linkLabel">请输入 Neta 人物链接或安利语</label>
+            <div style="padding: 20px; background: linear-gradient(135deg, rgba(255, 193, 7, 0.08), rgba(255, 152, 0, 0.08)); border: 2px dashed rgba(255, 152, 0, 0.3); border-radius: 12px; text-align: center; margin-bottom: 15px;">
+                <div style="font-size: 1.1em; color: #ffb84d; font-weight: bold; margin-bottom: 8px;">🔧 维护中……</div>
+                <div style="font-size: 0.85em; color: #888; line-height: 1.6;">
+                    链接自动获取功能暂时不可用<br>
+                    请切换到「📝 粘贴简介」标签页手动输入～
+                </div>
+            </div>
+            <textarea disabled style="opacity: 0.5; background: #f5f5f5;"></textarea>
+        </div>
             
             <!-- 加载动画 -->
             <div class="loading-section hidden" id="loadingSection">
@@ -448,6 +492,26 @@
     </div>
 
     <script>
+        // 切换标签页
+        function switchEnneaTab(tab) {
+            const textSection = document.getElementById('textSection');
+            const linkSection = document.getElementById('linkSection');
+            const textTabBtn = document.getElementById('textTabBtn');
+            const linkTabBtn = document.getElementById('linkTabBtn');
+            
+            if (tab === 'text') {
+                textSection.classList.remove('hidden');
+                linkSection.classList.add('hidden');
+                textTabBtn.classList.add('active');
+                linkTabBtn.classList.remove('active');
+            } else {
+                textSection.classList.add('hidden');
+                linkSection.classList.remove('hidden');
+                textTabBtn.classList.remove('active');
+                linkTabBtn.classList.add('active');
+            }
+        }
+
         // 语言配置
         let currentLang = 'zh';
         
@@ -455,7 +519,10 @@
             zh: {
                 title: '✨ 九型人格分析',
                 subtitle: '描述你自己，让我来读懂你的内心',
-                descLabel: '请用一段话描述你自己：',
+                textTabBtn: '📝 粘贴简介',
+                linkTabBtn: '🔗 Neta 链接',
+                descLabel: '请输入 ta 的简介：',
+                linkLabel: '请输入 Neta 人物链接或安利语',
                 inputHint: '💡 描述越详细，分析越准确。建议 100 字以上。',
                 analyzeBtn: '开始分析',
                 analyzing: '分析中…',
@@ -469,7 +536,10 @@
             en: {
                 title: '✨ Enneagram Analysis',
                 subtitle: 'Describe yourself, let me understand your heart',
-                descLabel: 'Please describe yourself in a paragraph:',
+                textTabBtn: '📝 Paste Description',
+                linkTabBtn: '🔗 Neta Link',
+                descLabel: 'Please enter description:',
+                linkLabel: 'Please enter Neta character link or recommendation',
                 inputHint: '💡 The more detailed your description, the more accurate the analysis. 100+ characters recommended.',
                 analyzeBtn: 'Start Analysis',
                 analyzing: 'Analyzing…',
@@ -1319,7 +1389,10 @@
             // 更新界面文字
             document.getElementById('title').textContent = i18n[lang].title;
             document.getElementById('subtitle').textContent = i18n[lang].subtitle;
+            document.getElementById('textTabBtn').textContent = i18n[lang].textTabBtn;
+            document.getElementById('linkTabBtn').textContent = i18n[lang].linkTabBtn;
             document.getElementById('descLabel').textContent = i18n[lang].descLabel;
+            document.getElementById('linkLabel').textContent = i18n[lang].linkLabel;
             document.getElementById('inputHint').textContent = i18n[lang].inputHint;
             document.getElementById('analyzeBtn').textContent = i18n[lang].analyzeBtn;
             document.getElementById('resultTitle').textContent = i18n[lang].resultTitle;
