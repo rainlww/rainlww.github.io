@@ -486,6 +486,22 @@
             margin-bottom: 10px;
             margin-top: -50px;
             letter-spacing: 8px;
+            min-height: 1.2em;
+        }
+
+        .title .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background: #fff;
+            margin-left: 5px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
 
         .subtitle {
@@ -1489,6 +1505,34 @@
             }
         }
 
+        // 打字机效果
+        function typeWriterEffect() {
+            const titleElement = document.querySelector('.title');
+            if (!titleElement) return;
+            
+            const originalText = titleElement.textContent;
+            titleElement.textContent = '';
+            
+            const cursor = document.createElement('span');
+            cursor.className = 'cursor';
+            titleElement.appendChild(cursor);
+            
+            let charIndex = 0;
+            const typeInterval = setInterval(function() {
+                if (charIndex < originalText.length) {
+                    const textNode = document.createTextNode(originalText.charAt(charIndex));
+                    titleElement.insertBefore(textNode, cursor);
+                    charIndex++;
+                } else {
+                    clearInterval(typeInterval);
+                    // 3 秒后移除光标
+                    setTimeout(function() {
+                        cursor.style.display = 'none';
+                    }, 3000);
+                }
+            }, 100);
+        }
+
         // 页面加载
         window.addEventListener('DOMContentLoaded', function() {
             const loadingScreen = document.getElementById('loading-screen');
@@ -1527,6 +1571,7 @@
                         mainScreen.classList.add('visible');
                         currentBgIndex = Math.floor(Math.random() * backgrounds.length);
                         setBackground(currentBgIndex);
+                        setTimeout(typeWriterEffect, 500);
                     }
                 };
                 img.onerror = function() {
@@ -1538,6 +1583,7 @@
                         mainScreen.classList.add('visible');
                         currentBgIndex = Math.floor(Math.random() * backgrounds.length);
                         setBackground(currentBgIndex);
+                        setTimeout(typeWriterEffect, 500);
                     }
                 };
             });
