@@ -1740,14 +1740,10 @@
             
             console.log('打字机效果开始执行，标题：', originalText);
             
-            // 先清除可能存在的旧光标（防止平板端重复执行）
-            const existingCursors = titleElement.querySelectorAll('.cursor');
-            existingCursors.forEach(function(c) {
-                c.parentNode.removeChild(c);
-            });
-            
-            // 清空标题，准备逐字显示
-            titleElement.textContent = '';
+            // 彻底清除可能存在的旧光标和所有子节点
+            while (titleElement.firstChild) {
+                titleElement.removeChild(titleElement.firstChild);
+            }
             
             // 添加光标
             const cursor = document.createElement('span');
@@ -1777,11 +1773,11 @@
                         
                         if (blinkCount >= 4) {
                             clearInterval(blinkInterval);
-                            // 删除光标元素
-                            if (cursor.parentNode) {
-                                cursor.parentNode.removeChild(cursor);
+                            // 彻底清除所有子节点（包括光标和空格）
+                            while (titleElement.firstChild) {
+                                titleElement.removeChild(titleElement.firstChild);
                             }
-                            // 恢复原始文字（不含空格）
+                            // 恢复原始文字
                             titleElement.textContent = originalText;
                             console.log('打字机效果完成，光标已移除');
                         }
@@ -1817,23 +1813,10 @@
                 loadingText.textContent = 'Loading' + dots;
             }, 400);
             
-            // 直接显示主页，背景图片异步加载（不阻塞）
+            // 延长 Loading 页显示时间，让用户欣赏下雨和云层效果
             console.log('背景图片数量：', backgrounds.length, '背景列表：', backgrounds);
             
-            // 立即清除省略号动画
-            clearInterval(dotInterval);
-            
-            // 立即隐藏 Loading 页
-            loadingScreen.classList.add('hidden');
-            
-            // 立即显示主页
-            mainScreen.classList.add('visible');
-            
-            // 设置初始背景（先显示第一个，其他的异步加载）
-            currentBgIndex = 0;
-            setBackground(currentBgIndex);
-            
-            // 异步预加载其他背景图片（不阻塞）
+            // 异步预加载背景图片（不阻塞）
             backgrounds.forEach(function(src) {
                 const img = new Image();
                 img.src = src;
@@ -1845,16 +1828,32 @@
                 };
             });
             
-            // 0.5 秒后完全移除 Loading 页（等过渡完成）
+            // 1.5 秒后隐藏 Loading 页（让用户欣赏下雨和云层）
             setTimeout(function() {
-                loadingScreen.style.display = 'none';
+                // 清除省略号动画
+                clearInterval(dotInterval);
                 
-                // 0.3 秒后启动打字机效果
+                // 隐藏 Loading 页
+                loadingScreen.classList.add('hidden');
+                
+                // 显示主页
+                mainScreen.classList.add('visible');
+                
+                // 设置初始背景
+                currentBgIndex = 0;
+                setBackground(currentBgIndex);
+                
+                // 0.5 秒后完全移除 Loading 页（等过渡完成）
                 setTimeout(function() {
-                    console.log('启动打字机效果');
-                    typeWriterEffect();
-                }, 300);
-            }, 500);
+                    loadingScreen.style.display = 'none';
+                    
+                    // 0.3 秒后启动打字机效果
+                    setTimeout(function() {
+                        console.log('启动打字机效果');
+                        typeWriterEffect();
+                    }, 300);
+                }, 500);
+            }, 1500);
         });
 
         // 导航函数
