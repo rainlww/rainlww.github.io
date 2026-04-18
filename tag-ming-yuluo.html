@@ -19,6 +19,8 @@
         .character-item-name { font-size: 1.1em; color: #333; font-weight: 600; }
         @media (max-width: 768px) { .tag-title { font-size: 1.5em; } .character-list { grid-template-columns: repeat(2, 1fr); gap: 15px; } }
         @media (max-width: 480px) { .character-list { grid-template-columns: 1fr; } .character-item-name { font-size: 1em; } }
+        .empty-state { text-align: center; padding: 60px 20px; color: #999; }
+        .empty-state p { font-size: 0.9em; font-style: italic; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -39,6 +41,19 @@
                 <div class="character-item-name">荷穆勒夏</div>
             </div>
         </div>
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <p>(´• ω •`)</p>
+            <p>啊哦……轻若还没有添加哦……</p>
+        </div>
     </div>
+<script>
+        // 检查是否为空
+        const characterList = document.querySelector('.character-list');
+        const emptyState = document.getElementById('emptyState');
+        if (characterList && characterList.children.length === 0) {
+            characterList.style.display = 'none';
+            emptyState.style.display = 'block';
+        }
+    </script>
 </body>
 </html>
