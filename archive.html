@@ -445,9 +445,23 @@
 
         // 切换标签选中状态
         function toggleTag(tag) {
-            // 点击标签跳转到标签页面
-            const tagPage = `tag-${tag}.html`;
-            window.location.href = tagPage;
+            const index = selectedTags.indexOf(tag);
+            if (index > -1) {
+                selectedTags.splice(index, 1);
+            } else {
+                selectedTags.push(tag);
+            }
+
+            // 更新 UI
+            document.querySelectorAll('.filter-tag').forEach(el => {
+                el.classList.toggle('active', selectedTags.includes(el.dataset.tag));
+            });
+
+            // 检查是否选中荷穆勒
+            updateHomuleshaNotice();
+
+            // 筛选人物卡片
+            filterCharacters();
         }
 
         // 筛选人物卡片

@@ -455,7 +455,7 @@
             // 设置信息框标签
             const tagsEl = document.getElementById('infoTags');
             tagsEl.innerHTML = character.tags.map(tag => 
-                `<span class="wiki-tag">${tag}</span>`
+                `<a href="tag-${tag}.html" class="wiki-tag" style="text-decoration: none; cursor: pointer;">${tag}</a>`
             ).join('');
 
             // 设置简介
