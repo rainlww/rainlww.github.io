@@ -1210,6 +1210,9 @@
             .loading-text {
                 font-size: 2em;
             }
+            .loading-tips {
+                font-size: 0.9em;
+            }
             .raindrop {
                 height: 18px;
             }
@@ -1217,12 +1220,29 @@
                 opacity: 0.5;
             }
         }
+
+        /* Tips 区 - 加载页底部中央 */
+        .loading-tips {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1em;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            font-style: italic;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            max-width: 80%;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
     <!-- Loading 页面 -->
     <div id="loading-screen">
         <div class="loading-text" id="loadingText">Loading</div>
+        <div class="loading-tips" id="loadingTips"></div>
     </div>
 
     <!-- 主页 -->
@@ -1508,6 +1528,29 @@
             }
         }
 
+        // Tips 文案数组
+        const loadingTips = [
+            '每一次刷新，都是一场新的相遇。',
+            '听，雨声渐渐近了。',
+            '世界正在为你展开。',
+            '稍等片刻，美好即将呈现。',
+            '雨落的世界，欢迎你的到来。',
+            '加载的是风景，等待的是心情。',
+            '一朵云，一滴雨，一个世界。',
+            '你来得刚刚好。',
+            '所有的等待，都是为了更好的相遇。',
+            '雨停了，天晴了，世界准备好了。'
+        ];
+
+        // 随机显示 Tips
+        function showRandomTips() {
+            const tipsElement = document.getElementById('loadingTips');
+            if (!tipsElement) return;
+            
+            const randomIndex = Math.floor(Math.random() * loadingTips.length);
+            tipsElement.textContent = loadingTips[randomIndex];
+        }
+
         // 打字机效果 - 逐字显示
         let typewriterDone = false;
         function typeWriterEffect() {
@@ -1573,6 +1616,9 @@
             const loadingScreen = document.getElementById('loading-screen');
             const mainScreen = document.getElementById('main-screen');
             const loadingText = document.getElementById('loadingText');
+            
+            // 显示随机 Tips
+            showRandomTips();
             
             // 创建下雨效果
             createRain();
