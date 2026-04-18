@@ -1515,10 +1515,18 @@
             typewriterDone = true;
             
             const titleElement = document.querySelector('.title');
-            if (!titleElement) return;
+            if (!titleElement) {
+                console.log('打字机效果：找不到.title 元素');
+                return;
+            }
             
-            const originalText = titleElement.textContent;
-            if (!originalText) return;
+            const originalText = titleElement.textContent.trim();
+            if (!originalText) {
+                console.log('打字机效果：标题文字为空');
+                return;
+            }
+            
+            console.log('打字机效果开始执行，标题：', originalText);
             
             // 先打出标题 + 两个空格
             titleElement.textContent = originalText + '  ';
@@ -1526,7 +1534,7 @@
             // 添加光标
             const cursor = document.createElement('span');
             cursor.className = 'cursor';
-            cursor.textContent = '|';
+            cursor.style.opacity = '1';
             titleElement.appendChild(cursor);
             
             // 闪烁两下后删除空格和光标
@@ -1544,6 +1552,7 @@
                     if (cursor.parentNode) {
                         cursor.parentNode.removeChild(cursor);
                     }
+                    console.log('打字机效果完成');
                 }
             }, 300); // 300ms 切换一次，总共约 1.2 秒
         }
@@ -1909,11 +1918,14 @@
             // 否则不响应（被 opacity 和 cursor 覆盖）
         }
         
-        // 页面加载时初始化语言
+        // 页面加载时初始化语言和打字机效果
         window.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded 触发');
             initLang();
-            // 语言初始化后执行打字机效果
-            setTimeout(typeWriterEffect, 100);
+            // 确保 DOM 完全渲染后执行打字机效果
+            requestAnimationFrame(function() {
+                setTimeout(typeWriterEffect, 50);
+            });
         });
     </script>
 </body>

@@ -3,116 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>心理测试选择</title>
+    <title>测试·更深认识 ta</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Georgia', 'Microsoft YaHei', serif;
+            font-family: 'Comic Sans MS', 'Chalkboard', 'YouYuan', 'Microsoft YaHei', cursive;
             min-height: 100vh;
-            background: linear-gradient(135deg, #a8c8b8 0%, #b8d8c8 50%, #c8e8d8 100%);
+            background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #ADD8E6 100%);
             padding: 40px 20px;
         }
+
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
+
         .title {
-            font-size: 2.5em;
-            color: #4a6a5a;
+            font-size: 3em;
+            color: #fff;
             text-align: center;
             margin-bottom: 15px;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+            letter-spacing: 8px;
         }
+
         .subtitle {
             text-align: center;
-            color: #6a8a7a;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.3em;
             margin-bottom: 50px;
-            font-size: 1.1em;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            letter-spacing: 3px;
         }
-        .tests-grid {
+
+        .entries-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 30px;
             margin-bottom: 40px;
         }
-        .test-card {
+
+        .entry-card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            padding: 40px 30px;
+            padding: 40px 35px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
             cursor: pointer;
             transition: all 0.3s ease;
             border: 2px solid transparent;
         }
-        .test-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-            border-color: #7ab8a0;
+
+        .entry-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 255, 255, 0.6);
         }
-        .test-icon {
-            font-size: 3em;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .test-name {
-            font-size: 1.5em;
-            color: #4a6a5a;
-            text-align: center;
+
+        .entry-title {
+            font-size: 1.8em;
+            color: #5a7d8a;
             margin-bottom: 15px;
             font-weight: bold;
         }
-        .test-desc {
-            color: #6a8a7a;
-            text-align: center;
-            line-height: 1.8;
-            font-size: 0.95em;
+
+        .entry-desc {
+            color: #6a8a9a;
+            line-height: 2;
+            font-size: 1.05em;
         }
+
+        .entry-btn {
+            margin-top: 25px;
+            padding: 14px 35px;
+            background: linear-gradient(135deg, #87CEEB, #B0E0E6);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .entry-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(135, 206, 235, 0.4);
+        }
+
         .back-link {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 40px;
         }
+
         .back-link a {
-            color: #4a6a5a;
-            text-decoration: none;
-            font-size: 1.1em;
-            padding: 12px 30px;
-            border: 2px solid #4a6a5a;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-        .back-link a:hover {
-            background: #4a6a5a;
             color: #fff;
+            text-decoration: none;
+            font-size: 1.2em;
+            padding: 15px 40px;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+
+        .back-link a:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.9);
+            transform: translateY(-3px);
+        }
+
         @media (max-width: 768px) {
-            .tests-grid { grid-template-columns: 1fr; }
-            .title { font-size: 2em; }
+            .entries-grid { grid-template-columns: 1fr; }
+            .title { font-size: 2.2em; letter-spacing: 5px; }
+            .subtitle { font-size: 1.1em; }
+            .entry-card { padding: 30px 25px; }
+            .entry-title { font-size: 1.5em; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="title">心理测试选择</h1>
-        <p class="subtitle">选择你想进行的测试</p>
+        <h1 class="title">测试·更深认识 ta</h1>
+        <p class="subtitle">—— 探索人格的奥秘，发现更深层的自己 ——</p>
         
-        <div class="tests-grid">
+        <div class="entries-grid">
             <!-- MBTI 测试 -->
-            <div class="test-card" onclick="window.location.href='mbti.html'">
-                <div class="test-icon">🧠</div>
-                <h2 class="test-name">01 · MBTI 人格检测</h2>
-                <p class="test-desc">
+            <div class="entry-card" onclick="window.location.href='mbti.html'">
+                <h2 class="entry-title">🧠 MBTI 人格检测</h2>
+                <p class="entry-desc">
                     基于荣格八维认知功能的 16 型人格分析<br>
                     探索你的性格类型与认知偏好
                 </p>
+                <button class="entry-btn" onclick="window.location.href='mbti.html'">开始测试</button>
             </div>
             
             <!-- 九型人格测试 -->
-            <div class="test-card" onclick="window.location.href='enneagram.html'">
-                <div class="test-icon">✨</div>
-                <h2 class="test-name">02 · 九型人格分析</h2>
-                <p class="test-desc">
+            <div class="entry-card" onclick="window.location.href='enneagram.html'">
+                <h2 class="entry-title">✨ 九型人格分析</h2>
+                <p class="entry-desc">
                     探索你内心深处的核心动机和恐惧<br>
                     发现你的人格分布与成长方向
                 </p>
+                <button class="entry-btn" onclick="window.location.href='enneagram.html'">开始测试</button>
             </div>
         </div>
         
