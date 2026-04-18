@@ -1278,13 +1278,13 @@
             <p class="section-label" data-i18n="home-section2">——观测站的千奇百怪功能区</p>
             <div class="entries-grid">
                 <!-- 测试·更深认识 ta -->
-                <div class="entry-card" onclick="navigateTo('test-choice.html')">
+                <div class="entry-card" onclick="window.location.href='test-choice.html'">
                     <h2 class="entry-title" data-i18n="home-card3-title">测试·更深认识 ta</h2>
                     <p class="entry-desc" data-i18n="home-card3-desc">
                         MBTI / 九型人格 · 探索人格的奥秘<br>
                         发现更深层的自己～
                     </p>
-                    <button class="entry-btn" data-i18n="home-card3-btn">开始测试</button>
+                    <button class="entry-btn" onclick="window.location.href='test-choice.html'" data-i18n="home-card3-btn">开始测试</button>
                 </div>
 
                 <!-- 绘境 · 标签配方库 -->
@@ -1509,11 +1509,17 @@
         }
 
         // 打字机效果
+        let typewriterDone = false;
         function typeWriterEffect() {
+            if (typewriterDone) return;
+            typewriterDone = true;
+            
             const titleElement = document.querySelector('.title');
             if (!titleElement) return;
             
             const originalText = titleElement.textContent;
+            if (!originalText) return;
+            
             titleElement.textContent = '';
             
             const cursor = document.createElement('span');
@@ -1533,7 +1539,7 @@
                         cursor.style.display = 'none';
                     }, 3000);
                 }
-            }, 100);
+            }, 80);
         }
 
         // 页面加载
@@ -1574,7 +1580,6 @@
                         mainScreen.classList.add('visible');
                         currentBgIndex = Math.floor(Math.random() * backgrounds.length);
                         setBackground(currentBgIndex);
-                        setTimeout(typeWriterEffect, 500);
                     }
                 };
                 img.onerror = function() {
@@ -1586,7 +1591,6 @@
                         mainScreen.classList.add('visible');
                         currentBgIndex = Math.floor(Math.random() * backgrounds.length);
                         setBackground(currentBgIndex);
-                        setTimeout(typeWriterEffect, 500);
                     }
                 };
             });
@@ -1902,6 +1906,8 @@
         // 页面加载时初始化语言
         window.addEventListener('DOMContentLoaded', function() {
             initLang();
+            // 语言初始化后执行打字机效果
+            setTimeout(typeWriterEffect, 100);
         });
     </script>
 </body>

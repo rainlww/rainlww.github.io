@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心理测试选择</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', 'Microsoft YaHei', serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #a8c8b8 0%, #b8d8c8 50%, #c8e8d8 100%);
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .title {
+            font-size: 2.5em;
+            color: #4a6a5a;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #6a8a7a;
+            margin-bottom: 50px;
+            font-size: 1.1em;
+        }
+        .tests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .test-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            border-color: #7ab8a0;
+        }
+        .test-icon {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .test-name {
+            font-size: 1.5em;
+            color: #4a6a5a;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .test-desc {
+            color: #6a8a7a;
+            text-align: center;
+            line-height: 1.8;
+            font-size: 0.95em;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: #4a6a5a;
+            text-decoration: none;
+            font-size: 1.1em;
+            padding: 12px 30px;
+            border: 2px solid #4a6a5a;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .back-link a:hover {
+            background: #4a6a5a;
+            color: #fff;
+        }
+        @media (max-width: 768px) {
+            .tests-grid { grid-template-columns: 1fr; }
+            .title { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">心理测试选择</h1>
+        <p class="subtitle">选择你想进行的测试</p>
+        
+        <div class="tests-grid">
+            <!-- MBTI 测试 -->
+            <div class="test-card" onclick="window.location.href='mbti.html'">
+                <div class="test-icon">🧠</div>
+                <h2 class="test-name">01 · MBTI 人格检测</h2>
+                <p class="test-desc">
+                    基于荣格八维认知功能的 16 型人格分析<br>
+                    探索你的性格类型与认知偏好
+                </p>
+            </div>
+            
+            <!-- 九型人格测试 -->
+            <div class="test-card" onclick="window.location.href='enneagram.html'">
+                <div class="test-icon">✨</div>
+                <h2 class="test-name">02 · 九型人格分析</h2>
+                <p class="test-desc">
+                    探索你内心深处的核心动机和恐惧<br>
+                    发现你的人格分布与成长方向
+                </p>
+            </div>
+        </div>
+        
+        <div class="back-link">
+            <a href="index.html">← 返回主页</a>
+        </div>
+    </div>
+</body>
+</html>
