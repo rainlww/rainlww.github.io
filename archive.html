@@ -740,13 +740,24 @@
 
         // 渲染筛选标签
         function renderFilterTags() {
-            const container = document.getElementById('filterTags');
-            if (!container) return;
-            container.innerHTML = presetTags.map(tag => `
-                <div class="filter-tag" data-tag="${tag}" onclick="toggleTag('${tag}')">
-                    ${tag}
-                </div>
-            `).join('');
+            // 渲染人物标签
+            const charContainer = document.getElementById('characterFilterTags');
+            if (charContainer) {
+                charContainer.innerHTML = characterTags.map(tag => `
+                    <div class="filter-tag" data-tag="${tag}" onclick="toggleTag('${tag}')">
+                        ${tag}
+                    </div>
+                `).join('');
+            }
+            // 渲染所属标签
+            const affContainer = document.getElementById('affiliationFilterTags');
+            if (affContainer) {
+                affContainer.innerHTML = affiliationTags.map(tag => `
+                    <div class="filter-tag" data-tag="${tag}" onclick="toggleTag('${tag}')">
+                        ${tag}
+                    </div>
+                `).join('');
+            }
         }
 
         // 切换标签选中状态
