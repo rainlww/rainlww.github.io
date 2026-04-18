@@ -1233,8 +1233,10 @@
             font-style: italic;
             letter-spacing: 2px;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            max-width: 80%;
-            line-height: 1.6;
+            max-width: 90%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     </style>
 </head>
@@ -1530,7 +1532,7 @@
 
         // Tips 文案数组
         const loadingTips = [
-            '苦瓜炒鸡蛋已被列入观测站总部黑名单。'
+            'Tips: 苦瓜炒鸡蛋已经被列入观测站总部黑名单'
         ];
 
         // 随机显示 Tips
