@@ -426,18 +426,6 @@
                 imageEl.innerHTML = `<img src="${character.cover}" alt="${character.name}">`;
             }
 
-// 设置信息框名字
-            document.getElementById('infoName').textContent = character.name;
-
-            // 设置信息框编号
-            document.getElementById('infoId').textContent = character.number;
-
-            // 设置信息框标签
-            const tagsEl = document.getElementById('infoTags');
-            tagsEl.innerHTML = character.tags.map(tag => 
-                `<a href="tag-${tag}.html" class="wiki-tag" style="text-decoration: none; cursor: pointer;">${tag}</a>`
-            ).join('');
-
             // 设置简介
             if (character.description && character.description !== '（简介待填写）') {
                 document.getElementById('descriptionContent').innerHTML = character.description;
