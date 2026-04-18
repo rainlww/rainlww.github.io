@@ -428,7 +428,9 @@
             ).join('');
 
             // 设置简介
-            document.getElementById('descriptionContent').textContent = character.description;
+            if (character.description && character.description !== '（简介待填写）') {
+                document.getElementById('descriptionContent').innerHTML = character.description;
+            }
 
             // 设置捏 Ta 链接
             if (character.nietaLink) {

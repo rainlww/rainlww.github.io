@@ -110,7 +110,9 @@
             document.getElementById('infoName').textContent = character.name;
             document.getElementById('infoId').textContent = character.number;
             document.getElementById('infoTags').innerHTML = character.tags.map(tag => `<span class="wiki-tag">${tag}</span>`).join('');
-            document.getElementById('descriptionContent').textContent = character.description;
+            if (character.description && character.description !== '（简介待填写）') {
+                document.getElementById('descriptionContent').innerHTML = character.description;
+            }
             if (character.cover) {
                 document.getElementById('infoboxImage').innerHTML = `<img src="${character.cover}" alt="${character.name}">`;
             }
