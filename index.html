@@ -1591,12 +1591,16 @@
                     loadedImages++;
                     if (loadedImages >= totalImages) {
                         clearInterval(dotInterval);
+                        // 先隐藏 Loading 页
                         loadingScreen.classList.add('hidden');
-                        mainScreen.classList.add('visible');
-                        currentBgIndex = Math.floor(Math.random() * backgrounds.length);
-                        setBackground(currentBgIndex);
-                        // 页面显示后执行打字机效果
-                        setTimeout(typeWriterEffect, 100);
+                        // 等待 Loading 页过渡动画完成（0.5 秒）后再显示主页和启动打字机
+                        setTimeout(function() {
+                            mainScreen.classList.add('visible');
+                            currentBgIndex = Math.floor(Math.random() * backgrounds.length);
+                            setBackground(currentBgIndex);
+                            // 再等 0.3 秒让用户看到完整标题，然后启动打字机
+                            setTimeout(typeWriterEffect, 300);
+                        }, 500);
                     }
                 };
                 img.onerror = function() {
@@ -1604,12 +1608,16 @@
                     loadedImages++;
                     if (loadedImages >= totalImages) {
                         clearInterval(dotInterval);
+                        // 先隐藏 Loading 页
                         loadingScreen.classList.add('hidden');
-                        mainScreen.classList.add('visible');
-                        currentBgIndex = Math.floor(Math.random() * backgrounds.length);
-                        setBackground(currentBgIndex);
-                        // 页面显示后执行打字机效果
-                        setTimeout(typeWriterEffect, 100);
+                        // 等待 Loading 页过渡动画完成（0.5 秒）后再显示主页和启动打字机
+                        setTimeout(function() {
+                            mainScreen.classList.add('visible');
+                            currentBgIndex = Math.floor(Math.random() * backgrounds.length);
+                            setBackground(currentBgIndex);
+                            // 再等 0.3 秒让用户看到完整标题，然后启动打字机
+                            setTimeout(typeWriterEffect, 300);
+                        }, 500);
                     }
                 };
             });
