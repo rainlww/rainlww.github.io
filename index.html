@@ -1661,47 +1661,59 @@
             let loadedImages = 0;
             const totalImages = backgrounds.length;
             
-            backgrounds.forEach(function(src) {
-                const img = new Image();
-                img.src = src;
-                img.onload = function() {
-                    loadedImages++;
-                    if (loadedImages >= totalImages) {
-                        clearInterval(dotInterval);
-                        // 先隐藏 Loading 页
-                        loadingScreen.classList.add('hidden');
-                        // 等待 Loading 页过渡动画完成（0.5 秒）后再显示主页和启动打字机
-                        setTimeout(function() {
-                            mainScreen.classList.add('visible');
-                            currentBgIndex = Math.floor(Math.random() * backgrounds.length);
-                            setBackground(currentBgIndex);
-                            // 再等 0.3 秒让用户看到完整标题，然后启动打字机
-                            setTimeout(typeWriterEffect, 300);
-                        }, 500);
-                    }
-                };
-                img.onerror = function() {
-                    console.log('图片加载失败：' + src);
-                    loadedImages++;
-                    if (loadedImages >= totalImages) {
-                        clearInterval(dotInterval);
-                        // 先隐藏 Loading 页
-                        loadingScreen.classList.add('hidden');
-                        // 等待 Loading 页过渡动画完成（0.5 秒）后再显示主页和启动打字机
-                        setTimeout(function() {
-                            mainScreen.classList.add('visible');
-                            currentBgIndex = Math.floor(Math.random() * backgrounds.length);
-                            setBackground(currentBgIndex);
-                            // 再等 0.3 秒让用户看到完整标题，然后启动打字机
-                            setTimeout(typeWriterEffect, 300);
-                        }, 500);
-                    }
-                };
-            });
+            console.log('背景图片数量：', totalImages, '背景列表：', backgrounds);
             
-            // 最多等 4 秒（平板端优化，避免卡住）
+            // 如果没有背景图片，直接显示主页
+            if (totalImages === 0) {
+                console.log('没有背景图片，直接显示主页');
+                clearInterval(dotInterval);
+                loadingScreen.classList.add('hidden');
+                mainScreen.classList.add('visible');
+                setTimeout(typeWriterEffect, 300);
+            } else {
+                backgrounds.forEach(function(src) {
+                    const img = new Image();
+                    img.src = src;
+                    img.onload = function() {
+                        console.log('图片加载成功：', src, '已加载：', loadedImages + 1, '/', totalImages);
+                        loadedImages++;
+                        if (loadedImages >= totalImages) {
+                            clearInterval(dotInterval);
+                            // 先隐藏 Loading 页
+                            loadingScreen.classList.add('hidden');
+                            // 等待 Loading 页过渡动画完成（0.5 秒）后再显示主页和启动打字机
+                            setTimeout(function() {
+                                mainScreen.classList.add('visible');
+                                currentBgIndex = Math.floor(Math.random() * backgrounds.length);
+                                setBackground(currentBgIndex);
+                                // 再等 0.3 秒让用户看到完整标题，然后启动打字机
+                                setTimeout(typeWriterEffect, 300);
+                            }, 500);
+                        }
+                    };
+                    img.onerror = function() {
+                        console.log('图片加载失败：', src, '已加载：', loadedImages + 1, '/', totalImages);
+                        loadedImages++;
+                        if (loadedImages >= totalImages) {
+                            clearInterval(dotInterval);
+                            // 先隐藏 Loading 页
+                            loadingScreen.classList.add('hidden');
+                            // 等待 Loading 页过渡动画完成（0.5 秒）后再显示主页和启动打字机
+                            setTimeout(function() {
+                                mainScreen.classList.add('visible');
+                                currentBgIndex = Math.floor(Math.random() * backgrounds.length);
+                                setBackground(currentBgIndex);
+                                // 再等 0.3 秒让用户看到完整标题，然后启动打字机
+                                setTimeout(typeWriterEffect, 300);
+                            }, 500);
+                        }
+                    };
+                });
+            }
+            
+            // 最多等 2 秒（平板端优化，避免卡住）
             setTimeout(function() {
-                console.log('加载超时，强制显示主页');
+                console.log('加载超时 (2 秒)，强制显示主页。已加载图片：', loadedImages, '/', totalImages);
                 
                 // 清除省略号动画
                 if (dotInterval) {
