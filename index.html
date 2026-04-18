@@ -1508,7 +1508,7 @@
             }
         }
 
-        // 打字机效果
+        // 打字机效果 - 逐字显示
         let typewriterDone = false;
         function typeWriterEffect() {
             if (typewriterDone) return;
@@ -1528,33 +1528,44 @@
             
             console.log('打字机效果开始执行，标题：', originalText);
             
-            // 先打出标题 + 两个空格
-            titleElement.textContent = originalText + '  ';
+            // 清空标题，准备逐字显示
+            titleElement.textContent = '';
             
             // 添加光标
             const cursor = document.createElement('span');
             cursor.className = 'cursor';
+            cursor.textContent = '|';
             cursor.style.opacity = '1';
             titleElement.appendChild(cursor);
             
-            // 闪烁两下后删除空格和光标
-            let blinkCount = 0;
-            const blinkInterval = setInterval(function() {
-                blinkCount++;
-                cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
-                
-                // 闪烁两下后（即第 4 次切换，2 次完整闪烁）
-                if (blinkCount >= 4) {
-                    clearInterval(blinkInterval);
-                    // 删除两个空格
-                    titleElement.textContent = originalText;
-                    // 移除光标
-                    if (cursor.parentNode) {
-                        cursor.parentNode.removeChild(cursor);
-                    }
-                    console.log('打字机效果完成');
+            // 逐字打字
+            let charIndex = 0;
+            const typeInterval = setInterval(function() {
+                if (charIndex < originalText.length) {
+                    // 在光标前插入当前字符
+                    const charNode = document.createTextNode(originalText.charAt(charIndex));
+                    titleElement.insertBefore(charNode, cursor);
+                    charIndex++;
+                } else {
+                    // 打完了，添加两个空格
+                    clearInterval(typeInterval);
+                    titleElement.insertBefore(document.createTextNode('  '), cursor);
+                    
+                    // 闪烁两下后删除空格和光标
+                    let blinkCount = 0;
+                    const blinkInterval = setInterval(function() {
+                        blinkCount++;
+                        cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
+                        
+                        if (blinkCount >= 4) {
+                            clearInterval(blinkInterval);
+                            // 删除两个空格和光标
+                            titleElement.textContent = originalText;
+                            console.log('打字机效果完成');
+                        }
+                    }, 300);
                 }
-            }, 300); // 300ms 切换一次，总共约 1.2 秒
+            }, 80); // 80ms 一个字
         }
 
         // 页面加载
