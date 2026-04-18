@@ -1777,9 +1777,13 @@
                         
                         if (blinkCount >= 4) {
                             clearInterval(blinkInterval);
-                            // 删除两个空格和光标
+                            // 删除光标元素
+                            if (cursor.parentNode) {
+                                cursor.parentNode.removeChild(cursor);
+                            }
+                            // 恢复原始文字（不含空格）
                             titleElement.textContent = originalText;
-                            console.log('打字机效果完成');
+                            console.log('打字机效果完成，光标已移除');
                         }
                     }, 300);
                 }
