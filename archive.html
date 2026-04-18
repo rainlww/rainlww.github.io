@@ -453,8 +453,20 @@
             <div class="search-box">
                 <input type="text" class="search-input" id="searchInput" placeholder="搜索角色或标签…" oninput="handleSearch()">
             </div>
-            <div class="filter-tags" id="filterTags">
-                <!-- 标签由 JavaScript 动态生成，可点击 -->
+            <!-- 按人物查找 -->
+            <div class="filter-section">
+                <div class="filter-section-title">按人物查找</div>
+                <div class="filter-tags" id="characterFilterTags">
+                    <!-- 人物标签由 JavaScript 动态生成 -->
+                </div>
+            </div>
+
+            <!-- 按所属查找 -->
+            <div class="filter-section">
+                <div class="filter-section-title">按所属查找</div>
+                <div class="filter-tags" id="affiliationFilterTags">
+                    <!-- 所属标签由 JavaScript 动态生成 -->
+                </div>
             </div>
         </div>
 
@@ -599,19 +611,124 @@
                 related: [],
                 gender: "男",
                 affiliation: "0601 号观测站"
+            },
+            {
+                id: "ming-luoyue",
+                number: "0601-Ly01",
+                name: "明落月",
+                cover: "",
+                tags: ["0601 号观测站", "明落月"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "0601 号观测站"
+            },
+            {
+                id: "ming-xunyue",
+                number: "0601-Xy01",
+                name: "明循月",
+                cover: "",
+                tags: ["0601 号观测站", "明循月"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "0601 号观测站"
+            },
+            {
+                id: "ming-quanyue",
+                number: "0601-Qy01",
+                name: "明泉月",
+                cover: "",
+                tags: ["0601 号观测站", "明泉月"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "0601 号观测站"
+            },
+            {
+                id: "chang-ming",
+                number: "0601-Cm01",
+                name: "长明",
+                cover: "",
+                tags: ["0601 号观测站", "长明"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "男",
+                affiliation: "0601 号观测站"
+            },
+            {
+                id: "qing-ruo",
+                number: "0601-Qr01",
+                name: "轻若",
+                cover: "",
+                tags: ["0601 号观测站", "轻若"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "0601 号观测站"
+            },
+            {
+                id: "ming-yuluo-tea",
+                number: "0601-M03",
+                name: "明雨落",
+                cover: "",
+                tags: ["捏捏茶馆", "明雨落"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "捏捏茶馆"
+            },
+            {
+                id: "homulesi",
+                number: "0601-M09",
+                name: "荷穆勒思",
+                cover: "",
+                tags: ["环城", "荷穆勒", "明雨落"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "环城"
+            },
+            {
+                id: "youyexing",
+                number: "0601-M03",
+                name: ""幽夜行"",
+                cover: "",
+                tags: ["维护者协会", "明雨落"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "维护者协会"
+            },
+            {
+                id: "wumingqing",
+                number: "0601-M04",
+                name: ""无名卿"",
+                cover: "",
+                tags: ["槐安公寓", "明雨落"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "槐安公寓"
             }
         ];
 
         // 预置标签
-        const presetTags = [
-            "0601 号观测站",
-            "明雨落",
-            "苏甘泉",
-            "明落月",
-            "明循月",
-            "明泉月",
-            "荷穆勒"
-        ];
+        // 按人物查找标签
+        const characterTags = ["明雨落", "苏甘泉", "明循月", "明落月", "明泉月", "长明", "轻若", "荷穆勒"];
+        // 按所属查找标签
+        const affiliationTags = ["0601 号观测站", "捏捏茶馆", "维护者协会", "圣拉姆特"];
+        
+        const presetTags = [...characterTags, ...affiliationTags];
 
         // 当前选中的标签
         let selectedTags = [];
