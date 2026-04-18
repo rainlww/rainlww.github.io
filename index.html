@@ -1867,9 +1867,9 @@
                 });
             }
             
-            // 最多等 2 秒（平板端优化，避免卡住）
+            // 最多等 1 秒（平板端优化，避免卡住）
             setTimeout(function() {
-                console.log('加载超时 (2 秒)，强制显示主页。已加载图片：', loadedImages, '/', totalImages);
+                console.log('加载超时 (1 秒)，强制显示主页。已加载图片：', loadedImages, '/', totalImages);
                 
                 // 清除省略号动画
                 if (dotInterval) {
@@ -1891,7 +1891,7 @@
                     console.log('超时保护：启动打字机效果');
                     typeWriterEffect();
                 }, 1000);
-            }, 2000);
+            }, 1000);
         });
 
         // 导航函数
