@@ -108,6 +108,18 @@
         .btn-success { background: linear-gradient(135deg, #88c8a0, #98d8b0); }
         .hidden { display: none !important; }
         
+        .radar-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 30px auto;
+        }
+        
+        #radarChart {
+            width: 100%;
+            height: 100%;
+        }
+        
         .result-header {
             text-align: center;
             padding: 30px;
@@ -303,8 +315,15 @@
             
             <div class="output-section hidden" id="mbtiResultSection">
                 <div id="mbtiResult"></div>
-                <div class="btn-group" style="margin-top: 20px;">
+                
+                <!-- 雷达图 -->
+                <div class="radar-container" style="margin: 30px auto; max-width: 400px;">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                
+                <div class="btn-group" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
                     <button class="btn btn-secondary btn-success" onclick="copyMBTIResult()">📋 复制报告</button>
+                    <button class="btn btn-secondary" onclick="savePersonalityCard()">💾 保存卡片</button>
                     <button class="btn btn-secondary" onclick="resetMBTI()">🗑️ 重新分析</button>
                 </div>
             </div>
@@ -315,6 +334,9 @@
     </div>
     
     <div id="toast" style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); color: #fff; padding: 14px 28px; border-radius: 12px; opacity: 0; transition: opacity 0.3s ease; font-weight: 500; box-shadow: 0 5px 20px rgba(0,0,0,0.3);">已复制！</div>
+
+    <!-- 人格卡片保存功能 -->
+    <canvas id="cardCanvas" style="display: none;"></canvas>
     
     <script>
         function switchTab(tab) {
@@ -771,7 +793,190 @@
             `;
             
             resultSection.classList.remove('hidden');
+            
+            // 绘制雷达图
+            setTimeout(() => drawRadarChart(report.percents), 100);
+            
             showToast('分析完成！');
+        }
+
+        // 绘制雷达图
+        function drawRadarChart(percents) {
+            const canvas = document.getElementById('radarChart');
+            const ctx = canvas.getContext('2d');
+            
+            // 设置画布大小
+            const size = 300;
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = size * dpr;
+            canvas.height = size * dpr;
+            canvas.style.width = size + 'px';
+            canvas.style.height = size + 'px';
+            ctx.scale(dpr, dpr);
+            
+            const center = size / 2;
+            const radius = size * 0.35;
+            const labels = ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P'];
+            const values = [
+                percents.E, percents.I, percents.S, percents.N,
+                percents.T, percents.F, percents.J, percents.P
+            ];
+            
+            // 清空画布
+            ctx.clearRect(0, 0, size, size);
+            
+            // 绘制背景网格（5 层）
+            for (let level = 1; level <= 5; level++) {
+                const r = (radius / 5) * level;
+                ctx.beginPath();
+                for (let i = 0; i < 8; i++) {
+                    const angle = (Math.PI / 4) * i - Math.PI / 2;
+                    const x = center + r * Math.cos(angle);
+                    const y = center + r * Math.sin(angle);
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.strokeStyle = 'rgba(122, 184, 160, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+            
+            // 绘制轴线
+            for (let i = 0; i < 8; i++) {
+                const angle = (Math.PI / 4) * i - Math.PI / 2;
+                const x = center + radius * Math.cos(angle);
+                const y = center + radius * Math.sin(angle);
+                ctx.beginPath();
+                ctx.moveTo(center, center);
+                ctx.lineTo(x, y);
+                ctx.strokeStyle = 'rgba(122, 184, 160, 0.3)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+            
+            // 绘制数据多边形
+            ctx.beginPath();
+            for (let i = 0; i < 8; i++) {
+                const angle = (Math.PI / 4) * i - Math.PI / 2;
+                const r = (radius / 100) * values[i];
+                const x = center + r * Math.cos(angle);
+                const y = center + r * Math.sin(angle);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(122, 184, 160, 0.3)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(122, 184, 160, 0.8)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // 绘制数据点
+            for (let i = 0; i < 8; i++) {
+                const angle = (Math.PI / 4) * i - Math.PI / 2;
+                const r = (radius / 100) * values[i];
+                const x = center + r * Math.cos(angle);
+                const y = center + r * Math.sin(angle);
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = '#7ab8a0';
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+            
+            // 绘制标签
+            for (let i = 0; i < 8; i++) {
+                const angle = (Math.PI / 4) * i - Math.PI / 2;
+                const r = radius + 20;
+                const x = center + r * Math.cos(angle);
+                const y = center + r * Math.sin(angle);
+                ctx.fillStyle = '#5a8a7a';
+                ctx.font = 'bold 14px Georgia';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(labels[i] + ': ' + values[i] + '%', x, y);
+            }
+        }
+
+        // 保存人格卡片
+        function savePersonalityCard() {
+            const resultDiv = document.getElementById('mbtiResult');
+            const type = resultDiv.querySelector('.mbti-type').textContent;
+            const name = resultDiv.querySelector('.mbti-name').textContent;
+            const intro = resultDiv.querySelector('.type-description p').textContent;
+            
+            const canvas = document.getElementById('cardCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = 400;
+            const height = 500;
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+            
+            // 背景渐变
+            const gradient = ctx.createLinearGradient(0, 0, 0, height);
+            gradient.addColorStop(0, '#d4f0e8');
+            gradient.addColorStop(1, '#f0fcf4');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+            
+            // 边框装饰
+            ctx.strokeStyle = '#7ab8a0';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(15, 15, width - 30, height - 30);
+            
+            // 标题
+            ctx.fillStyle = '#5a8a7a';
+            ctx.font = 'bold 24px Georgia';
+            ctx.textAlign = 'center';
+            ctx.fillText('MBTI 人格类型', width / 2, 50);
+            
+            // 类型
+            ctx.fillStyle = '#5a8a7a';
+            ctx.font = 'bold 48px Georgia';
+            ctx.fillText(type, width / 2, 120);
+            
+            // 名称
+            ctx.fillStyle = '#666';
+            ctx.font = '20px Georgia';
+            ctx.fillText(name, width / 2, 160);
+            
+            // 简介（自动换行）
+            ctx.fillStyle = '#555';
+            ctx.font = '14px Georgia';
+            const words = intro.split(' ');
+            let line = '';
+            let y = 220;
+            const maxWidth = width - 60;
+            for (let i = 0; i < words.length; i++) {
+                const testLine = line + words[i] + ' ';
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && i > 0) {
+                    ctx.fillText(line, width / 2, y);
+                    line = words[i] + ' ';
+                    y += 25;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, width / 2, y);
+            
+            // 底部装饰
+            ctx.fillStyle = '#7ab8a0';
+            ctx.font = '12px Georgia';
+            ctx.fillText('Rainfall\'s World · MBTI Test', width / 2, height - 30);
+            
+            // 下载
+            const link = document.createElement('a');
+            link.download = `MBTI-${type}-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            showToast('卡片已保存！');
         }
 
         function copyMBTIResult() {

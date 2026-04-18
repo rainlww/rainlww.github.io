@@ -387,10 +387,24 @@
             <p class="copy-hint">点击 UUID 可复制</p>
         </div>
 
+        <!-- 历史记录 -->
+        <div class="history-section" id="historySection" style="margin-top: 40px;">
+            <h2 style="font-size: 1.3em; color: #3a5a6a; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                📜 历史记录
+                <button onclick="clearHistory()" style="padding: 5px 12px; font-size: 0.85em; background: rgba(90, 125, 138, 0.2); border: none; border-radius: 6px; color: #3a5a6a; cursor: pointer;">清空历史</button>
+            </h2>
+            <div id="historyList"></div>
+        </div>
+
         <a href="index.html" class="back-link">← 返回主页</a>
     </div>
 
     <script>
+        // 页面加载时渲染历史记录
+        document.addEventListener('DOMContentLoaded', function() {
+            renderHistory();
+        });
+
         // 解析链接
         async function parseLink() {
             const link = document.getElementById('roleLink').value.trim();
@@ -442,7 +456,7 @@
             }
         }
 
-        // 显示结果
+        // 显示结果并保存历史
         function showSimpleResult(uuid, link) {
             const resultSection = document.getElementById('resultSection');
             
@@ -454,6 +468,89 @@
             document.getElementById('shareUuid').textContent = '（仅支持完整链接）';
             
             resultSection.classList.add('show');
+            
+            // 保存到历史记录
+            saveToHistory(uuid, link);
+        }
+
+        // 保存到历史记录
+        function saveToHistory(uuid, link) {
+            let history = JSON.parse(localStorage.getItem('uuidHistory') || '[]');
+            
+            // 检查是否已存在
+            const exists = history.some(item => item.uuid === uuid);
+            if (exists) return;
+            
+            // 添加到开头
+            history.unshift({
+                uuid: uuid,
+                link: link,
+                time: new Date().toLocaleString('zh-CN')
+            });
+            
+            // 只保留最近 20 条
+            if (history.length > 20) {
+                history = history.slice(0, 20);
+            }
+            
+            localStorage.setItem('uuidHistory', JSON.stringify(history));
+            renderHistory();
+        }
+
+        // 渲染历史记录
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem('uuidHistory') || '[]');
+            const historyList = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                historyList.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">暂无历史记录</p>';
+                return;
+            }
+            
+            historyList.innerHTML = history.map((item, index) => `
+                <div class="history-item" style="padding: 15px; background: rgba(90, 125, 138, 0.05); border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 15px;">
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-family: monospace; font-size: 0.95em; color: #3a5a6a; font-weight: 600; margin-bottom: 5px;">${item.uuid}</div>
+                        <div style="font-size: 0.8em; color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.link}</div>
+                        <div style="font-size: 0.75em; color: #aaa; margin-top: 3px;">${item.time}</div>
+                    </div>
+                    <button onclick="copyUUID('${item.uuid}')" style="padding: 8px 16px; background: linear-gradient(135deg, #7a9aaa, #8aaaba); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85em; white-space: nowrap;">复制</button>
+                    <button onclick="deleteHistoryItem(${index})" style="padding: 8px 12px; background: rgba(200, 100, 100, 0.2); color: #c86464; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85em; white-space: nowrap;">删除</button>
+                </div>
+            `).join('');
+        }
+
+        // 复制 UUID
+        function copyUUID(uuid) {
+            navigator.clipboard.writeText(uuid).then(() => {
+                showToast('已复制！');
+            });
+        }
+
+        // 删除单条历史
+        function deleteHistoryItem(index) {
+            let history = JSON.parse(localStorage.getItem('uuidHistory') || '[]');
+            history.splice(index, 1);
+            localStorage.setItem('uuidHistory', JSON.stringify(history));
+            renderHistory();
+        }
+
+        // 清空历史
+        function clearHistory() {
+            if (confirm('确定要清空所有历史记录吗？')) {
+                localStorage.removeItem('uuidHistory');
+                renderHistory();
+                showToast('历史记录已清空');
+            }
+        }
+
+        // 显示提示
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); color: #fff; padding: 14px 28px; border-radius: 12px; font-weight: 500; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 10000;';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
         }
 
         // 复制文本
