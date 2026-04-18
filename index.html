@@ -811,6 +811,113 @@
             background: rgba(255, 80, 80, 0.9);
         }
 
+        /* 开发者模式调试面板 */
+        .dev-debug-panel {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            width: 320px;
+            max-height: 80vh;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            border-radius: 8px;
+            z-index: 10000;
+            font-size: 0.85em;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .dev-debug-panel.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .dev-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+        }
+
+        .dev-panel-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .dev-panel-content {
+            padding: 10px;
+        }
+
+        .debug-section {
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .debug-section:last-child {
+            border-bottom: none;
+        }
+
+        .debug-section h4 {
+            margin: 0 0 8px 0;
+            font-size: 0.9em;
+            color: #87CEEB;
+        }
+
+        .debug-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+        }
+
+        .debug-item span:first-child {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .debug-item span:last-child {
+            color: #fff;
+            word-break: break-all;
+            text-align: right;
+            margin-left: 10px;
+        }
+
+        .debug-btn {
+            background: rgba(135, 206, 235, 0.3);
+            color: #fff;
+            border: 1px solid rgba(135, 206, 235, 0.5);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            transition: all 0.2s;
+        }
+
+        .debug-btn:hover {
+            background: rgba(135, 206, 235, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .dev-debug-panel {
+                width: 280px;
+                top: 60px;
+                right: 10px;
+            }
+        }
+
         .entries-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -1281,6 +1388,46 @@
         
         <!-- 开发者模式退出按钮 -->
         <button class="dev-exit-btn" id="devExitBtn" onclick="exitDevMode()">❌ 退出开发者模式</button>
+        
+        <!-- 开发者模式调试面板 -->
+        <div class="dev-debug-panel" id="devDebugPanel">
+            <div class="dev-panel-header">
+                <span>🔍 调试信息</span>
+                <button class="dev-panel-close" onclick="toggleDebugPanel()">×</button>
+            </div>
+            <div class="dev-panel-content" id="devPanelContent">
+                <div class="debug-section">
+                    <h4>📱 设备信息</h4>
+                    <div class="debug-item"><span>屏幕尺寸：</span><span id="debugScreenSize">-</span></div>
+                    <div class="debug-item"><span>设备类型：</span><span id="debugDeviceType">-</span></div>
+                    <div class="debug-item"><span>窗口大小：</span><span id="debugWindowSize">-</span></div>
+                    <div class="debug-item"><span>URL：</span><span id="debugURL">-</span></div>
+                </div>
+                <div class="debug-section">
+                    <h4>⏱️ 性能数据</h4>
+                    <div class="debug-item"><span>加载时间：</span><span id="debugLoadTime">-</span></div>
+                    <div class="debug-item"><span>DOM 就绪：</span><span id="debugDOMReady">-</span></div>
+                    <div class="debug-item"><span>背景数量：</span><span id="debugBgCount">-</span></div>
+                </div>
+                <div class="debug-section">
+                    <h4>💾 LocalStorage</h4>
+                    <div class="debug-item"><span>siteLang：</span><span id="debugSiteLang">-</span></div>
+                    <div class="debug-item"><span>uuidHistory：</span><span id="debugUuidHistory">-</span></div>
+                </div>
+                <div class="debug-section">
+                    <h4>🎬 状态</h4>
+                    <div class="debug-item"><span>打字机：</span><span id="debugTypewriter">-</span></div>
+                    <div class="debug-item"><span>背景索引：</span><span id="debugBgIndex">-</span></div>
+                    <div class="debug-item"><span>开发者模式：</span><span id="debugDevMode">-</span></div>
+                </div>
+                <div class="debug-section">
+                    <h4>📋 操作</h4>
+                    <button class="debug-btn" onclick="refreshDebugInfo()">🔄 刷新</button>
+                    <button class="debug-btn" onclick="clearLocalStorage()">🗑️ 清空 localStorage</button>
+                    <button class="debug-btn" onclick="copyDebugInfo()">📋 复制全部</button>
+                </div>
+            </div>
+        </div>
         
         <div class="container">
             <h1 class="title" data-i18n="home-welcome">欢迎来到雨落的世界！</h1>
@@ -1941,6 +2088,8 @@
                     devMode = true;
                     document.getElementById('devModeIndicator').classList.add('active');
                     document.getElementById('devExitBtn').classList.add('active');
+                    document.getElementById('devDebugPanel').classList.add('active');
+                    refreshDebugInfo();
                     
                     // 解锁档案馆
                     unlockArchive();
@@ -1963,10 +2112,70 @@
             }
         }
 
+        // 调试面板显示/隐藏
+        function toggleDebugPanel() {
+            const panel = document.getElementById('devDebugPanel');
+            if (panel.classList.contains('active')) {
+                panel.classList.remove('active');
+            } else {
+                panel.classList.add('active');
+                refreshDebugInfo();
+            }
+        }
+
+        // 刷新调试信息
+        function refreshDebugInfo() {
+            // 设备信息
+            document.getElementById('debugScreenSize').textContent = screen.width + '×' + screen.height;
+            document.getElementById('debugDeviceType').textContent = window.innerWidth <= 768 ? '平板/手机' : '电脑';
+            document.getElementById('debugWindowSize').textContent = window.innerWidth + '×' + window.innerHeight;
+            document.getElementById('debugURL').textContent = window.location.href;
+
+            // 性能数据
+            if (window.performance && window.performance.timing) {
+                const timing = window.performance.timing;
+                const loadTime = timing.loadEventEnd - timing.navigationStart;
+                const domReady = timing.domContentLoadedEventEnd - timing.navigationStart;
+                document.getElementById('debugLoadTime').textContent = loadTime + 'ms';
+                document.getElementById('debugDOMReady').textContent = domReady + 'ms';
+            }
+            document.getElementById('debugBgCount').textContent = backgrounds.length;
+
+            // LocalStorage
+            document.getElementById('debugSiteLang').textContent = localStorage.getItem('siteLang') || '默认 (zh)';
+            const uuidHistory = localStorage.getItem('uuidHistory');
+            document.getElementById('debugUuidHistory').textContent = uuidHistory ? JSON.parse(uuidHistory).length + ' 条' : '空';
+
+            // 状态
+            document.getElementById('debugTypewriter').textContent = typeof typewriterDone !== 'undefined' ? (typewriterDone ? '已完成' : '未执行') : '未知';
+            document.getElementById('debugBgIndex').textContent = typeof currentBgIndex !== 'undefined' ? currentBgIndex : '未知';
+            document.getElementById('debugDevMode').textContent = devMode ? '开启 ✅' : '关闭 ❌';
+        }
+
+        // 清空 localStorage
+        function clearLocalStorage() {
+            if (confirm('确定要清空所有 localStorage 数据吗？（包括语言设置、UUID 历史等）')) {
+                localStorage.clear();
+                alert('✅ localStorage 已清空！刷新页面生效。');
+                refreshDebugInfo();
+            }
+        }
+
+        // 复制调试信息
+        function copyDebugInfo() {
+            const content = document.getElementById('devPanelContent').innerText;
+            navigator.clipboard.writeText(content).then(function() {
+                alert('✅ 调试信息已复制到剪贴板！');
+            }).catch(function() {
+                alert('❌ 复制失败，请手动选择复制。');
+            });
+        }
+
         // 退出开发者模式
         function exitDevMode() {
             devMode = false;
             document.getElementById('devModeIndicator').classList.remove('active');
+            document.getElementById('devDebugPanel').classList.remove('active');
             document.getElementById('devExitBtn').classList.remove('active');
             
             // 锁定档案馆
