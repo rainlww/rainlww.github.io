@@ -1,0 +1,46 @@
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.8em;
+        letter-spacing: 2px;
+    }
+    .page-subtitle {
+        font-size: 1em;
+    }
+    .characters-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    .character-card-tag {
+        font-size: 0.65em;
+        padding: 2px 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.5em;
+        letter-spacing: 1px;
+    }
+    .page-subtitle {
+        font-size: 0.9em;
+    }
+    .characters-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    .character-card-info {
+        padding: 8px;
+    }
+    .character-card-name {
+        font-size: 0.9em;
+    }
+    .filter-tags {
+        gap: 8px;
+    }
+    .filter-tag {
+        padding: 6px 12px;
+        font-size: 0.8em;
+    }
+}
