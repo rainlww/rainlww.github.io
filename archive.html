@@ -467,6 +467,8 @@
         // 筛选人物卡片
         function filterCharacters() {
             const cards = document.querySelectorAll('.character-card');
+            let hasResults = false;
+
             cards.forEach(card => {
                 const onclick = card.getAttribute('onclick');
                 if (!onclick) return;
@@ -478,12 +480,25 @@
 
                 if (selectedTags.length === 0) {
                     card.style.display = 'block';
+                    hasResults = true;
                     return;
                 }
 
-                const hasSelectedTag = selectedTags.some(tag => char.tags.includes(tag));
-                card.style.display = hasSelectedTag ? 'block' : 'none';
+                // 交集筛选：必须包含所有选中的标签
+                const hasAllTags = selectedTags.every(tag => char.tags.includes(tag));
+                if (hasAllTags) {
+                    card.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    card.style.display = 'none';
+                }
             });
+
+            // 显示/隐藏空状态提示
+            const emptyState = document.getElementById('emptyState');
+            if (emptyState) {
+                emptyState.style.display = hasResults ? 'none' : 'block';
+            }
         }
 
         // 更新荷穆勒提示
