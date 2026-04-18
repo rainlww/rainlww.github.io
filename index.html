@@ -1702,7 +1702,11 @@
             // 最多等 4 秒（平板端优化，避免卡住）
             setTimeout(function() {
                 console.log('加载超时，强制显示主页');
-                clearInterval(dotInterval);
+                
+                // 清除省略号动画
+                if (dotInterval) {
+                    clearInterval(dotInterval);
+                }
                 
                 // 先淡出 Loading 页
                 loadingScreen.classList.add('hidden');
@@ -1716,7 +1720,7 @@
                 setTimeout(function() {
                     loadingScreen.style.display = 'none';
                 }, 1000);
-            }, 6000);
+            }, 4000);
         });
 
         // 导航函数
