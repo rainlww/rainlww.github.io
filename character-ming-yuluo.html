@@ -250,6 +250,8 @@
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
         .artwork-item:hover {
@@ -257,10 +259,22 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
-        .artwork-item img {
+        .artwork-item-image {
             width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 20px;
+            min-height: 300px;
+        }
+
+        .artwork-item img {
+            max-width: 100%;
+            max-height: 500px;
             height: auto;
             display: block;
+            object-fit: contain;
         }
 
         .artwork-item .placeholder {
@@ -332,19 +346,25 @@
                         <div class="artwork-grid">
                             <!-- 立绘 1：封面 -->
                             <div class="artwork-item">
-                                <img src="ming-yuluo-1-opt.jpg" alt="明雨落 - 封面">
+                                <div class="artwork-item-image">
+                                    <img src="ming-yuluo-1-opt.jpg" alt="明雨落 - 封面">
+                                </div>
                                 <div class="artwork-caption">明雨落 - 封面</div>
                             </div>
                             
                             <!-- 立绘 2：捏 Ta 学院 -->
                             <div class="artwork-item">
-                                <img src="ming-yuluo-2-opt.jpg" alt="明雨落 - 捏 Ta 学院">
+                                <div class="artwork-item-image">
+                                    <img src="ming-yuluo-2-opt.jpg" alt="明雨落 - 捏 Ta 学院">
+                                </div>
                                 <div class="artwork-caption">明雨落 # 捏 Ta 学院</div>
                             </div>
                             
                             <!-- 立绘 3：捏捏骑士团 -->
                             <div class="artwork-item">
-                                <img src="ming-yuluo-3-opt.jpg" alt="明雨落 - 捏捏骑士团">
+                                <div class="artwork-item-image">
+                                    <img src="ming-yuluo-3-opt.jpg" alt="明雨落 - 捏捏骑士团">
+                                </div>
                                 <div class="artwork-caption">明雨落 # 捏捏骑士团</div>
                             </div>
                         </div>
