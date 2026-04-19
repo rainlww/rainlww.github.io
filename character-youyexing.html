@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幽夜行 - 雨落们的档案馆</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #fff; color: #333; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: #f5f5f5; border-radius: 4px; }
+        .back-link:hover { color: #7a6a7a; background: #e8e8e8; }
+        .page-title { font-size: 2.5em; color: #333; font-weight: bold; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ddd; letter-spacing: 0; word-break: keep-all; white-space: normal; }
+        .wiki-layout { display: flex; gap: 30px; margin-top: 30px; }
+        .wiki-main { flex: 1; min-width: 0; }
+        .wiki-infobox { flex: 0 0 300px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 4px; padding: 20px; height: fit-content; }
+        .infobox-image { width: 100%; margin-bottom: 15px; background: #fff; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .infobox-image img { width: 100%; height: auto; display: block; }
+        .infobox-image .placeholder { width: 100%; padding-top: 133%; display: flex; justify-content: center; align-items: center; font-size: 4em; color: rgba(154, 122, 138, 0.4); background: linear-gradient(135deg, #FFF9C4 0%, #E3F2FD 100%); }
+        .infobox-table { width: 100%; font-size: 0.9em; }
+        .infobox-table th, .infobox-table td { padding: 8px 0; border-bottom: 1px solid #e0e0e0; text-align: left; }
+        .infobox-table th { color: #666; font-weight: 500; width: 80px; }
+        .infobox-table td { color: #333; }
+        .toc { background: #f9f9f9; border: 1px solid #ddd; border-radius: 4px; padding: 15px 20px; margin-bottom: 30px; }
+        .toc-title { font-size: 1.1em; font-weight: bold; color: #333; margin-bottom: 10px; }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 6px; }
+        .toc-list a { color: #9a7a8a; text-decoration: none; font-size: 0.95em; }
+        .toc-list a:hover { color: #7a6a7a; text-decoration: underline; }
+        .wiki-section { margin-bottom: 40px; scroll-margin-top: 20px; }
+        .wiki-section-title { font-size: 1.6em; color: #333; font-weight: bold; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #9a7a8a; }
+        .wiki-section-content { font-size: 1em; color: #555; line-height: 1.8; }
+        .wiki-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .wiki-tag { display: inline-block; padding: 4px 12px; background: #f5f5f5; border-radius: 4px; font-size: 0.85em; color: #666; border: 1px solid #e0e0e0; text-decoration: none; }
+        .wiki-tag:hover { background: #e8e8e8; }
+        .related-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .related-item { padding: 8px 16px; background: #f5f5f5; border-radius: 4px; font-size: 0.95em; color: #555; border: 1px solid #e0e0e0; }
+        .artwork-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .artwork-item { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: all 0.3s ease; }
+        .artwork-item:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .artwork-item-image { width: 100%; height: 450px; display: flex; justify-content: center; align-items: center; background: #f9f9f9; overflow: hidden; }
+        .artwork-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .artwork-caption { padding: 12px; text-align: center; background: #f9f9f9; font-size: 0.9em; color: #666; border-top: 1px solid #e0e0e0; }
+        @media (max-width: 768px) { .wiki-layout { flex-direction: column; } .wiki-infobox { width: 100%; order: -1; } .page-title { font-size: 2em; } }
+        @media (max-width: 480px) { .page-title { font-size: 1.5em; } .artwork-item-image { height: 350px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="archive.html" class="back-link">← 返回档案馆</a>
+        <h1 class="page-title" id="pageTitle">幽夜行</h1>
+        <div class="wiki-layout">
+            <div class="wiki-main">
+                <div class="toc">
+                    <div class="toc-title">目录</div>
+                    <ul class="toc-list">
+                        <li><a href="#artwork">立绘展示</a></li>
+                        <li><a href="#description">角色简介</a></li>
+                        <li><a href="#related">相关雨落</a></li>
+                        <li><a href="#external">外部链接</a></li>
+                    </ul>
+                </div>
+                <div class="wiki-section" id="artwork">
+                    <h2 class="wiki-section-title">立绘展示</h2>
+                    <div class="artwork-grid">
+                        <div class="artwork-item">
+                            <div class="artwork-item-image"><div class="placeholder">📷</div></div>
+                            <div class="artwork-caption">幽夜行 - 封面（待提供）</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wiki-section" id="description">
+                    <h2 class="wiki-section-title">角色简介</h2>
+                    <div class="wiki-section-content" id="descriptionContent"><span style="font-size: 0.9em; font-style: italic; color: #999;">啊哦……轻若还没有添加哦……</span></div>
+                </div>
+                <div class="wiki-section" id="related">
+                    <h2 class="wiki-section-title">相关雨落</h2>
+                    <div class="related-list" id="relatedYuluoList"><span class="related-item" style="font-size: 0.9em; font-style: italic; color: #999;">啊哦……轻若还没有添加哦……</span></div>
+                </div>
+                <div class="wiki-section" id="external">
+                    <h2 class="wiki-section-title">外部链接</h2>
+                    <div id="externalLinks"><p style="color: #999; font-size: 0.9em;">暂无外部链接</p></div>
+                </div>
+            </div>
+            <div class="wiki-infobox">
+                <div class="infobox-image" id="infoboxImage"><div class="placeholder">📷</div></div>
+                <table class="infobox-table">
+                    <tr><th>名字</th><td id="infoName">-</td></tr>
+                    <tr><th>档案馆编号</th><td id="infoId">-</td></tr>
+                    <tr><th>标签</th><td><div class="wiki-tags" id="infoTags"></div></td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        const character = {
+            id: "youyexing",
+            number: "0601-M03",
+            name: "幽夜行",
+            cover: "",
+            tags: ['维护者协会', '明雨落'],
+            nietaLink: "",
+            description: "",
+            relatedYuluo: []
+        };
+        window.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('pageTitle').textContent = character.name;
+            document.getElementById('infoName').textContent = character.name;
+            document.getElementById('infoId').textContent = character.number;
+            document.getElementById('infoTags').innerHTML = character.tags.map(tag => `<a href="tag-${tag}.html" class="wiki-tag" style="text-decoration: none; cursor: pointer;">${tag}</a>`).join('');
+            if (character.description && character.description !== '') {
+                document.getElementById('descriptionContent').innerHTML = character.description;
+            }
+            if (character.cover) {
+                document.getElementById('infoboxImage').innerHTML = `<img src="${character.cover}" alt="${character.name}">`;
+            }
+        });
+    </script>
+</body>
+</html>
