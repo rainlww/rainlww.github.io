@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #333; line-height: 1.6; min-height: 100vh; position: relative; }
-        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('ming-yuluo-landscape-opt.jpg') center/cover no-repeat; opacity: 0.25; z-index: -1; }
+        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('ming-yuluo-landscape-opt.jpg') center/cover no-repeat; opacity: 0.25; z-index: -1; transition: background-image 0.3s ease; }
         .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
         .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,245,245,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
         .back-link:hover { color: #7a6a7a; background: rgba(232,232,232,0.9); }
@@ -34,7 +34,7 @@
     </style>
 </head>
 <body>
-    <div class="page-bg"></div>
+    <div class="page-bg" id="pageBg"></div>
     <div class="container">
         <a href="archive.html" class="back-link">← 返回档案馆</a>
         <h1 class="page-title" id="pageTitle">明雨落</h1>
@@ -99,6 +99,33 @@
             </div>
         </details>
     </div>
+    <script>
+        // 设备识别：手机端用竖版背景，平板/桌面用横版背景
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                   (window.innerWidth <= 768);
+        }
+        
+        // 设置背景图
+        const pageBg = document.getElementById('pageBg');
+        if (isMobile()) {
+            pageBg.style.backgroundImage = "url('ming-yuluo-1-opt.jpg')";
+        } else {
+            pageBg.style.backgroundImage = "url('ming-yuluo-landscape-opt.jpg')";
+        }
+        
+        // 窗口大小改变时重新检测
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                if (isMobile()) {
+                    pageBg.style.backgroundImage = "url('ming-yuluo-1-opt.jpg')";
+                } else {
+                    pageBg.style.backgroundImage = "url('ming-yuluo-landscape-opt.jpg')";
+                }
+            }, 250);
+        });
+    </script>
 </body>
 </html>
-<!-- v3 -->
