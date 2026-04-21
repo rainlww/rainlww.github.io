@@ -7,13 +7,11 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #333; line-height: 1.6; min-height: 100vh; position: relative; }
-        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('homulesha-landscape-opt.jpg') center/cover no-repeat; opacity: 0.25; z-index: -1; }
+        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('homulesha-landscape-opt.jpg') center/cover no-repeat; opacity: 0.25; z-index: -1; transition: background-image 0.3s ease; }
         .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
         .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,245,245,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
         .back-link:hover { color: #7a6a7a; background: rgba(232,232,232,0.9); }
         .page-title { font-size: 2.5em; color: #333; font-weight: bold; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(221,221,221,0.5); letter-spacing: 0; word-break: keep-all; white-space: normal; }
-        .character-quote { font-size: 0.95em; color: #666; font-style: italic; margin-bottom: 20px; line-height: 1.8; text-align: left; }
-        .character-quote div { margin-bottom: 4px; }
         .collapse-section { margin-bottom: 20px; border: none; }
         .collapse-section[open] { border-bottom: 1px solid rgba(224,224,224,0.5); padding-bottom: 15px; }
         .collapse-title { list-style: none; display: flex; align-items: center; gap: 8px; font-size: 1.2em; font-weight: 500; color: #333; cursor: pointer; padding: 10px 0; margin: 0; transition: color 0.2s; }
@@ -25,7 +23,7 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
         .artwork-container { text-align: center; }
         .artwork-frame { display: inline-block; max-width: 100%; padding: 12px; background: linear-gradient(135deg, rgba(232,228,217,0.9) 0%, rgba(212,207,196,0.9) 100%); border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); backdrop-filter: blur(10px); }
-        .artwork-frame img { display: block; max-width: 100%; max-height: 550px; height: auto; border-radius: 2px; }
+        .artwork-frame img { display: block; max-width: 100%; max-height: 650px; height: auto; border-radius: 2px; }
         .artwork-caption { padding: 12px; text-align: center; background: rgba(249,249,249,0.9); font-size: 0.9em; color: #666; border-top: 1px solid rgba(224,224,224,0.5); margin-top: 10px; border-radius: 4px; backdrop-filter: blur(10px); }
         .toc-list { list-style: none; }
         .toc-list li { margin-bottom: 6px; }
@@ -36,16 +34,10 @@
     </style>
 </head>
 <body>
-    <div class="page-bg"></div>
+    <div class="page-bg" id="pageBg"></div>
     <div class="container">
         <a href="archive.html" class="back-link">← 返回档案馆</a>
         <h1 class="page-title" id="pageTitle">荷穆勒夏</h1>
-        <div class="character-quote">
-            <div>旧日种种已成过往，如今的秩序混乱不堪。</div>
-            <div>而"侍者"，早已剩下空名。</div>
-            <div>若是想恢复辉煌——抑或是开创新的时代——</div>
-            <div>我们，必须改变。</div>
-        </div>
         
         <details class="collapse-section">
             <summary class="collapse-title">
@@ -112,6 +104,33 @@
             </div>
         </details>
     </div>
+    <script>
+        // 设备识别：手机端用竖版背景，平板/桌面用横版背景
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                   (window.innerWidth <= 768);
+        }
+        
+        // 设置背景图
+        const pageBg = document.getElementById('pageBg');
+        if (isMobile()) {
+            pageBg.style.backgroundImage = "url('homulesha-cover-hq.jpg?v=2')";
+        } else {
+            pageBg.style.backgroundImage = "url('homulesha-landscape-opt.jpg')";
+        }
+        
+        // 窗口大小改变时重新检测
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                if (isMobile()) {
+                    pageBg.style.backgroundImage = "url('homulesha-cover-hq.jpg?v=2')";
+                } else {
+                    pageBg.style.backgroundImage = "url('homulesha-landscape-opt.jpg')";
+                }
+            }, 250);
+        });
+    </script>
 </body>
 </html>
-<!-- v3 -->
