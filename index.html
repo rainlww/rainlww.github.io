@@ -1735,11 +1735,14 @@
             }
             
             console.log('打字机效果开始执行，标题：', originalText);
+            console.log('清除前子节点数量：', titleElement.childNodes.length);
             
             // 彻底清除可能存在的旧光标和所有子节点
             while (titleElement.firstChild) {
                 titleElement.removeChild(titleElement.firstChild);
             }
+            
+            console.log('清除后子节点数量：', titleElement.childNodes.length);
             
             // 添加光标
             const cursor = document.createElement('span');
@@ -1747,6 +1750,8 @@
             cursor.textContent = '|';
             cursor.style.opacity = '1';
             titleElement.appendChild(cursor);
+            
+            console.log('添加光标后子节点数量：', titleElement.childNodes.length);
             
             // 逐字打字
             let charIndex = 0;
@@ -1769,13 +1774,18 @@
                         
                         if (blinkCount >= 4) {
                             clearInterval(blinkInterval);
+                            console.log('闪烁完成，开始清除光标。当前子节点数量：', titleElement.childNodes.length);
+                            
                             // 彻底清除所有子节点（包括光标和空格）
                             while (titleElement.firstChild) {
                                 titleElement.removeChild(titleElement.firstChild);
                             }
+                            
+                            console.log('清除后子节点数量：', titleElement.childNodes.length);
+                            
                             // 恢复原始文字
                             titleElement.textContent = originalText;
-                            console.log('打字机效果完成，光标已移除');
+                            console.log('打字机效果完成，光标已移除。最终文字：', titleElement.textContent);
                         }
                     }, 300);
                 }
