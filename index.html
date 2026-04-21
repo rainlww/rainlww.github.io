@@ -1866,30 +1866,54 @@
             
             // 2 秒后隐藏 Loading 页（让用户欣赏下雨和云层 + 省略号动画）
             setTimeout(function() {
-                // 清除省略号动画
-                clearInterval(dotInterval);
+                console.log('2 秒超时触发，隐藏 Loading 页');
                 
-                // 隐藏 Loading 页
-                loadingScreen.classList.add('hidden');
-                
-                // 显示主页
-                mainScreen.classList.add('visible');
-                
-                // 设置初始背景
-                currentBgIndex = 0;
-                setBackground(currentBgIndex);
-                
-                // 0.5 秒后完全移除 Loading 页（等过渡完成）
-                setTimeout(function() {
-                    loadingScreen.style.display = 'none';
+                try {
+                    // 清除省略号动画
+                    if (dotInterval) {
+                        clearInterval(dotInterval);
+                    }
                     
-                    // 0.3 秒后启动打字机效果
+                    // 隐藏 Loading 页
+                    loadingScreen.classList.add('hidden');
+                    
+                    // 显示主页
+                    mainScreen.classList.add('visible');
+                    
+                    // 设置初始背景
+                    currentBgIndex = 0;
+                    setBackground(currentBgIndex);
+                    
+                    // 0.5 秒后完全移除 Loading 页（等过渡完成）
                     setTimeout(function() {
-                        console.log('启动打字机效果');
-                        typeWriterEffect();
-                    }, 300);
-                }, 500);
-            }, 1500);
+                        try {
+                            loadingScreen.style.display = 'none';
+                            
+                            // 0.3 秒后启动打字机效果
+                            setTimeout(function() {
+                                console.log('启动打字机效果');
+                                typeWriterEffect();
+                            }, 300);
+                        } catch (e) {
+                            console.error('移除 Loading 页出错：', e);
+                        }
+                    }, 500);
+                } catch (e) {
+                    console.error('隐藏 Loading 页出错：', e);
+                }
+            }, 2000);
+            
+            // 4 秒强制保护：无论上面发生什么，4 秒后强制显示主页
+            setTimeout(function() {
+                console.log('4 秒强制保护触发！');
+                try {
+                    loadingScreen.style.display = 'none';
+                    mainScreen.classList.add('visible');
+                    setTimeout(typeWriterEffect, 300);
+                } catch (e) {
+                    console.error('强制保护出错：', e);
+                }
+            }, 4000);
         });
 
         // 导航函数
