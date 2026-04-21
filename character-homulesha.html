@@ -65,6 +65,50 @@
             margin-bottom: 4px;
         }
 
+        /* 折叠面板样式（PRTS Wiki 风格） */
+        .collapse-section {
+            margin-bottom: 20px;
+            border: none;
+        }
+        .collapse-section[open] {
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
+        .collapse-title {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            padding: 10px 0;
+            margin: 0;
+            transition: color 0.2s;
+        }
+        .collapse-title:hover {
+            color: #9a7a8a;
+        }
+        .collapse-title::-webkit-details-marker {
+            display: none;
+        }
+        .collapse-icon {
+            transition: transform 0.3s;
+            flex-shrink: 0;
+        }
+        .collapse-section[open] .collapse-icon {
+            transform: rotate(180deg);
+        }
+        .collapse-content {
+            padding: 10px 0 0 28px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* Wiki 风格布局：左右分栏 */
         .wiki-layout {
             display: flex;
@@ -332,20 +376,29 @@
         <div class="wiki-layout">
             <!-- 左侧：主要内容区 -->
             <div class="wiki-main">
-                <!-- 目录 -->
-                <div class="toc">
-                    <div class="toc-title">目录</div>
-                    <ul class="toc-list">
-                        <li><a href="#artwork">立绘展示</a></li>
-                        <li><a href="#description">角色简介</a></li>
-                        <li><a href="#related">相关雨落</a></li>
-                        <li><a href="#external">外部链接</a></li>
-                    </ul>
-                </div>
+                <!-- 目录（可折叠） -->
+                <details class="collapse-section" open>
+                    <summary class="collapse-title">
+                        <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        目录
+                    </summary>
+                    <div class="collapse-content">
+                        <ul class="toc-list">
+                            <li><a href="#artwork">立绘展示</a></li>
+                            <li><a href="#description">角色简介</a></li>
+                            <li><a href="#related">相关雨落</a></li>
+                            <li><a href="#external">外部链接</a></li>
+                        </ul>
+                    </div>
+                </details>
 
                 <!-- 立绘展示 -->
-                <div class="wiki-section" id="artwork">
-                    <h2 class="wiki-section-title">立绘展示</h2>
+                <details class="collapse-section" id="artwork" open>
+                    <summary class="collapse-title">
+                        <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        立绘展示
+                    </summary>
+                    <div class="collapse-content">
                     <div class="character-artwork">
                         <div class="artwork-grid">
                             <!-- 立绘 1：封面 -->
@@ -360,24 +413,36 @@
                 </div>
 
                 <!-- 角色简介 -->
-                <div class="wiki-section" id="description">
-                    <h2 class="wiki-section-title">角色简介</h2>
+                <details class="collapse-section" id="description" open>
+                    <summary class="collapse-title">
+                        <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        角色简介
+                    </summary>
+                    <div class="collapse-content">
                     <div class="wiki-section-content" id="descriptionContent">
                         <span style="font-size: 0.9em; font-style: italic; color: #999;">啊哦……轻若还没有添加哦……</span>
                     </div>
                 </div>
 
                 <!-- 相关人物 -->
-                <div class="wiki-section" id="related">
-                    <h2 class="wiki-section-title">相关雨落</h2>
+                <details class="collapse-section" id="related" open>
+                    <summary class="collapse-title">
+                        <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        相关雨落
+                    </summary>
+                    <div class="collapse-content">
                     <div class="related-list" id="relatedYuluoList">
                         <span class="related-item" style="font-size: 0.9em; font-style: italic; color: #999;">啊哦……轻若还没有添加哦……</span>
                     </div>
                 </div>
 
                 <!-- 外部链接 -->
-                <div class="wiki-section" id="external">
-                    <h2 class="wiki-section-title">外部链接</h2>
+                <details class="collapse-section" id="external" open>
+                    <summary class="collapse-title">
+                        <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                        外部链接
+                    </summary>
+                    <div class="collapse-content">
                     <div id="externalLinks">
                         <a href="#" class="wiki-link" id="nietaLink" target="_blank" style="display: none;">查看捏 Ta 角色</a>
                         <p style="color: #999; font-size: 0.9em; margin-top: 10px;" id="noLink" style="display: none;">暂无外部链接</p>
