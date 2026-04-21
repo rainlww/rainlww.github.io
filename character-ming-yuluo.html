@@ -5,478 +5,165 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>明雨落 - 雨落们的档案馆</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: #fff;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* 返回链接 */
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #9a7a8a;
-            text-decoration: none;
-            font-size: 0.9em;
-            padding: 6px 14px;
-            background: #f5f5f5;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #fff; color: #333; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: #f5f5f5; border-radius: 4px; }
+        .back-link:hover { color: #7a6a7a; background: #e8e8e8; }
+        .page-title { font-size: 2.5em; color: #333; font-weight: bold; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #ddd; letter-spacing: 0; word-break: keep-all; white-space: normal; }
+        .character-quote { font-size: 0.95em; color: #888; font-style: italic; margin-bottom: 20px; line-height: 1.8; text-align: left; }
+        .character-quote div { margin-bottom: 4px; }
+        .collapse-section { margin-bottom: 20px; border: none; }
+        .collapse-section[open] { border-bottom: 1px solid #e0e0e0; padding-bottom: 15px; }
+        .collapse-title { list-style: none; display: flex; align-items: center; gap: 8px; font-size: 1.2em; font-weight: 500; color: #333; cursor: pointer; padding: 10px 0; margin: 0; transition: color 0.2s; }
+        .collapse-title:hover { color: #9a7a8a; }
+        .collapse-title::-webkit-details-marker { display: none; }
+        .collapse-icon { transition: transform 0.3s; flex-shrink: 0; }
+        .collapse-section[open] .collapse-icon { transform: rotate(180deg); }
+        .collapse-content { padding: 10px 0 0 28px; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .artwork-container { text-align: center; }
+        .artwork-frame { 
+            display: inline-block; 
+            max-width: 100%; 
+            padding: 12px; 
+            background: linear-gradient(135deg, #e8e4d9 0%, #d4cfc4 100%); 
             border-radius: 4px;
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
-
-        .back-link:hover {
-            color: #7a6a7a;
-            background: #e8e8e8;
+        .artwork-frame img { 
+            display: block; 
+            max-width: 100%; 
+            height: auto; 
+            border-radius: 2px;
         }
-
-        /* 页面标题 */
-        .page-title {
-            font-size: 2.5em;
-            color: #333;
-            font-weight: bold;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        /* Wiki 风格布局：左右分栏 */
-        .wiki-layout {
-            display: flex;
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        /* 左侧：主要内容区 */
-        .wiki-main {
-            flex: 1;
-            min-width: 0;
-        }
-
-        /* 右侧：信息框 */
-        .wiki-infobox {
-            flex: 0 0 300px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 20px;
-            height: fit-content;
-        }
-
-        /* 信息框内图片 */
-        .infobox-image {
-            width: 100%;
-            margin-bottom: 15px;
-            background: #fff;
-            border-radius: 4px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .infobox-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .infobox-image .placeholder {
-            width: 100%;
-            padding-top: 133%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 4em;
-            color: rgba(154, 122, 138, 0.4);
-            background: linear-gradient(135deg, #f5e6f0 0%, #e8d5e8 100%);
-        }
-
-        /* 信息框表格 */
-        .infobox-table {
-            width: 100%;
-            font-size: 0.9em;
-        }
-
-        .infobox-table th,
-        .infobox-table td {
-            padding: 8px 0;
-            border-bottom: 1px solid #e0e0e0;
-            text-align: left;
-        }
-
-        .infobox-table th {
-            color: #666;
-            font-weight: 500;
-            width: 80px;
-        }
-
-        .infobox-table td {
-            color: #333;
-        }
-
-        /* 目录导航 */
-        .toc {
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 15px 20px;
-            margin-bottom: 30px;
-        }
-
-        .toc-title {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .toc-list {
-            list-style: none;
-        }
-
-        .toc-list li {
-            margin-bottom: 6px;
-        }
-
-        .toc-list a {
-            color: #9a7a8a;
-            text-decoration: none;
-            font-size: 0.95em;
-            transition: all 0.3s ease;
-        }
-
-        .toc-list a:hover {
-            color: #7a6a7a;
-            text-decoration: underline;
-        }
-
-        /* 章节 */
-        .wiki-section {
-            margin-bottom: 40px;
-            scroll-margin-top: 20px;
-        }
-
-        .wiki-section-title {
-            font-size: 1.6em;
-            color: #333;
-            font-weight: bold;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #9a7a8a;
-        }
-
-        .wiki-section-content {
-            font-size: 1em;
-            color: #555;
-            line-height: 1.8;
-        }
-
-        /* 标签 */
-        .wiki-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 15px 0;
-        }
-
-        .wiki-tag {
-            font-size: 0.85em;
-            color: #666;
-            background: #f5f5f5;
-            padding: 4px 12px;
-            border-radius: 4px;
-            border: 1px solid #e0e0e0;
-        }
-
-        /* 链接按钮 */
-        .wiki-link {
-            display: inline-block;
-            padding: 10px 24px;
-            background: linear-gradient(135deg, #9a7a8a, #aa8a9a);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 0.95em;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .wiki-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(154, 122, 138, 0.4);
-        }
-
-        /* 相关人物 */
-        .related-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .related-item {
-            padding: 8px 16px;
-            background: #f5f5f5;
-            border-radius: 4px;
-            font-size: 0.95em;
-            color: #555;
-            border: 1px solid #e0e0e0;
-        }
-
-        /* 立绘展示区 - 多图网格 */
-        .character-artwork {
-            margin: 30px 0;
-        }
-
-        .artwork-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .artwork-item {
-            background: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .artwork-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-
-        .artwork-item-image {
-            width: 100%;
-            height: 450px; /* 固定高度，统一尺寸 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #f9f9f9;
-            overflow: hidden;
-        }
-
-        .artwork-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* 裁剪填充，统一尺寸 */
-            display: block;
-        }
-
-        .artwork-item .placeholder {
-            width: 100%;
-            padding-top: 140%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 4em;
-            color: rgba(154, 122, 138, 0.4);
-            background: linear-gradient(135deg, #f5e6f0 0%, #e8d5e8 100%);
-        }
-
-        .artwork-caption {
-            padding: 12px;
-            text-align: center;
-            background: #f9f9f9;
-            font-size: 0.9em;
-            color: #666;
+        .artwork-caption { 
+            padding: 12px; 
+            text-align: center; 
+            background: #f9f9f9; 
+            font-size: 0.9em; 
+            color: #666; 
             border-top: 1px solid #e0e0e0;
+            margin-top: 10px;
+            border-radius: 4px;
         }
-
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .wiki-layout {
-                flex-direction: column;
-            }
-            .wiki-infobox {
-                flex: none;
-                width: 100%;
-                order: -1;
-            }
-            .page-title {
-                font-size: 2em;
-            }
-            .wiki-section-title {
-                font-size: 1.4em;
-            }
-            .artwork-grid {
-                grid-template-columns: 1fr;
-            }
+        .view-toggle { 
+            display: flex; 
+            justify-content: center; 
+            gap: 10px; 
+            margin-bottom: 15px; 
         }
+        .view-toggle-btn {
+            padding: 8px 20px;
+            border: 1px solid #9a7a8a;
+            background: #fff;
+            color: #9a7a8a;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+        .view-toggle-btn:hover {
+            background: #f5f5f5;
+        }
+        .view-toggle-btn.active {
+            background: #9a7a8a;
+            color: #fff;
+        }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 6px; }
+        .toc-list a { color: #9a7a8a; text-decoration: none; font-size: 0.95em; }
+        .toc-list a:hover { color: #7a6a7a; text-decoration: underline; }
+        @media (max-width: 768px) { .page-title { font-size: 2em; } }
+        @media (max-width: 480px) { .page-title { font-size: 1.5em; } }
     </style>
 </head>
 <body>
     <div class="container">
         <a href="archive.html" class="back-link">← 返回档案馆</a>
-        
         <h1 class="page-title" id="pageTitle">明雨落</h1>
         
-        <div class="wiki-layout">
-            <!-- 左侧：主要内容区 -->
-            <div class="wiki-main">
-                <!-- 目录 -->
-                <div class="toc">
-                    <div class="toc-title">目录</div>
-                    <ul class="toc-list">
-                        <li><a href="#artwork">立绘展示</a></li>
-                        <li><a href="#description">人物简介</a></li>
-                        <li><a href="#related">相关雨落</a></li>
-                        <li><a href="#external">外部链接</a></li>
-                    </ul>
-                </div>
-
-                <!-- 立绘展示 -->
-                <div class="wiki-section" id="artwork">
-                    <h2 class="wiki-section-title">立绘展示</h2>
-                    <div class="character-artwork">
-                        <div class="artwork-grid">
-                            <!-- 立绘 1：封面 -->
-                            <div class="artwork-item">
-                                <div class="artwork-item-image">
-                                    <img src="ming-yuluo-1-opt.jpg" alt="明雨落 - 封面">
-                                </div>
-                                <div class="artwork-caption">明雨落 - 封面</div>
-                            </div>
-                            
-                            <!-- 立绘 2：捏 Ta 学院 -->
-                            <div class="artwork-item">
-                                <div class="artwork-item-image">
-                                    <img src="ming-yuluo-2-opt.jpg" alt="明雨落 - 捏 Ta 学院">
-                                </div>
-                                <div class="artwork-caption">明雨落 # 捏 Ta 学院</div>
-                            </div>
-                            
-                            <!-- 立绘 3：捏捏骑士团 -->
-                            <div class="artwork-item">
-                                <div class="artwork-item-image">
-                                    <img src="ming-yuluo-3-opt.jpg" alt="明雨落 - 捏捏骑士团">
-                                </div>
-                                <div class="artwork-caption">明雨落 # 捏捏骑士团</div>
-                            </div>
-                        </div>
+        <details class="collapse-section">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                目录
+            </summary>
+            <div class="collapse-content">
+                <ul class="toc-list">
+                    <li><a href="#artwork">立绘展示</a></li>
+                    <li><a href="#description">人物简介</a></li>
+                    <li><a href="#related">相关雨落</a></li>
+                    <li><a href="#external">外部链接</a></li>
+                </ul>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="artwork">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                立绘展示
+            </summary>
+            <div class="collapse-content">
+                <div class="artwork-container">
+                    <div class="view-toggle">
+                        <button class="view-toggle-btn active" onclick="switchArtwork('portrait')">竖版</button>
+                        <button class="view-toggle-btn" onclick="switchArtwork('landscape')">横版</button>
                     </div>
-                </div>
-
-                <!-- 人物简介 -->
-                <div class="wiki-section" id="description">
-                    <h2 class="wiki-section-title">人物简介</h2>
-                    <div class="wiki-section-content" id="descriptionContent">
-                        <span style="font-size: 0.9em; font-style: italic; color: #999;">啊哦……轻若还没有添加哦……</span>
+                    <div class="artwork-frame">
+                        <img id="artworkImage" src="ming-yuluo-1-opt.jpg" alt="明雨落">
                     </div>
-                </div>
-
-                <!-- 相关人物 -->
-                <div class="wiki-section" id="related">
-                    <h2 class="wiki-section-title">相关雨落</h2>
-                    <div class="related-list" id="relatedYuluoList">
-                        <span class="related-item" style="font-size: 0.9em; font-style: italic; color: #999;">啊哦……轻若还没有添加哦……</span>
-                    </div>
-                </div>
-
-                <!-- 外部链接 -->
-                <div class="wiki-section" id="external">
-                    <h2 class="wiki-section-title">外部链接</h2>
-                    <div id="externalLinks">
-                        <a href="#" class="wiki-link" id="nietaLink" target="_blank" style="display: none;">查看捏 Ta 角色</a>
-                        <p style="color: #999; font-size: 0.9em; margin-top: 10px;" id="noLink">暂无外部链接</p>
-                    </div>
+                    <div class="artwork-caption" id="artworkCaption">明雨落 - 竖版立绘</div>
                 </div>
             </div>
-            
-            <!-- 右侧：信息框 -->
-            <div class="wiki-infobox">
-                <div class="infobox-image" id="infoboxImage">
-                    <div class="placeholder">📷</div>
-                </div>
-                
-                <table class="infobox-table">
-                    <tr>
-                        <th>名字</th>
-                        <td id="infoName">-</td>
-                    </tr>
-                    <tr>
-                        <th>档案馆编号</th>
-                        <td id="infoId">-</td>
-                    </tr>
-                    <tr>
-                        <th>标签</th>
-                        <td>
-                            <div class="wiki-tags" id="infoTags"></div>
-                        </td>
-                    </tr>
-                </table>
+        </details>
+        
+        <details class="collapse-section" id="description">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                人物简介
+            </summary>
+            <div class="collapse-content">
+                <p style="color: #999; font-size: 0.9em; font-style: italic;">啊哦……轻若还没有添加哦……</p>
             </div>
-        </div>
+        </details>
+        
+        <details class="collapse-section" id="related">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                相关雨落
+            </summary>
+            <div class="collapse-content">
+                <p style="color: #999; font-size: 0.9em; font-style: italic;">啊哦……轻若还没有添加哦……</p>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="external">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                外部链接
+            </summary>
+            <div class="collapse-content">
+                <p style="color: #999; font-size: 0.9em;">暂无外部链接</p>
+            </div>
+        </details>
     </div>
-
     <script>
-        // 人物数据
-        const character = {
-            id: "ming-yuluo",
-            number: "0601-M01",
-            name: "明雨落",
-            cover: "ming-yuluo-1-opt.jpg", // 第一张作为封面
-            tags: ["0601 号观测站", "明雨落"],
-            nietaLink: "",
-            description: '<span style="font-size: 0.9em; font-style: italic; color: #999;">啊哦……轻若还没有添加哦……</span>',
-            relatedYuluo: ["苏甘泉"]
+        const artworks = {
+            portrait: {
+                src: 'ming-yuluo-1-opt.jpg',
+                caption: '明雨落 - 竖版立绘'
+            },
+            landscape: {
+                src: 'ming-yuluo-landscape-opt.jpg',
+                caption: '明雨落 - 横版立绘'
+            }
         };
-
-        // 初始化页面
-        window.addEventListener('DOMContentLoaded', function() {
-            // 设置页面标题
-            document.getElementById('pageTitle').textContent = character.name;
-
-            // 设置信息框图片
-            const imageEl = document.getElementById('infoboxImage');
-            if (character.cover) {
-                imageEl.innerHTML = `<img src="${character.cover}" alt="${character.name}">`;
-            }
-
-            // 设置信息框名字
-            document.getElementById('infoName').textContent = character.name;
-
-            // 设置信息框编号
-            document.getElementById('infoId').textContent = character.number;
-
-            // 设置信息框标签
-            const tagsEl = document.getElementById('infoTags');
-            tagsEl.innerHTML = character.tags.map(tag => 
-                `<a href="tag-${tag}.html" class="wiki-tag" style="text-decoration: none; cursor: pointer;">${tag}</a>`
-            ).join('');
-
-            // 设置简介
-            if (character.description && character.description !== '（简介待填写）') {
-                document.getElementById('descriptionContent').innerHTML = character.description;
-            }
-
-            // 设置捏 Ta 链接
-            if (character.nietaLink) {
-                document.getElementById('nietaLink').style.display = 'inline-block';
-                document.getElementById('nietaLink').href = character.nietaLink;
-                document.getElementById('noLink').style.display = 'none';
-            }
-
-            // 设置相关人物
-            if (character.relatedYuluo && character.relatedYuluo.length > 0) {
-                document.getElementById('relatedList').innerHTML = character.relatedYuluo.map(name => 
-                    `<span class="related-item">${name}</span>`
-                ).join('');
-            }
-        });
+        function switchArtwork(type) {
+            document.getElementById('artworkImage').src = artworks[type].src;
+            document.getElementById('artworkCaption').textContent = artworks[type].caption;
+            document.querySelectorAll('.view-toggle-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
     </script>
 </body>
 </html>
