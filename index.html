@@ -1346,9 +1346,29 @@
         }
 
         .loading-tips span:last-child {
-            display: inline-block;
+            display: inline;
             white-space: normal;
             line-height: 1.6;
+        }
+
+        /* 第二条 Tips 特殊缩进 - 让第二行和"猫"字对齐 */
+        .loading-tips .tips-cat {
+            padding-left: 0;
+        }
+
+        /* 平板端强制一行显示 */
+        @media (min-width: 769px) {
+            .loading-tips span:last-child {
+                white-space: nowrap;
+            }
+        }
+
+        /* 手机端允许换行 */
+        @media (max-width: 768px) {
+            .loading-tips .tips-cat {
+                display: block;
+                padding-left: 3.2em; /* 和"猫"字对齐 */
+            }
         }
 
         @media (max-width: 768px) {
@@ -1693,7 +1713,7 @@
         // Tips 文案数组
         const loadingTips = [
             'Tips: 苦瓜炒鸡蛋已经被列入观测站总部黑名单',
-            'Tips: 冷知识：猫猫落的形象是考试时候确定的。<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;谁叫学考太无聊了呢。'
+            'Tips: 冷知识：猫猫落的形象是考试时候确定的。谁叫学考太无聊了呢。'
         ];
 
         // 随机显示 Tips
@@ -1707,7 +1727,15 @@
             // 分离 "Tips:" 和后面的内容
             const match = tipText.match(/^Tips:\s*(.*)/);
             if (match) {
-                tipsElement.innerHTML = '<span style="white-space: nowrap;">Tips:&nbsp;</span><span>' + match[1] + '</span>';
+                const content = match[1];
+                // 检测是否包含"冷知识"（第二条 Tips）
+                if (content.includes('冷知识')) {
+                    // 第二条：需要特殊缩进，让第二行和"猫"字对齐
+                    tipsElement.innerHTML = '<span style="white-space: nowrap;">Tips:&nbsp;</span><span class="tips-cat">' + content + '</span>';
+                } else {
+                    // 第一条：普通显示
+                    tipsElement.innerHTML = '<span style="white-space: nowrap;">Tips:&nbsp;</span><span>' + content + '</span>';
+                }
             } else {
                 tipsElement.textContent = tipText;
             }
