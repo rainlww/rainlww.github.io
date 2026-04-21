@@ -1848,6 +1848,7 @@
             }, 400);
             
             // 延长 Loading 页显示时间，让用户欣赏下雨和云层效果
+            // 省略号动画会完整播放（0 秒 → 1.6 秒 → 2 秒清除）
             console.log('背景图片数量：', backgrounds.length, '背景列表：', backgrounds);
             
             // 异步预加载背景图片（不阻塞）
@@ -1862,7 +1863,7 @@
                 };
             });
             
-            // 1.5 秒后隐藏 Loading 页（让用户欣赏下雨和云层）
+            // 2 秒后隐藏 Loading 页（让用户欣赏下雨和云层 + 省略号动画）
             setTimeout(function() {
                 // 清除省略号动画
                 clearInterval(dotInterval);
