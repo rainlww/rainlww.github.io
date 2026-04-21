@@ -1831,11 +1831,27 @@
             // 显示随机 Tips
             showRandomTips();
             
-            // 创建下雨效果
-            createRain();
+            // 平板端简化动画（防止卡死）
+            const isTablet = window.innerWidth <= 1024;
+            console.log('设备检测：', window.innerWidth, isTablet ? '平板/手机' : '桌面');
             
-            // 创建云层效果
-            createClouds();
+            if (!isTablet) {
+                // 桌面端：完整动画
+                createRain();
+                createClouds();
+            } else {
+                // 平板/手机端：简化动画（只创建少量雨滴，无云层）
+                console.log('平板端：简化动画模式');
+                // 创建少量雨滴（10 个而不是 50 个）
+                for (let i = 0; i < 10; i++) {
+                    const raindrop = document.createElement('div');
+                    raindrop.className = 'raindrop';
+                    raindrop.style.left = Math.random() * 100 + '%';
+                    raindrop.style.animationDelay = Math.random() * 2 + 's';
+                    raindrop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+                    loadingScreen.appendChild(raindrop);
+                }
+            }
             
             // 省略号动画
             let dotCount = 0;
@@ -1864,9 +1880,12 @@
                 };
             });
             
-            // 2 秒后隐藏 Loading 页（让用户欣赏下雨和云层 + 省略号动画）
+            // 平板端 1 秒后隐藏 Loading 页（防止卡死）
+            const loadingTimeout = isTablet ? 1000 : 2000;
+            console.log('Loading 页显示时间：', loadingTimeout, 'ms');
+            
             setTimeout(function() {
-                console.log('2 秒超时触发，隐藏 Loading 页');
+                console.log('超时触发，隐藏 Loading 页');
                 
                 try {
                     // 清除省略号动画
@@ -1884,7 +1903,7 @@
                     currentBgIndex = 0;
                     setBackground(currentBgIndex);
                     
-                    // 0.5 秒后完全移除 Loading 页（等过渡完成）
+                    // 0.3 秒后完全移除 Loading 页
                     setTimeout(function() {
                         try {
                             loadingScreen.style.display = 'none';
@@ -1897,15 +1916,16 @@
                         } catch (e) {
                             console.error('移除 Loading 页出错：', e);
                         }
-                    }, 500);
+                    }, 300);
                 } catch (e) {
                     console.error('隐藏 Loading 页出错：', e);
                 }
-            }, 2000);
+            }, loadingTimeout);
             
-            // 4 秒强制保护：无论上面发生什么，4 秒后强制显示主页
+            // 2 秒强制保护（平板端）/ 4 秒强制保护（桌面端）
+            const forceTimeout = isTablet ? 2000 : 4000;
             setTimeout(function() {
-                console.log('4 秒强制保护触发！');
+                console.log('强制保护触发！');
                 try {
                     loadingScreen.style.display = 'none';
                     mainScreen.classList.add('visible');
@@ -1913,7 +1933,7 @@
                 } catch (e) {
                     console.error('强制保护出错：', e);
                 }
-            }, 4000);
+            }, forceTimeout);
         });
 
         // 导航函数
