@@ -1742,83 +1742,50 @@
             }
         }
 
-        // 打字机效果 - 逐字显示
+        // 打字机效果 - 简化版（移除调试日志，确保稳定）
         let typewriterDone = false;
         function typeWriterEffect() {
-            if (typewriterDone) {
-                console.log('打字机效果：已经执行过，跳过');
-                return;
-            }
+            if (typewriterDone) return;
             typewriterDone = true;
             
             const titleElement = document.querySelector('.title');
-            if (!titleElement) {
-                console.log('打字机效果：找不到.title 元素');
-                return;
-            }
+            if (!titleElement) return;
             
             const originalText = titleElement.textContent.trim();
-            if (!originalText) {
-                console.log('打字机效果：标题文字为空');
-                return;
-            }
+            if (!originalText) return;
             
-            console.log('打字机效果开始执行，标题：', originalText);
-            console.log('清除前子节点数量：', titleElement.childNodes.length);
+            // 清除所有子节点
+            titleElement.textContent = '';
             
-            // 彻底清除可能存在的旧光标和所有子节点
-            while (titleElement.firstChild) {
-                titleElement.removeChild(titleElement.firstChild);
-            }
-            
-            console.log('清除后子节点数量：', titleElement.childNodes.length);
-            
-            // 添加光标
+            // 创建光标
             const cursor = document.createElement('span');
             cursor.className = 'cursor';
             cursor.textContent = '|';
-            cursor.style.opacity = '1';
             titleElement.appendChild(cursor);
-            
-            console.log('添加光标后子节点数量：', titleElement.childNodes.length);
             
             // 逐字打字
             let charIndex = 0;
             const typeInterval = setInterval(function() {
                 if (charIndex < originalText.length) {
-                    // 在光标前插入当前字符
                     const charNode = document.createTextNode(originalText.charAt(charIndex));
                     titleElement.insertBefore(charNode, cursor);
                     charIndex++;
                 } else {
-                    // 打完了，添加两个空格
                     clearInterval(typeInterval);
-                    titleElement.insertBefore(document.createTextNode('  '), cursor);
                     
-                    // 闪烁两下后删除空格和光标
+                    // 闪烁 2 下后移除光标
                     let blinkCount = 0;
                     const blinkInterval = setInterval(function() {
                         blinkCount++;
-                        cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
+                        cursor.style.opacity = blinkCount % 2 === 0 ? '1' : '0';
                         
                         if (blinkCount >= 4) {
                             clearInterval(blinkInterval);
-                            console.log('闪烁完成，开始清除光标。当前子节点数量：', titleElement.childNodes.length);
-                            
-                            // 彻底清除所有子节点（包括光标和空格）
-                            while (titleElement.firstChild) {
-                                titleElement.removeChild(titleElement.firstChild);
-                            }
-                            
-                            console.log('清除后子节点数量：', titleElement.childNodes.length);
-                            
-                            // 恢复原始文字
                             titleElement.textContent = originalText;
-                            console.log('打字机效果完成，光标已移除。最终文字：', titleElement.textContent);
                         }
                     }, 300);
                 }
-            }, 80); // 80ms 一个字
+            }, 80);
         }
 
         // 页面加载
@@ -1853,87 +1820,51 @@
                 }
             }
             
-            // 省略号动画
-            let dotCount = 0;
-            const dotInterval = setInterval(function() {
-                dotCount = (dotCount + 1) % 4;
-                let dots = '';
-                for (let i = 0; i < dotCount; i++) {
-                    dots += '.';
-                }
-                loadingText.textContent = 'Loading' + dots;
-            }, 400);
-            
-            // 延长 Loading 页显示时间，让用户欣赏下雨和云层效果
-            // 省略号动画会完整播放（0 秒 → 1.6 秒 → 2 秒清除）
-            console.log('背景图片数量：', backgrounds.length, '背景列表：', backgrounds);
-            
-            // 异步预加载背景图片（不阻塞）
-            backgrounds.forEach(function(src) {
-                const img = new Image();
-                img.src = src;
-                img.onload = function() {
-                    console.log('背景图片加载成功：', src);
-                };
-                img.onerror = function() {
-                    console.log('背景图片加载失败：', src);
-                };
-            });
-            
-            // 平板端 1 秒后隐藏 Loading 页（防止卡死）
-            const loadingTimeout = isTablet ? 1000 : 2000;
-            console.log('Loading 页显示时间：', loadingTimeout, 'ms');
-            
-            setTimeout(function() {
-                console.log('超时触发，隐藏 Loading 页');
-                
-                try {
-                    // 清除省略号动画
-                    if (dotInterval) {
-                        clearInterval(dotInterval);
+            // 平板端完全跳过省略号动画（防止卡死）
+            let dotInterval = null;
+            if (!isTablet) {
+                // 仅桌面端运行省略号动画
+                let dotCount = 0;
+                dotInterval = setInterval(function() {
+                    dotCount = (dotCount + 1) % 4;
+                    let dots = '';
+                    for (let i = 0; i < dotCount; i++) {
+                        dots += '.';
                     }
-                    
-                    // 隐藏 Loading 页
-                    loadingScreen.classList.add('hidden');
-                    
-                    // 显示主页
-                    mainScreen.classList.add('visible');
-                    
-                    // 设置初始背景
-                    currentBgIndex = 0;
-                    setBackground(currentBgIndex);
-                    
-                    // 0.3 秒后完全移除 Loading 页
-                    setTimeout(function() {
-                        try {
-                            loadingScreen.style.display = 'none';
-                            
-                            // 0.3 秒后启动打字机效果
-                            setTimeout(function() {
-                                console.log('启动打字机效果');
-                                typeWriterEffect();
-                            }, 300);
-                        } catch (e) {
-                            console.error('移除 Loading 页出错：', e);
-                        }
-                    }, 300);
-                } catch (e) {
-                    console.error('隐藏 Loading 页出错：', e);
-                }
-            }, loadingTimeout);
+                    loadingText.textContent = 'Loading' + dots;
+                }, 400);
+            } else {
+                // 平板端直接显示 "Loading..."
+                loadingText.textContent = 'Loading...';
+            }
             
-            // 2 秒强制保护（平板端）/ 4 秒强制保护（桌面端）
-            const forceTimeout = isTablet ? 2000 : 4000;
+            console.log('Loading 页显示时间：', isTablet ? '1 秒（平板）' : '2 秒（桌面）');
+            
+            // 单一超时控制（避免多个 setTimeout 冲突）
             setTimeout(function() {
-                console.log('强制保护触发！');
-                try {
-                    loadingScreen.style.display = 'none';
-                    mainScreen.classList.add('visible');
-                    setTimeout(typeWriterEffect, 300);
-                } catch (e) {
-                    console.error('强制保护出错：', e);
+                console.log('超时触发，开始清理');
+                
+                // 1. 清除省略号动画
+                if (dotInterval) {
+                    clearInterval(dotInterval);
+                    dotInterval = null;
                 }
-            }, forceTimeout);
+                
+                // 2. 完全移除 Loading 页（一步到位，避免过渡动画卡死）
+                loadingScreen.style.display = 'none';
+                
+                // 3. 显示主页
+                mainScreen.classList.add('visible');
+                
+                // 4. 设置背景
+                currentBgIndex = 0;
+                setBackground(currentBgIndex);
+                
+                // 5. 立即启动打字机效果（无延迟）
+                console.log('启动打字机效果');
+                typeWriterEffect();
+                
+            }, isTablet ? 1000 : 2000);
         });
 
         // 导航函数
