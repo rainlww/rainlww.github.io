@@ -100,15 +100,25 @@
         </details>
     </div>
     <script>
+        // 预加载图片
+        function preloadImage(url) {
+            const img = new Image();
+            img.src = url;
+        }
+        
         // 设备识别：只用屏幕宽度判断（768px 为界）
         function updateBackground() {
             const pageBg = document.getElementById('pageBg');
+            if (!pageBg) return;
+            
             if (window.innerWidth <= 768) {
                 // 手机：竖版背景
-                pageBg.style.backgroundImage = "url('ming-yuluo-1-opt.jpg')";
+                preloadImage('ming-yuluo-1-opt.jpg');
+                pageBg.style.background = "url('ming-yuluo-1-opt.jpg') center 30%/cover no-repeat #fff";
             } else {
                 // 平板/桌面：横版背景
-                pageBg.style.backgroundImage = "url('ming-yuluo-landscape-opt.jpg')";
+                preloadImage('ming-yuluo-landscape-opt.jpg');
+                pageBg.style.background = "url('ming-yuluo-landscape-opt.jpg') center 30%/cover no-repeat #fff";
             }
         }
         
