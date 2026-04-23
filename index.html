@@ -1516,6 +1516,7 @@
 
             <div class="footer">
                 <p data-i18n="home-footer1">雨落的世界 · 由 伊斯派菈 制作</p>
+                <p style="margin-top: 8px; cursor: pointer; color: #666;" onclick="openXiaoyudiModal()" data-i18n="home-footer-maintain">｜ 落下的小雨滴维护 ｜ 有问题请勿找雨落</p>
                 <p style="margin-top: 8px;" data-i18n="home-footer2">每一个世界，都是一段独特的旅程</p>
             </div>
             
@@ -1557,6 +1558,23 @@
             <div class="secret-modal-buttons">
                 <button class="secret-modal-btn cancel" onclick="closeSecretModalDirect()" data-i18n="home-secret-modal-return">返回</button>
                 <button class="secret-modal-btn" onclick="submitSecretCode()" data-i18n="home-secret-modal-confirm">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 小雨滴维护弹窗 -->
+    <div class="secret-modal" id="xiaoyudiModal" onclick="closeXiaoyudiModal(event)">
+        <div class="secret-modal-content">
+            <span class="secret-modal-close" onclick="closeXiaoyudiModal(event)">×</span>
+            <h3 class="secret-modal-title">✨ 小雨滴上岗啦！</h3>
+            <div class="secret-modal-text" style="text-align: left; line-height: 1.8; padding: 20px;">
+                伊斯姐回圣拉姆特了。<br>
+                而且总不能让客人帮忙干活吧。<br>
+                于是！小雨滴！上岗啦！<br><br>
+                —— 落下的小雨滴 (≧∇≦) ﾉ
+            </div>
+            <div class="secret-modal-buttons">
+                <button class="secret-modal-btn" onclick="closeXiaoyudiModalDirect()" style="background: linear-gradient(135deg, #87CEEB, #B0E0E6);">知道啦～！</button>
             </div>
         </div>
     </div>
@@ -2009,6 +2027,22 @@
 
         function closeSecretModalDirect() {
             document.getElementById('secretModal').classList.remove('active');
+        }
+
+        // 5. 小雨滴维护弹窗
+        function openXiaoyudiModal() {
+            const modal = document.getElementById('xiaoyudiModal');
+            modal.classList.add('active');
+        }
+
+        function closeXiaoyudiModalDirect() {
+            document.getElementById('xiaoyudiModal').classList.remove('active');
+        }
+
+        function closeXiaoyudiModal(event) {
+            if (event.target.id === 'xiaoyudiModal') {
+                document.getElementById('xiaoyudiModal').classList.remove('active');
+            }
         }
 
         function closeSecretModal(event) {
