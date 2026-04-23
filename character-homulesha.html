@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1a1a1a; line-height: 1.7; min-height: 100vh; position: relative; font-weight: 500; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; opacity: 0.25; z-index: -1; }
+        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; opacity: 0.15; z-index: -1; }
         .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
         .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,245,245,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
         .back-link:hover { color: #7a6a7a; background: rgba(232,232,232,0.9); }
@@ -38,9 +38,9 @@
     <div class="container">
         <a href="archive.html" class="back-link">← 返回档案馆</a>
         <h1 class="page-title" id="pageTitle">荷穆勒夏</h1>
-        <div style="margin: 20px 0; padding: 15px 20px; background: rgba(245,245,245,0.8); border-left: 3px solid #9a7a8a; border-radius: 4px;">
-            <div style="font-size: 0.9em; color: #9a7a8a; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px;">「 引言 」</div>
-            <div style="font-size: 0.95em; color: #666; font-style: italic; line-height: 1.8;">
+        <div style="margin: 15px 0; padding: 12px 16px; background: rgba(250,250,250,0.6); border-left: 2px solid #c0a0b0; border-radius: 3px;">
+            <div style="font-size: 0.85em; color: #a08090; font-weight: 600; margin-bottom: 8px; letter-spacing: 1.5px;">「 引言 」</div>
+            <div style="font-size: 0.9em; color: #777; font-style: italic; line-height: 1.7;">
                 <div>旧日种种已成过往，如今的秩序混乱不堪。</div>
                 <div>而"侍者"，早已剩下空名。</div>
                 <div>若是想恢复辉煌——抑或是开创新的时代——</div>
@@ -183,14 +183,19 @@
             }
         }
         
-        // 初始化
+        // 立即初始化
         updateBackground();
         
-        // 窗口大小改变时重新检测（防抖）
+        // 窗口大小改变时重新检测（防抖 100ms）
         let resizeTimer;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(updateBackground, 250);
+            resizeTimer = setTimeout(updateBackground, 100);
+        });
+        
+        // 页面加载完成后再次确保背景正确
+        window.addEventListener('load', function() {
+            updateBackground();
         });
     </script>
 <script>
