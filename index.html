@@ -500,6 +500,19 @@
             background: #fff;
             margin-left: 5px;
             vertical-align: middle;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* 平板端隐藏光标防止双光标 */
+        @media (max-width: 768px) {
+            .title .cursor {
+                display: none !important;
+            }
         }
 
         .subtitle {
@@ -1806,6 +1819,16 @@
             }, 80);
         }
 
+        // 预加载背景图片（防止加载慢）
+        function preloadBackgrounds() {
+            const allBackgrounds = [...desktopBackgrounds, ...mobileBackgrounds];
+            allBackgrounds.forEach(function(bg) {
+                const img = new Image();
+                img.src = bg;
+            });
+            console.log('背景预加载完成');
+        }
+
         // 页面加载
         window.addEventListener('DOMContentLoaded', function() {
             console.log('平板端检测：', window.innerWidth);
@@ -1813,12 +1836,19 @@
             const mainScreen = document.getElementById('main-screen');
             const loadingText = document.getElementById('loadingText');
             
+            // 预加载背景
+            preloadBackgrounds();
+            
             // 显示随机 Tips
             showRandomTips();
+            
+            // 检查是否是首次访问
+            const hasVisited = sessionStorage.getItem('hasVisited');
             
             // 平板端简化动画（防止卡死）
             const isTablet = window.innerWidth <= 1024;
             console.log('设备检测：', window.innerWidth, isTablet ? '平板/手机' : '桌面');
+            console.log('是否首次访问：', !hasVisited);
             
             if (!isTablet) {
                 // 桌面端：完整动画
@@ -1840,8 +1870,8 @@
             
             // 平板端完全跳过省略号动画（防止卡死）
             let dotInterval = null;
-            if (!isTablet) {
-                // 仅桌面端运行省略号动画
+            if (!isTablet && !hasVisited) {
+                // 仅桌面端 + 首次访问运行省略号动画
                 let dotCount = 0;
                 dotInterval = setInterval(function() {
                     dotCount = (dotCount + 1) % 4;
@@ -1852,8 +1882,18 @@
                     loadingText.textContent = 'Loading' + dots;
                 }, 400);
             } else {
-                // 平板端直接显示 "Loading..."
+                // 平板端或非首次访问直接显示 "Loading..."
                 loadingText.textContent = 'Loading...';
+            }
+            
+            // 非首次访问跳过 Loading 直接显示主页
+            if (hasVisited) {
+                console.log('非首次访问，跳过 Loading');
+                loadingScreen.style.display = 'none';
+                mainScreen.classList.add('visible');
+                setBackground(currentBgIndex);
+                typeWriterEffect();
+                return;
             }
             
             console.log('Loading 页显示时间：', isTablet ? '1 秒（平板）' : '2 秒（桌面）');
@@ -1868,17 +1908,20 @@
                     dotInterval = null;
                 }
                 
-                // 2. 完全移除 Loading 页（一步到位，避免过渡动画卡死）
+                // 2. 标记已访问（本次会话不再显示 Loading）
+                sessionStorage.setItem('hasVisited', 'true');
+                
+                // 3. 完全移除 Loading 页（一步到位，避免过渡动画卡死）
                 loadingScreen.style.display = 'none';
                 
-                // 3. 显示主页
+                // 4. 显示主页
                 mainScreen.classList.add('visible');
                 
-                // 4. 设置背景
+                // 5. 设置背景
                 currentBgIndex = 0;
                 setBackground(currentBgIndex);
                 
-                // 5. 立即启动打字机效果（无延迟）
+                // 6. 立即启动打字机效果（无延迟）
                 console.log('启动打字机效果');
                 typeWriterEffect();
                 
