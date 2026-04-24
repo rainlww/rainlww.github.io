@@ -1795,7 +1795,19 @@
                     tags.push(...shuffleArray([...emotionPool]).slice(0, 3));
                     
                     tags = [...new Set(tags)].sort(() => 0.5 - Math.random());
-                    outputBox.value = tags.join(', ');
+                    
+                    // 输出结果（纯文本 + 可点击标签）
+                    const outputText = document.getElementById('outputText');
+                    const outputTags = document.getElementById('outputBox');
+                    
+                    // 纯文本用于复制
+                    outputText.value = tags.join(', ');
+                    
+                    // 可点击标签用于查看
+                    outputTags.innerHTML = tags.map(tag => 
+                        `<a href="https://safebooru.donmai.us/posts?tags=${encodeURIComponent(tag)}" target="_blank" class="tag-chip">${tag}</a>`
+                    ).join('');
+                    
                     generateBtn.classList.add('hidden');
                     resultBtns.classList.remove('hidden');
                 }
