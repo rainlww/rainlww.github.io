@@ -498,19 +498,8 @@
 
         <!-- 人物卡片网格 -->
         <div class="characters-grid" id="charactersGrid">
-            <!-- 人物卡片 1: 明雨落 -->
-            <div class="character-card" onclick="openCharacter('ming-yuluo')">
-                <div class="character-card-cover">
-                    <img src="ming-yuluo-1-opt.jpg" loading="lazy" alt="明雨落">
-                </div>
-                <div class="character-card-info">
-                    <div class="character-card-name">明雨落</div>
-                    <div class="character-card-tags">
-                        <span class="character-card-tag">0601 号观测站</span>
-                        <span class="character-card-tag">明雨落</span>
-                    </div>
-                </div>
-            </div>
+            <!-- 人物卡片由 JavaScript 动态生成 -->
+        </div>
             
             <!-- 人物卡片 2: 雨落 -->
             <div class="character-card" onclick="openCharacter('yuluo')">
@@ -518,7 +507,7 @@
                     <img src="yuluo-cover-opt.jpg" loading="lazy" alt="雨落">
                 </div>
                 <div class="character-card-info">
-                    <div class="character-card-name">雨落</div>
+                    <div class="character-card-name">${formatName("雨落")}</div>
                     <div class="character-card-tags">
                         <span class="character-card-tag">明雨落</span>
                     </div>
@@ -531,7 +520,7 @@
                     <div class="placeholder">📷</div>
                 </div>
                 <div class="character-card-info">
-                    <div class="character-card-name">苏甘泉</div>
+                    <div class="character-card-name">${formatName("苏甘泉")}</div>
                     <div class="character-card-tags">
                         <span class="character-card-tag">0601 号观测站</span>
                         <span class="character-card-tag">苏甘泉</span>
@@ -545,7 +534,7 @@
                     <img src="homulesha-cover-new-opt.jpg" loading="lazy" alt="荷穆勒夏">
                 </div>
                 <div class="character-card-info">
-                    <div class="character-card-name">荷穆勒夏</div>
+                    <div class="character-card-name">${formatName("荷穆勒夏")}</div>
                     <div class="character-card-tags">
                         <span class="character-card-tag">荷穆勒</span>
                         <span class="character-card-tag">明雨落</span>
@@ -559,7 +548,7 @@
                     <div class="placeholder">📷</div>
                 </div>
                 <div class="character-card-info">
-                    <div class="character-card-name">明落月</div>
+                    <div class="character-card-name">${formatName("明落月")}</div>
                     <div class="character-card-tags">
                         <span class="character-card-tag">0601 号观测站</span>
                         <span class="character-card-tag">明落月</span>
@@ -573,7 +562,7 @@
                     <div class="placeholder">📷</div>
                 </div>
                 <div class="character-card-info">
-                    <div class="character-card-name">明循月</div>
+                    <div class="character-card-name">${formatName("明循月")}</div>
                     <div class="character-card-tags">
                         <span class="character-card-tag">0601 号观测站</span>
                         <span class="character-card-tag">明循月</span>
@@ -587,7 +576,7 @@
                     <div class="placeholder">📷</div>
                 </div>
                 <div class="character-card-info">
-                    <div class="character-card-name">明泉月</div>
+                    <div class="character-card-name">${formatName("明泉月")}</div>
                     <div class="character-card-tags">
                         <span class="character-card-tag">0601 号观测站</span>
                         <span class="character-card-tag">明泉月</span>
@@ -601,7 +590,7 @@
                     <div class="placeholder">📷</div>
                 </div>
                 <div class="character-card-info">
-                    <div class="character-card-name">长明</div>
+                    <div class="character-card-name">${formatName("长明")}</div>
                     <div class="character-card-tags">
                         <span class="character-card-tag">0601 号观测站</span>
                         <span class="character-card-tag">长明</span>
@@ -615,7 +604,7 @@
                     <div class="placeholder">📷</div>
                 </div>
                 <div class="character-card-info">
-                    <div class="character-card-name">轻若</div>
+                    <div class="character-card-name">${formatName("轻若")}</div>
                     <div class="character-card-tags">
                         <span class="character-card-tag">0601 号观测站</span>
                         <span class="character-card-tag">轻若</span>
@@ -629,7 +618,7 @@
                     <div class="placeholder">📷</div>
                 </div>
                 <div class="character-card-info">
-                    <div class="character-card-name">明雨落</div>
+                    <div class="character-card-name">${formatName("明雨落")}</div>
                     <div class="character-card-tags">
                         <span class="character-card-tag">捏捏茶馆</span>
                         <span class="character-card-tag">明雨落</span>
@@ -643,7 +632,7 @@
                     <div class="placeholder">📷</div>
                 </div>
                 <div class="character-card-info">
-                    <div class="character-card-name">荷穆勒思</div>
+                    <div class="character-card-name">${formatName("荷穆勒思")}</div>
                     <div class="character-card-tags">
                         <span class="character-card-tag">环城</span>
                         <span class="character-card-tag">荷穆勒</span>
@@ -872,9 +861,41 @@
             return name;
         }
 
+        // 渲染人物卡片
+        function renderCards() {
+            const grid = document.getElementById('charactersGrid');
+            if (!grid) return;
+            
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const filteredChars = characters.filter(char => {
+                if (selectedTags.length > 0) {
+                    return selectedTags.every(tag => char.tags.includes(tag));
+                }
+                if (query) {
+                    return char.name.toLowerCase().includes(query) || char.tags.some(tag => tag.toLowerCase().includes(query));
+                }
+                return true;
+            });
+
+            grid.innerHTML = filteredChars.map(char => `
+                <div class="character-card" onclick="openCharacter('${char.id}')">
+                    <div class="character-card-cover">
+                        ${char.cover ? `<img src="${char.cover}" loading="lazy" alt="${char.name}">` : '<div class="placeholder">📷</div>'}
+                    </div>
+                    <div class="character-card-info">
+                        <div class="character-card-name">${formatName(char.name)}</div>
+                        <div class="character-card-tags">
+                            ${char.tags.map(tag => `<span class="character-card-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         // 初始化
         function init() {
             renderFilterTags();
+            renderCards();
         }
 
         // 渲染筛选标签
