@@ -30,12 +30,13 @@
             text-align: center;
             margin-bottom: 30px;
             padding: 30px 20px;
-            background: linear-gradient(135deg, #f5e6f0 0%, #e8d5e8 100%);
+            background: linear-gradient(135deg, #FFF9C4 0%, #E3F2FD 100%);
             border-radius: 8px;
         }
 
         .page-title {
             font-size: 2.5em;
+            font-family: 'Comic Sans MS', 'Chalkboard', 'Arial Rounded MT Bold', 'Microsoft YaHei', sans-serif;
             color: #5a4a5a;
             letter-spacing: 3px;
             margin-bottom: 10px;
@@ -124,6 +125,137 @@
             font-style: italic;
         }
 
+        /* 视图切换按钮 - PRTS 风格 */
+        .view-toggles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        .view-toggle-btn {
+            padding: 10px 28px;
+            border: none;
+            background: #2d2d2d;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .view-toggle-btn:hover {
+            background: #404040;
+        }
+        .view-toggle-btn.active {
+            background: #3ba8c7;
+        }
+
+        /* 表格视图 - PRTS Wiki 横向卡片风格 */
+        .characters-table {
+            display: none;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 15px;
+            margin-top: 20px;
+        }
+        .characters-table.show {
+            display: table;
+        }
+        .characters-table tbody tr {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .characters-table tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .characters-table td {
+            padding: 15px;
+            border-top: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .characters-table td:first-child {
+            border-left: 1px solid #f0f0f0;
+            border-radius: 8px 0 0 8px;
+        }
+        .characters-table td:last-child {
+            border-right: 1px solid #f0f0f0;
+            border-radius: 0 8px 8px 0;
+        }
+        .table-row-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .table-avatar {
+            width: 100px;
+            height: 100px;
+            flex-shrink: 0;
+            overflow: hidden;
+            background: #f5f5f5;
+        }
+        .table-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .table-avatar .placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            color: #ccc;
+            background: #f5f5f5;
+        }
+        .table-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .table-header {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .table-name {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #333;
+        }
+        .table-number {
+            font-size: 0.85em;
+            color: #666;
+            font-family: monospace;
+        }
+        .table-details {
+            display: inline-grid;
+            grid-template-columns: auto auto;
+            gap: 8px 15px;
+            background: #f5f5f5;
+            padding: 10px 15px;
+            border-radius: 6px;
+        }
+        .table-detail-label {
+            font-size: 0.8em;
+            color: #999;
+            font-weight: 500;
+        }
+        .table-detail-value {
+            font-size: 0.9em;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* 立绘视图 */
+        .characters-grid.hide {
+            display: none;
+        }
+
         /* 人物卡片网格 - PRTS 风格 */
         .characters-grid {
             display: grid;
@@ -165,7 +297,7 @@
             width: 100%;
             padding-top: 140%; /* 竖版比例 */
             position: relative;
-            background: linear-gradient(135deg, #f5e6f0 0%, #e8d5e8 100%);
+            background: linear-gradient(135deg, #FFF9C4 0%, #E3F2FD 100%);
             overflow: hidden;
         }
 
@@ -256,8 +388,58 @@
             border-top: 1px solid #e0e0e0;
             margin-top: 40px;
         }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 1.8em;
+                letter-spacing: 0;
+                word-break: keep-all;
+                white-space: normal;
+            }
+            .page-subtitle {
+                font-size: 1em;
+            }
+            .characters-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            .character-card-tag {
+                font-size: 0.65em;
+                padding: 2px 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.3em;
+                letter-spacing: 0;
+                word-break: keep-all;
+                white-space: normal;
+            }
+            .page-subtitle {
+                font-size: 0.9em;
+            }
+            .characters-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .character-card-info {
+                padding: 8px;
+            }
+            .character-card-name {
+                font-size: 0.9em;
+            }
+            .filter-tags {
+                gap: 8px;
+            }
+            .filter-tag {
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
+        }
     </style>
-</head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"></head>
 <body>
     <div class="container">
         <!-- 页面头部 -->
@@ -271,9 +453,27 @@
             <div class="search-box">
                 <input type="text" class="search-input" id="searchInput" placeholder="搜索角色或标签…" oninput="handleSearch()">
             </div>
-            <div class="filter-tags" id="filterTags">
-                <!-- 标签由 JavaScript 动态生成 -->
+            <!-- 按人物查找 -->
+            <div class="filter-section">
+                <div class="filter-section-title">按人物查找</div>
+                <div class="filter-tags" id="characterFilterTags">
+                    <!-- 人物标签由 JavaScript 动态生成 -->
+                </div>
             </div>
+
+            <!-- 按所属查找 -->
+            <div class="filter-section">
+                <div class="filter-section-title">按所属查找</div>
+                <div class="filter-tags" id="affiliationFilterTags">
+                    <!-- 所属标签由 JavaScript 动态生成 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 空状态提示 -->
+        <div id="emptyState" style="display: none; text-align: center; padding: 60px 20px; color: #999;">
+            <p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p>
+            <p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>
         </div>
 
         <!-- 荷穆勒提示 -->
@@ -281,12 +481,24 @@
             <p class="homulesha-notice-text">"荷穆勒"之名，意味着重重苦难。</p>
         </div>
 
+        <!-- 视图切换 -->
+        <div class="view-toggles">
+            <button class="view-toggle-btn active" onclick="switchView('card')">立绘视图</button>
+            <button class="view-toggle-btn" onclick="switchView('table')">表格视图</button>
+        </div>
+
+        <!-- 表格视图 -->
+        <table class="characters-table" id="charactersTable">
+            <tbody id="charactersTableBody">
+            </tbody>
+        </table>
+
         <!-- 人物卡片网格 -->
         <div class="characters-grid" id="charactersGrid">
             <!-- 人物卡片 1: 明雨落 -->
             <div class="character-card" onclick="openCharacter('ming-yuluo')">
                 <div class="character-card-cover">
-                    <div class="placeholder">📷</div>
+                    <img src="ming-yuluo-1-opt.jpg" loading="lazy" alt="明雨落">
                 </div>
                 <div class="character-card-info">
                     <div class="character-card-name">明雨落</div>
@@ -300,7 +512,7 @@
             <!-- 人物卡片 2: 雨落 -->
             <div class="character-card" onclick="openCharacter('yuluo')">
                 <div class="character-card-cover">
-                    <div class="placeholder">📷</div>
+                    <img src="yuluo-cover-opt.jpg" loading="lazy" alt="雨落">
                 </div>
                 <div class="character-card-info">
                     <div class="character-card-name">雨落</div>
@@ -310,10 +522,24 @@
                 </div>
             </div>
             
-            <!-- 人物卡片 3: 荷穆勒夏 -->
+            <!-- 人物卡片 3: 苏甘泉 -->
+            <div class="character-card" onclick="openCharacter('su-ganquan')">
+                <div class="character-card-cover">
+                    <div class="placeholder">📷</div>
+                </div>
+                <div class="character-card-info">
+                    <div class="character-card-name">苏甘泉</div>
+                    <div class="character-card-tags">
+                        <span class="character-card-tag">0601 号观测站</span>
+                        <span class="character-card-tag">苏甘泉</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 人物卡片 4: 荷穆勒夏 -->
             <div class="character-card" onclick="openCharacter('homulesha')">
                 <div class="character-card-cover">
-                    <img src="homulesha-cover-opt.jpg" alt="荷穆勒夏">
+                    <img src="homulesha-cover-new-opt.jpg" loading="lazy" alt="荷穆勒夏">
                 </div>
                 <div class="character-card-info">
                     <div class="character-card-name">荷穆勒夏</div>
@@ -340,42 +566,169 @@
         const characters = [
             {
                 id: "ming-yuluo",
+                number: "0601-M01",
                 name: "明雨落",
                 cover: "ming-yuluo-1-opt.jpg",
                 tags: ["0601 号观测站", "明雨落"],
                 nietaLink: "",
                 description: "（简介待填写）",
-                related: []
+                related: [],
+                gender: "女",
+                affiliation: "0601 号观测站"
             },
             {
                 id: "yuluo",
+                number: "0601-M02",
                 name: "雨落",
-                cover: "",
+                cover: "yuluo-cover-opt.jpg",
                 tags: ["明雨落"],
                 nietaLink: "",
                 description: "（简介待填写）",
-                related: []
+                related: [],
+                gender: "女",
+                affiliation: "黄昏雪会馆"
             },
             {
                 id: "homulesha",
+                number: "0601-M10",
                 name: "荷穆勒夏",
-                cover: "homulesha-cover-opt.jpg",
+                cover: "homulesha-cover-new-opt.jpg",
                 tags: ["荷穆勒", "明雨落"],
                 nietaLink: "",
                 description: "（简介待填写）",
-                related: []
+                related: [],
+                gender: "女",
+                affiliation: "圣拉姆特"
+            },
+            {
+                id: "su-ganquan",
+                number: "0601-S01",
+                name: "苏甘泉",
+                cover: "",
+                tags: ["0601 号观测站", "苏甘泉"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "男",
+                affiliation: "0601 号观测站"
+            },
+            {
+                id: "ming-luoyue",
+                number: "0601-Ly01",
+                name: "明落月",
+                cover: "",
+                tags: ["0601 号观测站", "明落月"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "0601 号观测站"
+            },
+            {
+                id: "ming-xunyue",
+                number: "0601-Xy01",
+                name: "明循月",
+                cover: "",
+                tags: ["0601 号观测站", "明循月"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "0601 号观测站"
+            },
+            {
+                id: "ming-quanyue",
+                number: "0601-Qy01",
+                name: "明泉月",
+                cover: "",
+                tags: ["0601 号观测站", "明泉月"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "0601 号观测站"
+            },
+            {
+                id: "chang-ming",
+                number: "0601-Cm01",
+                name: "长明",
+                cover: "",
+                tags: ["0601 号观测站", "长明"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "男",
+                affiliation: "0601 号观测站"
+            },
+            {
+                id: "qing-ruo",
+                number: "0601-Qr01",
+                name: "轻若",
+                cover: "",
+                tags: ["0601 号观测站", "轻若"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "0601 号观测站"
+            },
+            {
+                id: "ming-yuluo-tea",
+                number: "0601-M03",
+                name: "明雨落",
+                cover: "",
+                tags: ["捏捏茶馆", "明雨落"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "捏捏茶馆"
+            },
+            {
+                id: "homulesi",
+                number: "0601-M09",
+                name: "荷穆勒思",
+                cover: "",
+                tags: ["环城", "荷穆勒", "明雨落"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "环城"
+            },
+            {
+                id: "youyexing",
+                number: "0601-M03",
+                name: ""幽夜行"",
+                cover: "",
+                tags: ["维护者协会", "明雨落"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "维护者协会"
+            },
+            {
+                id: "wumingqing",
+                number: "0601-M04",
+                name: ""无名卿"",
+                cover: "",
+                tags: ["槐安公寓", "明雨落"],
+                nietaLink: "",
+                description: "（简介待填写）",
+                related: [],
+                gender: "女",
+                affiliation: "槐安公寓"
             }
         ];
 
         // 预置标签
-        const presetTags = [
-            "0601 号观测站",
-            "明雨落",
-            "明落月",
-            "明循月",
-            "明泉月",
-            "荷穆勒"
-        ];
+        // 按人物查找标签
+        const characterTags = ["明雨落", "苏甘泉", "明循月", "明落月", "明泉月", "长明", "轻若", "荷穆勒"];
+        // 按所属查找标签
+        const affiliationTags = ["0601 号观测站", "捏捏茶馆", "维护者协会", "圣拉姆特"];
+        
+        const presetTags = [...characterTags, ...affiliationTags];
 
         // 当前选中的标签
         let selectedTags = [];
@@ -420,6 +773,8 @@
         // 筛选人物卡片
         function filterCharacters() {
             const cards = document.querySelectorAll('.character-card');
+            let hasResults = false;
+
             cards.forEach(card => {
                 const onclick = card.getAttribute('onclick');
                 if (!onclick) return;
@@ -431,12 +786,43 @@
 
                 if (selectedTags.length === 0) {
                     card.style.display = 'block';
+                    hasResults = true;
                     return;
                 }
 
-                const hasSelectedTag = selectedTags.some(tag => char.tags.includes(tag));
-                card.style.display = hasSelectedTag ? 'block' : 'none';
+                // 交集筛选：必须包含所有选中的标签
+                const hasAllTags = selectedTags.every(tag => char.tags.includes(tag));
+                if (hasAllTags) {
+                    card.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    card.style.display = 'none';
+                }
             });
+
+            // 更新表格视图
+            renderTable();
+
+            // 显示/隐藏空状态提示
+            const emptyState = document.getElementById('emptyState');
+            if (emptyState) {
+                if (!hasResults) {
+                    emptyState.style.display = 'block';
+                    // 检查是否有选中的标签不存在于任何角色中
+                    const allTags = characters.flatMap(c => c.tags);
+                    const hasUnaddedTag = selectedTags.some(tag => !allTags.includes(tag));
+                    
+                    if (hasUnaddedTag) {
+                        // 有标签尚未添加人物
+                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">啊哦……轻若还没有添加哦……</p>';
+                    } else {
+                        // 交集为空
+                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>';
+                    }
+                } else {
+                    emptyState.style.display = 'none';
+                }
+            }
         }
 
         // 更新荷穆勒提示
@@ -447,6 +833,65 @@
             } else {
                 notice.classList.remove('show');
             }
+        }
+
+        // 视图切换
+        function switchView(view) {
+            const grid = document.getElementById('charactersGrid');
+            const table = document.getElementById('charactersTable');
+            const btns = document.querySelectorAll('.view-toggle-btn');
+            
+            if (view === 'card') {
+                grid.classList.remove('hide');
+                table.classList.remove('show');
+                btns[0].classList.add('active');
+                btns[1].classList.remove('active');
+            } else {
+                grid.classList.add('hide');
+                table.classList.add('show');
+                btns[0].classList.remove('active');
+                btns[1].classList.add('active');
+                renderTable();
+            }
+        }
+
+        // 渲染表格
+        function renderTable() {
+            const tbody = document.getElementById('charactersTableBody');
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const filteredChars = characters.filter(char => {
+                if (selectedTags.length > 0) {
+                    return selectedTags.every(tag => char.tags.includes(tag));
+                }
+                if (query) {
+                    return char.name.toLowerCase().includes(query) || char.tags.some(tag => tag.toLowerCase().includes(query));
+                }
+                return true;
+            });
+
+            tbody.innerHTML = filteredChars.map(char => `
+                <tr onclick="openCharacter('${char.id}')" style="cursor: pointer;">
+                    <td>
+                        <div class="table-row-content">
+                            <div class="table-avatar">
+                                ${char.cover ? `<img src="${char.cover}" loading="lazy" alt="${char.name}">` : '<div class="placeholder">📷</div>'}
+                            </div>
+                            <div class="table-info">
+                                <div class="table-header">
+                                    <span class="table-name">${char.name}</span>
+                                    <span class="table-number">${char.number || char.id}</span>
+                                </div>
+                                <div class="table-details">
+                                    <span class="table-detail-label">性别</span>
+                                    <span class="table-detail-value">${char.gender || "未知"}</span>
+                                    <span class="table-detail-label">所属</span>
+                                    <span class="table-detail-value">${char.affiliation || "未知"}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
         }
 
         // 搜索处理
@@ -482,3 +927,8 @@
     </script>
 </body>
 </html>
+<!-- force refresh -->
+<!-- v3 -->
+<!--雨落所属-->
+<!--编号修复-->
+<!--苏甘泉性别-->
