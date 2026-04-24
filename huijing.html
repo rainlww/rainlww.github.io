@@ -1820,10 +1820,34 @@
         // ==================== 复制结果 ====================
         function copyResult() {
             const outputText = document.getElementById('outputText');
-            outputText.select();
-            document.execCommand('copy');
+            const text = outputText.value;
             
-            showToast('已复制到剪贴板！');
+            // 现代浏览器 API
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showToast('已复制到剪贴板！');
+                }).catch(function(err) {
+                    // 降级方案
+                    fallbackCopy(text);
+                });
+            } else {
+                // 降级方案
+                fallbackCopy(text);
+            }
+            
+            function fallbackCopy(text) {
+                const tempInput = document.createElement('textarea');
+                tempInput.value = text;
+                tempInput.style.position = 'fixed';
+                tempInput.style.top = '0';
+                tempInput.style.left = '0';
+                tempInput.style.opacity = '0';
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                showToast('已复制到剪贴板！');
+            }
         }
 
         // ==================== 重制页面 ====================
