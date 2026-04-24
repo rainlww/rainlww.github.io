@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>捏图的百科全书——Neta 创作完全指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 50%, #A5D6A7 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-size: 2.5em;
+            color: #2E7D32;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #388E3C;
+            line-height: 1.8;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .resource-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .resource-card h3 {
+            color: #2E7D32;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .resource-card p {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .resource-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #4CAF50, #66BB6A);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .resource-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            background: linear-gradient(135deg, #66BB6A, #81C784);
+        }
+
+        .tag-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .tag-list li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #e0e0e0;
+            font-size: 0.9em;
+        }
+
+        .tag-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tag-list a {
+            color: #2E7D32;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .tag-list a:hover {
+            color: #4CAF50;
+            text-decoration: underline;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        .back-link a {
+            color: #2E7D32;
+            text-decoration: none;
+            padding: 12px 30px;
+            background: rgba(46, 125, 50, 0.1);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .back-link a:hover {
+            background: rgba(46, 125, 50, 0.2);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+            .title {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">📚 捏图的百科全书</h1>
+            <p class="subtitle">Neta 创作完全指南 · 从 tag 搭配到画风解析<br>收集自半月残夏等大佬的宝贵经验</p>
+        </div>
+
+        <div class="resource-grid">
+            <!-- Tag 工具 -->
+            <div class="resource-card">
+                <h3>🏷️ Tag 查询工具</h3>
+                <p>快速查找、生成、转换 tag，让创作更高效</p>
+                <ul class="tag-list">
+                    <li><a href="https://safebooru.donmai.us/" target="_blank">Safebooru</a> - 支持中文搜索 tag，常见 tag 搭配</li>
+                    <li><a href="https://tags.novelai.dev/" target="_blank">D 站 tag 分类</a> - 系统的 tag 分类查询</li>
+                    <li><a href="https://wolfchen.top/tag/" target="_blank">Tag 生成器</a> - 懒人 tag 包生成</li>
+                    <li><a href="https://aitag.top/" target="_blank">魔咒百科词典</a> - tag 百科查询</li>
+                    <li><a href="https://smilingwolf-wd-tagger.hf.space/" target="_blank">图片转 tag</a> - 上传图片自动识别 tag</li>
+                </ul>
+            </div>
+
+            <!-- 角色/画师预览 -->
+            <div class="resource-card">
+                <h3>👥 角色与画师预览</h3>
+                <p>20,000+ 角色和画师的预览图与提示词</p>
+                <ul class="tag-list">
+                    <li><a href="https://www.downloadmost.com/NoobAI-XL/danbooru-character/" target="_blank">Danbooru 角色</a> - 20,000+ 角色预览</li>
+                    <li><a href="https://www.downloadmost.com/NoobAI-XL/danbooru-artist/" target="_blank">Danbooru 画师</a> - 6,000+ 画师风格</li>
+                    <li><a href="https://www.downloadmost.com/NoobAI-XL/e621-artist/" target="_blank">E621 画师</a> - 4,000+ 画师预览</li>
+                    <li><a href="https://www.downloadmost.com/NoobAI-XL/e621-character/" target="_blank">E621 角色</a> - 3,000+ 角色预览</li>
+                </ul>
+            </div>
+
+            <!-- 画风工具 -->
+            <div class="resource-card">
+                <h3>🎨 画风与灵感</h3>
+                <p>随机画师串、提示词工具，激发创作灵感</p>
+                <ul class="tag-list">
+                    <li><a href="https://tera-dark.github.io/artist-generator/" target="_blank">随机画师串生成器</a> - 尝试新风格</li>
+                    <li><a href="https://prompt.newzone.top/app/zh" target="_blank">西西</a> - 提示词创作工具</li>
+                    <li><a href="https://nieta-art.feishu.cn/wiki/RZAawlH2ci74qckRLRPc9tOynrb" target="_blank">捏他 Wiki</a> - 飞书知识库</li>
+                </ul>
+            </div>
+
+            <!-- 解构原典 -->
+            <div class="resource-card">
+                <h3>📖 解构原典</h3>
+                <p>深入学习 Neta 创作原理与技巧</p>
+                <ul class="tag-list">
+                    <li><a href="https://docs.qq.com/doc/DUWxNREplQkhsb0Jx" target="_blank">《奥术》三卷整合</a></li>
+                    <li><a href="https://docs.qq.com/doc/DR1Z4VkFEZGl4Sk9S" target="_blank">第一卷</a></li>
+                    <li><a href="https://docs.qq.com/doc/DR2RhUWJ0alZIdWZU" target="_blank">第二卷</a></li>
+                    <li><a href="https://docs.qq.com/doc/DR09neE1QbGJCb2JQ" target="_blank">第三卷</a></li>
+                    <li><a href="https://docs.qq.com/doc/DR0JBWm1VWGhZUGR2" target="_blank">第四卷</a></li>
+                    <li><a href="https://docs.qq.com/doc/DR25Xd1hSa1BXVnpx" target="_blank">第六卷</a></li>
+                </ul>
+            </div>
+
+            <!-- NAI3-500 画风实例 -->
+            <div class="resource-card">
+                <h3>✨ NAI3-500 画风实例</h3>
+                <p>实际案例学习，掌握画风精髓</p>
+                <ul class="tag-list">
+                    <li><a href="https://docs.qq.com/doc/DRFdnb01mQXVBUm12" target="_blank">上卷</a> - 基础画风实例</li>
+                    <li><a href="https://docs.qq.com/doc/DRGZTeElaQmVWTXRD" target="_blank">下卷</a> - 进阶画风实例</li>
+                </ul>
+            </div>
+
+            <!-- 绘境 -->
+            <div class="resource-card">
+                <h3>🌟 绘境标签生成器</h3>
+                <p>用标签绘制意境，用词语营造画面</p>
+                <p style="margin-top: 10px;">自动生成 Danbooru 标准格式的标签组合方案，支持主题输入和随机生成。</p>
+                <a href="huijing.html" class="resource-link" style="margin-top: 15px;">使用绘境 →</a>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="index.html">← 返回主页</a>
+        </div>
+    </div>
+</body>
+</html>

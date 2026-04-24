@@ -105,6 +105,39 @@
             cursor: text;
         }
 
+        /* 可点击标签样式 */
+        .output-tags {
+            min-height: 200px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-content: flex-start;
+        }
+
+        .tag-chip {
+            display: inline-block;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #F57F17, #F9A825);
+            color: #fff;
+            border-radius: 20px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-family: monospace;
+            white-space: nowrap;
+        }
+
+        .tag-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 127, 23, 0.4);
+            background: linear-gradient(135deg, #F9A825, #FBC02D);
+        }
+
+        .tag-chip:active {
+            transform: translateY(0);
+        }
+
         .btn {
             width: 100%;
             padding: 15px 30px;
@@ -220,10 +253,14 @@
             </div>
 
             <div class="output-section">
-                <textarea class="output-box" id="outputBox" readonly placeholder="点击"生成"按钮，生成专属词条..."></textarea>
-                <div class="format-tip">
-                    <strong>📝 格式说明：</strong> 输出为 Danbooru raw tag 格式，空格已自动转换为下划线（如 <code>blue_sky</code>），可直接用于 Neta 创作。
+                <div class="output-box output-tags" id="outputBox" placeholder="点击"生成"按钮，生成专属词条...">
+                    <div class="output-placeholder" style="color: #F9A825; opacity: 0.6; text-align: center; padding: 40px 20px;">点击"生成"按钮，生成专属词条...</div>
                 </div>
+                <div class="format-tip">
+                    <strong>📝 格式说明：</strong> 输出为 Danbooru raw tag 格式，空格已自动转换为下划线（如 <code>blue_sky</code>），可直接用于 Neta 创作。<br>
+                    <strong>🔗 点击标签：</strong> 点击任意标签可在 Safebooru 查看示例图
+                </div>
+                <textarea class="hidden" id="outputText" readonly></textarea>
             </div>
 
             <button class="btn btn-primary" id="generateBtn" onclick="generate()">✨ 生成</button>
@@ -268,32 +305,42 @@
 
         // ==================== 基础标签库（按【绘境】skill 规范） ====================
         const baseTags = {
-            // 一、质量词库
+            // 一、质量词库（扩展至 30+ 标签）
             quality: [
                 "masterpiece", "best_quality", "high_quality", "ultra-detailed",
                 "detailed", "intricate_details", "fine_details", "cinematic_lighting",
                 "HDR", "ray_tracing", "global_illumination", "volumetric_lighting",
                 "8k", "4k", "high_resolution", "professional", "award-winning",
-                "photorealistic", "anime_style", "digital_art", "illustration"
+                "photorealistic", "anime_style", "digital_art", "illustration",
+                "cel_shading", "watercolor", "oil_painting", "pencil_sketch",
+                "ink_drawing", "concept_art", "character_sheet", "official_art"
             ],
-            // 二、光影词库
+            // 二、光影词库（扩展至 35+ 标签）
             lighting: [
                 "cinematic_lighting", "soft_lighting", "dramatic_lighting", "natural_light",
                 "studio_lighting", "sunlight", "moonlight", "candlelight", "sunset",
                 "sunrise", "golden_hour", "blue_hour", "firelight", "lamp_light",
                 "rim_light", "god_rays", "lens_flare", "subsurface_scattering",
-                "ambient_occlusion", "bloom", "light_particles"
+                "ambient_occlusion", "bloom", "light_particles", "volumetric_fog",
+                "chiaroscuro", "backlighting", "side_lighting", "top_lighting",
+                "underlighting", "neon_glow", "bioluminescence", "magic_glow",
+                "light_shafts", "caustics", "reflected_light", "shadow", "silhouette"
             ],
-            // 三、动作词库
+            // 三、动作词库（扩展至 50+ 标签）
             action: [
                 "standing", "sitting", "lying", "kneeling", "walking", "running", "jumping",
                 "hand_up", "hands_on_hips", "arms_crossed", "holding", "reaching_out",
                 "waving", "clapping", "head_tilt", "looking_away", "looking_down",
                 "looking_up", "head_back", "smile", "closed_eyes", "closed_mouth",
                 "parted_lips", "one_eye_closed", "open_mouth", "blush", "tears",
-                "surprised", "serious", "confident", "shy"
+                "surprised", "serious", "confident", "shy", "laughing", "crying",
+                "sleeping", "eating", "drinking", "reading", "writing", "singing",
+                "dancing", "fighting", "casting_spell", "playing_instrument",
+                "holding_sword", "holding_bow", "holding_wand", "holding_book",
+                "holding_flower", "holding_weapon", "arms_up", "hands_clasped",
+                "finger_gun", "peace_sign", "thumbs_up", "pointing", "salute"
             ],
-            // 四、场景词库
+            // 四、场景词库（扩展至 80+ 标签）
             scene: [
                 "outdoors", "nature", "flower", "tree", "grass", "forest", "beach",
                 "ocean", "mountain", "river", "lake", "garden", "park", "street",
@@ -302,24 +349,34 @@
                 "classroom", "cafe", "restaurant", "shop", "hallway", "staircase",
                 "sky", "cloud", "sun", "moon", "star", "day", "night", "dawn",
                 "dusk", "rain", "snow", "fog", "wind", "food", "drink", "book",
-                "chair", "table", "window", "door", "bed", "mirror", "candle", "lamp"
+                "chair", "table", "window", "door", "bed", "mirror", "candle", "lamp",
+                "castle", "ruins", "temple", "shrine", "tower", "dungeon", "cave",
+                "waterfall", "desert", "volcano", "glacier", "meadow", "cliff",
+                "valley", "island", "ship", "boat", "airship", "spaceship",
+                "throne_room", "ballroom", "greenhouse", "laboratory", "workshop",
+                "bathroom", "gym", "pool", "hot_spring", "tent", "campfire",
+                "fountain", "statue", "clock_tower", "windmill", "lighthouse"
             ],
-            // 五、构图/视角词库
+            // 五、构图/视角词库（扩展至 35+ 标签）
             composition: [
                 "full_body", "upper_body", "lower_body", "cowboy_shot", "close-up",
                 "extreme_close-up", "portrait", "headshot", "looking_at_viewer",
                 "from_above", "from_below", "from_side", "front_view", "side_view",
                 "back_view", "three_quarter_view", "solo_focus", "centered",
                 "rule_of_thirds", "symmetrical", "dynamic_angle", "dutch_angle",
-                "depth_of_field", "bokeh"
+                "depth_of_field", "bokeh", "panoramic", "wide_angle", "fisheye",
+                "macro", "telephoto", "aerial_view", "bird's_eye_view", "worm's_eye_view",
+                "over_the_shoulder", "pov", "selfie", "mirror_selfie"
             ],
-            // 六、情绪/氛围词库
+            // 六、情绪/氛围词库（扩展至 40+ 标签）
             emotion: [
                 "blush", "sweat", "glow", "barefoot", "wet", "dry", "happy",
                 "sad", "angry", "calm", "excited", "nervous", "relaxed",
                 "confident", "shy", "proud", "lonely", "peaceful", "romantic",
                 "mysterious", "dreamy", "nostalgic", "warm", "cold", "bright",
-                "dark", "soft", "harsh", "gentle", "intense", "serene", "vibrant", "muted"
+                "dark", "soft", "harsh", "gentle", "intense", "serene", "vibrant", "muted",
+                "melancholic", "hopeful", "fearful", "determined", "playful",
+                "elegant", "fierce", "tender", "whimsical", "ethereal", "gothic"
             ]
         };
 
@@ -1708,7 +1765,17 @@
                     const finalCount = Math.floor(Math.random() * (maxTags - minTags + 1)) + minTags;
                     tags = tags.slice(0, finalCount);
 
-                    outputBox.value = tags.join(', ');
+                    // 12. 输出结果（纯文本 + 可点击标签）
+                    const outputText = document.getElementById('outputText');
+                    const outputTags = document.getElementById('outputBox');
+                    
+                    // 纯文本用于复制
+                    outputText.value = tags.join(', ');
+                    
+                    // 可点击标签用于查看
+                    outputTags.innerHTML = tags.map(tag => 
+                        `<a href="https://safebooru.donmai.us/posts?tags=${encodeURIComponent(tag)}" target="_blank" class="tag-chip">${tag}</a>`
+                    ).join('');
 
                     // 显示结果按钮
                     generateBtn.classList.add('hidden');
@@ -1740,8 +1807,8 @@
 
         // ==================== 复制结果 ====================
         function copyResult() {
-            const outputBox = document.getElementById('outputBox');
-            outputBox.select();
+            const outputText = document.getElementById('outputText');
+            outputText.select();
             document.execCommand('copy');
             
             showToast('已复制到剪贴板！');
@@ -1750,7 +1817,9 @@
         // ==================== 重制页面 ====================
         function reset() {
             document.getElementById('themeInput').value = '';
-            document.getElementById('outputBox').value = '';
+            const outputTags = document.getElementById('outputBox');
+            outputTags.innerHTML = '<div class="output-placeholder" style="color: #F9A825; opacity: 0.6; text-align: center; padding: 40px 20px;">点击"生成"按钮，生成专属词条...</div>';
+            document.getElementById('outputText').value = '';
             document.getElementById('generateBtn').classList.remove('hidden');
             document.getElementById('resultBtns').classList.add('hidden');
             
