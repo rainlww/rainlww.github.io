@@ -1479,15 +1479,15 @@
                     <button class="entry-btn" onclick="window.open('https://t.nieta.art/LB4nC1Iq', '_blank'); return false;" data-i18n="home-card1-btn">点击进入</button>
                 </div>
 
-                <!-- 雨落们的档案馆（暂未开放） -->
-                <div class="entry-card" id="archiveCard" style="opacity: 0.5; cursor: not-allowed;" onclick="tryUnlockArchive()">
+                <!-- 雨落们的档案馆（已开放） -->
+                <div class="entry-card" id="archiveCard" onclick="navigateTo('archive.html')">
                     <h2 class="entry-title" data-i18n="home-card2-title">雨落们的档案馆</h2>
                     <p class="entry-desc" data-i18n="home-card2-desc">
                         这是千万滴雨落下的瞬间。<br>
                         每一滴都反射着独特的光芒。<br>
                     </p>
-                    <span style="color: #8a9a9f; font-size: 0.85em; margin-top: 8px; display: block;" id="archiveLockText" data-i18n="home-card2-lock">🔒 暂未对外开放</span>
-                    <button class="entry-btn" id="archiveBtn" style="background: linear-gradient(135deg, #a0a0a0, #b0b0b0); cursor: not-allowed;" data-i18n="home-card2-btn">暂未开放</button>
+                    <span style="color: #6abf8a; font-size: 0.85em; margin-top: 8px; display: block;" id="archiveLockText">✨ 已对外开放</span>
+                    <button class="entry-btn" id="archiveBtn" onclick="navigateTo('archive.html')">进入档案馆</button>
                 </div>
             </div>
 
