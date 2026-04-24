@@ -1785,7 +1785,7 @@
             }
         }
 
-        // 打字机效果 - 简化版（移除调试日志，确保稳定）
+        // 打字机效果 - 重写版（平板端无光标，直接显示文字）
         let typewriterDone = false;
         function typeWriterEffect() {
             if (typewriterDone) return;
@@ -1796,6 +1796,19 @@
             
             const originalText = titleElement.textContent.trim();
             if (!originalText) return;
+            
+            // 检测是否为平板/手机端
+            const isTablet = window.innerWidth <= 1024;
+            
+            // 平板/手机端：直接显示文字，无动画
+            if (isTablet) {
+                console.log('平板端：跳过打字机动画，直接显示');
+                titleElement.textContent = originalText;
+                return;
+            }
+            
+            // 桌面端：完整打字机动画
+            console.log('桌面端：运行打字机动画');
             
             // 清除所有子节点
             titleElement.textContent = '';
