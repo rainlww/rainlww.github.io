@@ -863,6 +863,15 @@
         // 当前选中的标签
         let selectedTags = [];
 
+        // 格式化名字：将#后的内容用浅色斜体显示
+        function formatName(name) {
+            if (name && name.includes('#')) {
+                const parts = name.split('#');
+                return parts[0] + '<span class="name-suffix">#' + parts.slice(1).join('#') + '</span>';
+            }
+            return name;
+        }
+
         // 初始化
         function init() {
             renderFilterTags();
@@ -1019,7 +1028,7 @@
                             </div>
                             <div class="table-info">
                                 <div class="table-header">
-                                    <span class="table-name">${char.name}</span>
+                                    <span class="table-name">${formatName(char.name)}</span>
                                     <span class="table-number">${char.number || char.id}</span>
                                 </div>
                                 <div class="table-details">
