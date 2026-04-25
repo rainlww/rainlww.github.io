@@ -461,12 +461,7 @@
             <p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>
         </div>
 
-        <!-- 荷穆勒提示 -->
-        <div id="homuleshaNotice" style="text-align: center; padding: 15px; margin: 20px 0; background: rgba(100, 100, 100, 0.08); border-radius: 4px; display: none;">
-            <p style="font-size: 0.95em; color: #666; font-style: italic; margin: 0;">"荷穆勒"之名，意味着重重苦难。</p>
-        </div>
-
-        <!-- 视图切换 -->
+        <!-- 荷穆勒提示 --><!-- 视图切换 -->
         <div class="view-toggles">
             <button class="view-toggle-btn active" onclick="switchView('card')">立绘视图</button>
             <button class="view-toggle-btn" onclick="switchView('table')">表格视图</button>
@@ -755,6 +750,25 @@
             // 筛选人物卡片
             renderCards();
             renderTable();
+
+            // 荷穆勒提示：只在选中荷穆勒标签时动态创建
+            let notice = document.getElementById('homuleshaNotice');
+            if (selectedTags.includes('荷穆勒')) {
+                if (!notice) {
+                    const viewToggles = document.querySelector('.view-toggles');
+                    if (viewToggles) {
+                        const noticeDiv = document.createElement('div');
+                        noticeDiv.id = 'homuleshaNotice';
+                        noticeDiv.style.cssText = 'text-align: center; padding: 15px; margin: 20px 0; background: rgba(100, 100, 100, 0.08); border-radius: 4px;';
+                        noticeDiv.innerHTML = '<p style="font-size: 0.95em; color: #666; font-style: italic; margin: 0;">"荷穆勒"之名，意味着重重苦难。</p>';
+                        viewToggles.parentNode.insertBefore(noticeDiv, viewToggles);
+                    }
+                }
+            } else {
+                if (notice) {
+                    notice.remove();
+                }
+            }
         }
 
         // 筛选人物卡片
