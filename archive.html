@@ -675,14 +675,9 @@
             const grid = document.getElementById('charactersGrid');
             if (!grid) return;
             
-            // 如果没有卡片，隐藏容器
-            if (filteredChars.length === 0) {
-                grid.style.display = 'none';
-                return;
-            }
-            grid.style.display = 'grid';
-            
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            // 筛选角色
             const filteredChars = characters.filter(char => {
                 if (selectedTags.length > 0) {
                     return selectedTags.every(tag => char.tags.includes(tag));
@@ -692,6 +687,13 @@
                 }
                 return true;
             });
+            
+            // 如果没有卡片，隐藏容器
+            if (filteredChars.length === 0) {
+                grid.style.display = 'none';
+                return;
+            }
+            grid.style.display = 'grid';
 
             grid.innerHTML = filteredChars.map(char => `'}
                     </div>
