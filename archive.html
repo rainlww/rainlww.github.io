@@ -695,10 +695,7 @@
             }
             grid.style.display = 'grid';
 
-            grid.innerHTML = filteredChars.map(char => `
-                <div class="character-card" onclick="openCharacter('${char.id}')">
-                    <div class="character-card-cover">
-                        ${char.cover ? `<img src="${char.cover}" loading="lazy" alt="${char.name}">` : '<div class="placeholder">📷</div>'}
+            grid.innerHTML = filteredChars.map(char => `'}
                     </div>
                     <div class="character-card-info">
                         <div class="character-card-name">${formatName(char.name)}</div>
