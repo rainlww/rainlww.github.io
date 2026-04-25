@@ -697,7 +697,7 @@
                 var coverHtml = char.cover 
                     ? '<img src="' + char.cover + '" loading="lazy" alt="' + char.name + '">'
                     : '<div class="placeholder">📷</div>';
-                return '<div class="character-card" onclick="openCharacter(\'' + char.id + '\')>' +
+                return '<div class="character-card" onclick="openCharacter(\'' + char.id + '\')"> +
                     '<div class="character-card-cover">' + coverHtml + '</div>' +
                     '<div class="character-card-info">' +
                     '<div class="character-card-name">' + formatName(char.name) + '</div>' +
