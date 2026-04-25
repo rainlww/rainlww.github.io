@@ -1613,37 +1613,35 @@
     </div>
 
     <!-- 最近更新弹窗 -->
-    <div class="secret-modal" id="changelogModal" onclick="closeChangelogModal(event)" style="background: rgba(255, 255, 255, 0.85);">
-        <div class="secret-modal-content" style="max-width: 650px; background: #ffffff;">
-            <span class="secret-modal-close" onclick="closeChangelogModal(event)" style="color: #333;">×</span>
-            <h3 class="secret-modal-title" style="color: #333;">📚 最近更新</h3>
-            <div class="secret-modal-text" style="text-align: left; padding: 0; max-height: 450px; overflow-y: auto;">
-                <div style="background: #f8f8f8; border-radius: 8px; padding: 20px; margin: 20px;">
-                    <div style="margin-bottom: 20px;">
-                        <div style="color: #FFD700; font-size: 0.9em; font-weight: bold; margin-bottom: 8px;">2026-04-24</div>
-                        <ul style="color: #333333; font-size: 0.95em; line-height: 1.8; padding-left: 20px; margin: 0;">
-                            <li>📝 页脚维护信息添加（点击"落下的小雨滴维护"弹出弹窗）</li>
-                            <li>🔧 打字机效果优化（平板端跳过动画直接显示）</li>
-                            <li>🔧 CDN 缓存优化（添加 no-cache meta 标签）</li>
-                            <li>🎨 页脚顺序调整（神秘暗号/空行/旅程/制作 + 维护）</li>
-                            <li>🎨 工具箱与神秘暗号间距增加（60px）</li>
-                        </ul>
-                    </div>
-                    <div style="margin-bottom: 15px;">
-                        <div style="color: #FFD700; font-size: 0.9em; font-weight: bold; margin-bottom: 8px;">2026-04-18</div>
-                        <ul style="color: #333333; font-size: 0.95em; line-height: 1.8; padding-left: 20px; margin: 0;">
-                            <li>🌐 主页正式上线</li>
-                            <li>🌧️ Loading 页下雨效果</li>
-                            <li>⌨️ 打字机效果标题</li>
-                            <li>🎵 背景音乐播放器</li>
-                            <li>🔓 神秘暗号弹窗（输入"雨晴了"开启开发者模式）</li>
-                            <li>🐛 调试面板（设备信息、性能数据、LocalStorage）</li>
-                            <li>🧰 观测站的秘密工具箱（链接到捏图百科全书）</li>
-                        </ul>
-                    </div>
+    <div class="secret-modal" id="changelogModal" onclick="closeChangelogModal(event)">
+        <div class="secret-modal-content" style="max-width: 700px; background: rgba(255, 255, 255, 0.9); border-radius: 12px; border-left: 4px solid #87CEEB; padding: 30px;">
+            <span class="secret-modal-close" onclick="closeChangelogModal(event)" style="color: #666;">×</span>
+            <h3 class="secret-modal-title" style="color: #666; margin-bottom: 25px;">📚 最近更新</h3>
+            <div class="secret-modal-text" style="text-align: left; line-height: 2; max-height: 450px; overflow-y: auto;">
+                <div style="margin-bottom: 25px;">
+                    <div style="color: #87CEEB; font-size: 1em; font-weight: bold; margin-bottom: 10px;">2026-04-24</div>
+                    <ul style="color: #666; font-size: 0.98em; line-height: 2.2; padding-left: 20px; margin: 0;">
+                        <li style="margin-bottom: 8px;">📝 页脚维护信息添加</li>
+                        <li style="margin-bottom: 8px;">🔧 打字机效果优化</li>
+                        <li style="margin-bottom: 8px;">🔧 CDN 缓存优化</li>
+                        <li style="margin-bottom: 8px;">🎨 页脚顺序调整</li>
+                        <li style="margin-bottom: 8px;">🎨 工具箱间距增加</li>
+                    </ul>
+                </div>
+                <div>
+                    <div style="color: #87CEEB; font-size: 1em; font-weight: bold; margin-bottom: 10px;">2026-04-18</div>
+                    <ul style="color: #666; font-size: 0.98em; line-height: 2.2; padding-left: 20px; margin: 0;">
+                        <li style="margin-bottom: 8px;">🌐 主页正式上线</li>
+                        <li style="margin-bottom: 8px;">🌧️ Loading 页下雨效果</li>
+                        <li style="margin-bottom: 8px;">⌨️ 打字机效果标题</li>
+                        <li style="margin-bottom: 8px;">🎵 背景音乐播放器</li>
+                        <li style="margin-bottom: 8px;">🔓 神秘暗号弹窗</li>
+                        <li style="margin-bottom: 8px;">🐛 调试面板</li>
+                        <li style="margin-bottom: 8px;">🧰 观测站的秘密工具箱</li>
+                    </ul>
                 </div>
             </div>
-            <div class="secret-modal-buttons">
+            <div class="secret-modal-buttons" style="margin-top: 25px;">
                 <button class="secret-modal-btn" onclick="closeChangelogModalDirect()" style="background: linear-gradient(135deg, #87CEEB, #B0E0E6);">知道啦～！</button>
             </div>
         </div>
