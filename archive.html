@@ -671,6 +671,7 @@
         }
 
         // 渲染人物卡片
+        // 渲染人物卡片
         function renderCards() {
             const grid = document.getElementById('charactersGrid');
             if (!grid) return;
@@ -699,7 +700,8 @@
                 const coverHtml = char.cover 
                     ? '<img src="' + char.cover + '" loading="lazy" alt="' + char.name + '">'
                     : '<div class="placeholder">📷</div>';
-                return '<div class="character-card" onclick="openCharacter('' + char.id + '')>' +
+                
+                return '<div class="character-card" onclick="openCharacter(\'' + char.id + '\')>' +
                     '<div class="character-card-cover">' + coverHtml + '</div>' +
                     '<div class="character-card-info">' +
                     '<div class="character-card-name">' + formatName(char.name) + '</div>' +
@@ -707,11 +709,6 @@
                     char.tags.map(tag => '<span class="character-card-tag">' + tag + '</span>').join('') +
                     '</div></div></div>';
             }).join('');
-
-                        </div>
-                    </div>
-                </div>
-            `).join('');
         }
 
         // 初始化
