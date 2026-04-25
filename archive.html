@@ -677,7 +677,6 @@
             
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
             
-            // 筛选角色
             const filteredChars = characters.filter(char => {
                 if (selectedTags.length > 0) {
                     return selectedTags.every(tag => char.tags.includes(tag));
@@ -688,26 +687,25 @@
                 return true;
             });
             
-            // 如果没有卡片，隐藏容器
             if (filteredChars.length === 0) {
                 grid.style.display = 'none';
                 return;
             }
             grid.style.display = 'grid';
 
-
-            grid.innerHTML = filteredChars.map(char => {
-                const coverHtml = char.cover 
-                    ? "<img src="" + char.cover + "" loading="lazy" alt="" + char.name + "">"
-                    : "<div class="placeholder">📷</div>";
-                return "<div class="character-card" onclick="openCharacter(\x27" + char.id + "\x27)>" +
-                    "<div class="character-card-cover">" + coverHtml + "</div>" +
-                    "<div class="character-card-info">" +
-                    "<div class="character-card-name">" + formatName(char.name) + "</div>" +
-                    "<div class="character-card-tags">" +
-                    char.tags.map(tag => "<span class="character-card-tag">" + tag + "</span>").join("") +
-                    "</div></div></div>";
-            }).join("");
+            grid.innerHTML = filteredChars.map(function(char) {
+                var coverHtml = char.cover 
+                    ? '<img src="' + char.cover + '" loading="lazy" alt="' + char.name + '">'
+                    : '<div class="placeholder">📷</div>';
+                return '<div class="character-card" onclick="openCharacter(\'' + char.id + '\')>' +
+                    '<div class="character-card-cover">' + coverHtml + '</div>' +
+                    '<div class="character-card-info">' +
+                    '<div class="character-card-name">' + formatName(char.name) + '</div>' +
+                    '<div class="character-card-tags">' +
+                    char.tags.map(function(tag) { return '<span class="character-card-tag">' + tag + '</span>'; }).join('') +
+                    '</div></div></div>';
+            }).join('');
+        }
 
         // 初始化
         function init() {
