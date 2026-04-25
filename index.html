@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<!-- Deploy: 2026-04-25T02:45:00Z - Add theme switcher -->
-<!-- Version: v2.0.1 - Theme Switcher -->
+<!-- Deploy: 2026-04-25T03:15:00Z - Remove theme switcher -->
+<!-- Version: v2.0.0 -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,62 +20,11 @@
             box-sizing: border-box;
         }
 
-        /* ==================== 主题变量 ==================== */
-        :root {
-            --bg-gradient-1: #87CEEB;
-            --bg-gradient-2: #B0E0E6;
-            --bg-gradient-3: #ADD8E6;
-            --loading-bg-1: #4a6a7a;
-            --loading-bg-2: #3a5a6a;
-            --loading-bg-3: #2a4a5a;
-        }
-
-        /* 樱花粉主题 */
-        [data-theme="sakura"] {
-            --bg-gradient-1: #FFB7C5;
-            --bg-gradient-2: #FFC0CB;
-            --bg-gradient-3: #FFD1DC;
-            --loading-bg-1: #6a4a5a;
-            --loading-bg-2: #5a3a4a;
-            --loading-bg-3: #4a2a3a;
-        }
-
-        /* 薰衣草紫主题 */
-        [data-theme="lavender"] {
-            --bg-gradient-1: #B19CD9;
-            --bg-gradient-2: #C9B1E8;
-            --bg-gradient-3: #D4C4E8;
-            --loading-bg-1: #4a4a6a;
-            --loading-bg-2: #3a3a5a;
-            --loading-bg-3: #2a2a4a;
-        }
-
-        /* 森林绿主题 */
-        [data-theme="forest"] {
-            --bg-gradient-1: #90C987;
-            --bg-gradient-2: #A8D8A0;
-            --bg-gradient-3: #B8E0B0;
-            --loading-bg-1: #4a6a4a;
-            --loading-bg-2: #3a5a3a;
-            --loading-bg-3: #2a4a2a;
-        }
-
-        /* 深夜黑主题 */
-        [data-theme="midnight"] {
-            --bg-gradient-1: #2C3E50;
-            --bg-gradient-2: #34495E;
-            --bg-gradient-3: #3D566E;
-            --loading-bg-1: #1a2a3a;
-            --loading-bg-2: #0a1a2a;
-            --loading-bg-3: #051018;
-        }
-
         body {
             font-family: 'Georgia', 'Microsoft YaHei', 'Segoe UI', serif;
             min-height: 100vh;
             overflow-x: hidden;
-            background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 50%, var(--bg-gradient-3) 100%);
-            transition: background 0.5s ease;
+            background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 50%, #ADD8E6 100%);
         }
 
         /* Loading 页面 - 下雨效果 */
@@ -792,40 +741,6 @@
             background: #fff;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
-
-        /* 主题切换按钮 */
-        .theme-selector {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .theme-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .theme-btn:hover {
-            transform: scale(1.15);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .theme-btn.active {
-            border-color: #fff;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
-        }
-
-        .theme-sky { background: linear-gradient(135deg, #87CEEB, #ADD8E6); }
-        .theme-sakura { background: linear-gradient(135deg, #FFB7C5, #FFD1DC); }
-        .theme-lavender { background: linear-gradient(135deg, #B19CD9, #D4C4E8); }
-        .theme-forest { background: linear-gradient(135deg, #90C987, #B8E0B0); }
-        .theme-midnight { background: linear-gradient(135deg, #2C3E50, #3D566E); }
 
         /* 悬浮选项弹窗 */
         .floating-options {
@@ -1650,18 +1565,6 @@
         <div class="floating-buttons">
             <div class="floating-btn-round" onclick="toggleFloatingOptions()">⚙️</div>
         </div>
-
-        <!-- 主题选择器弹窗 -->
-        <div class="floating-options" id="themeOptions">
-            <div style="text-align: center; color: #555; font-size: 0.9em; margin-bottom: 10px;">🎨 选择主题</div>
-            <div class="theme-selector">
-                <div class="theme-btn theme-sky active" onclick="setTheme('sky')" title="天空蓝"></div>
-                <div class="theme-btn theme-sakura" onclick="setTheme('sakura')" title="樱花粉"></div>
-                <div class="theme-btn theme-lavender" onclick="setTheme('lavender')" title="薰衣草紫"></div>
-                <div class="theme-btn theme-forest" onclick="setTheme('forest')" title="森林绿"></div>
-                <div class="theme-btn theme-midnight" onclick="setTheme('midnight')" title="深夜黑"></div>
-            </div>
-        </div>
         
         <!-- 悬浮选项弹窗 -->
         <div class="floating-options" id="floatingOptions">
@@ -2169,62 +2072,19 @@
             }
         });
 
-        // 3. 主题切换功能
-        function setTheme(themeName) {
-            // 设置主题
-            if (themeName === 'sky') {
-                document.documentElement.removeAttribute('data-theme');
-            } else {
-                document.documentElement.setAttribute('data-theme', themeName);
-            }
-            
-            // 保存到 localStorage
-            localStorage.setItem('theme', themeName);
-            
-            // 更新按钮状态
-            document.querySelectorAll('.theme-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector('.theme-' + themeName).classList.add('active');
-            
-            // 关闭弹窗
-            document.getElementById('themeOptions').classList.remove('active');
-        }
-
-        // 页面加载时恢复主题
-        window.addEventListener('DOMContentLoaded', function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                setTheme(savedTheme);
-            }
-        });
-
-        // 4. 悬浮选项弹窗
+        // 3. 悬浮选项弹窗
         function toggleFloatingOptions() {
             const options = document.getElementById('floatingOptions');
-            const themeOptions = document.getElementById('themeOptions');
-            
-            // 关闭另一个弹窗
-            if (options.classList.contains('active')) {
-                options.classList.remove('active');
-                themeOptions.classList.add('active');
-            } else if (themeOptions.classList.contains('active')) {
-                themeOptions.classList.remove('active');
-                options.classList.add('active');
-            } else {
-                options.classList.add('active');
-            }
+            options.classList.toggle('active');
         }
 
         // 点击页面其他地方关闭选项
         document.addEventListener('click', function(event) {
             const floatingBtn = document.querySelector('.floating-btn-round');
             const floatingOptions = document.getElementById('floatingOptions');
-            const themeOptions = document.getElementById('themeOptions');
             
-            if (!floatingBtn.contains(event.target) && !floatingOptions.contains(event.target) && !themeOptions.contains(event.target)) {
+            if (!floatingBtn.contains(event.target) && !floatingOptions.contains(event.target)) {
                 floatingOptions.classList.remove('active');
-                themeOptions.classList.remove('active');
             }
         });
 
