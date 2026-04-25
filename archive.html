@@ -695,12 +695,19 @@
             }
             grid.style.display = 'grid';
 
-            grid.innerHTML = filteredChars.map(char => `'}
-                    </div>
-                    <div class="character-card-info">
-                        <div class="character-card-name">${formatName(char.name)}</div>
-                        <div class="character-card-tags">
-                            ${char.tags.map(tag => `<span class="character-card-tag">${tag}</span>`).join('')}
+            grid.innerHTML = filteredChars.map(char => {
+                const coverHtml = char.cover 
+                    ? '<img src="' + char.cover + '" loading="lazy" alt="' + char.name + '">'
+                    : '<div class="placeholder">📷</div>';
+                return '<div class="character-card" onclick="openCharacter('' + char.id + '')>' +
+                    '<div class="character-card-cover">' + coverHtml + '</div>' +
+                    '<div class="character-card-info">' +
+                    '<div class="character-card-name">' + formatName(char.name) + '</div>' +
+                    '<div class="character-card-tags">' +
+                    char.tags.map(tag => '<span class="character-card-tag">' + tag + '</span>').join('') +
+                    '</div></div></div>';
+            }).join('');
+
                         </div>
                     </div>
                 </div>
