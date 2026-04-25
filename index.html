@@ -1796,38 +1796,38 @@
             }
         }
 
-        // 每日一句文案数组（根据日期每天切换一句）
-        const dailyQuotes = [
-            '每日一句：欢迎来到雨落的世界～！',
-            '每日一句：每一个世界，都是一段独特的旅程。',
-            '每日一句：雨落会一直在这里，等你回家。',
-            '每日一句：今天也要开心哦～！(≧∇≦) ﾉ',
-            '每日一句：生活就像下雨，有时候需要一把伞，有时候需要淋个痛快。',
-            '每日一句：你很好，值得被世界温柔以待。',
-            '每日一句：累了就休息一下吧，没关系的。',
-            '每日一句：今天也是闪闪发光的一天呢～！✨',
-            '每日一句：记得好好吃饭，好好睡觉，好好爱自己。',
-            '每日一句：无论发生什么，小雨滴都会陪着你～！'
+        // Tips 文案数组（根据日期每天切换一句）
+        const loadingTips = [
+            'Tips: 欢迎来到雨落的世界～！',
+            'Tips: 每一个世界，都是一段独特的旅程。',
+            'Tips: 雨落会一直在这里，等你回家。',
+            'Tips: 今天也要开心哦～！(≧∇≦) ﾉ',
+            'Tips: 生活就像下雨，有时候需要一把伞，有时候需要淋个痛快。',
+            'Tips: 你很好，值得被世界温柔以待。',
+            'Tips: 累了就休息一下吧，没关系的。',
+            'Tips: 今天也是闪闪发光的一天呢～！✨',
+            'Tips: 记得好好吃饭，好好睡觉，好好爱自己。',
+            'Tips: 无论发生什么，小雨滴都会陪着你～！'
         ];
 
-        // 根据日期显示每日一句
-        function showDailyQuote() {
+        // 根据日期显示 Tips（每天切换一句）
+        function showRandomTips() {
             const tipsElement = document.getElementById('loadingTips');
             if (!tipsElement) return;
             
             // 根据日期选择句子（一年 365 天循环）
             const now = new Date();
             const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-            const quoteIndex = dayOfYear % dailyQuotes.length;
-            const quoteText = dailyQuotes[quoteIndex];
+            const tipIndex = dayOfYear % loadingTips.length;
+            const tipText = loadingTips[tipIndex];
             
-            // 分离 "每日一句：" 和后面的内容
-            const match = quoteText.match(/^每日一句：\s*(.*)/);
+            // 分离 "Tips:" 和后面的内容
+            const match = tipText.match(/^Tips:\s*(.*)/);
             if (match) {
                 const content = match[1];
-                tipsElement.innerHTML = '<span style="white-space: nowrap;">每日一句：&nbsp;</span><span>' + content + '</span>';
+                tipsElement.innerHTML = '<span style="white-space: nowrap;">Tips:&nbsp;</span><span>' + content + '</span>';
             } else {
-                tipsElement.textContent = quoteText;
+                tipsElement.textContent = tipText;
             }
         }
 
@@ -1910,8 +1910,8 @@
             // 预加载背景
             preloadBackgrounds();
             
-            // 显示每日一句
-            showDailyQuote();
+            // 显示 Tips
+            showRandomTips();
             
             // 检查是否是首次访问
             const hasVisited = sessionStorage.getItem('hasVisited');
