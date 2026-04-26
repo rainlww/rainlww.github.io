@@ -354,15 +354,27 @@
             border-color: rgba(255, 255, 255, 0.8);
         }
 
-        /* 平板端神秘暗号按钮往下挪 */
-        @media (max-width: 1024px) and (min-width: 769px) {
+        /* iPad 专属调整（包括所有 iPad 型号） */
+        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+            /* 神秘暗号按钮往下挪 */
             .secret-code-btn {
-                bottom: -20px !important;
+                bottom: -30px !important;
             }
             
-            /* 平板端最近更新按钮增加底部间距 */
+            /* 最近更新按钮增加底部间距 */
             .changelog-btn-area {
-                margin-bottom: 80px !important;
+                margin-bottom: 100px !important;
+            }
+        }
+        
+        /* 通用平板端调整 */
+        @media (max-width: 1100px) and (min-width: 700px) {
+            .secret-code-btn {
+                bottom: -30px !important;
+            }
+            
+            .changelog-btn-area {
+                margin-bottom: 100px !important;
             }
         }
 
