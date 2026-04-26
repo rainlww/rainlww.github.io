@@ -330,18 +330,6 @@
             background-position: center !important;
         }
 
-        /* 平板端背景纯享适配 */
-        @media (max-width: 1024px) and (min-width: 769px) {
-            #main-screen.fullscreen-bg {
-                background-size: cover !important;
-            }
-            
-            /* 平板端神秘暗号按钮往下挪（减小 bottom 值） */
-            .secret-code-btn {
-                bottom: 10px;
-            }
-        }
-
         /* 神秘暗号按钮 */
         .secret-code-btn {
             position: fixed;
@@ -364,6 +352,13 @@
             transform: scale(1.05);
             background: rgba(255, 255, 255, 0.95);
             border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* 平板端神秘暗号按钮往下挪 */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .secret-code-btn {
+                bottom: 5px !important;
+            }
         }
 
         /* 神秘暗号弹窗 */
