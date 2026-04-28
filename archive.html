@@ -865,6 +865,21 @@
                 return true;
             });
 
+            // 更新空状态提示
+            const emptyState = document.getElementById('emptyState');
+            if (emptyState) {
+                if (filteredChars.length === 0) {
+                    emptyState.style.display = 'block';
+                    const allTags = characters.flatMap(c => c.tags);
+                    const hasUnaddedTag = selectedTags.some(tag => !allTags.includes(tag));
+                    if (hasUnaddedTag) {
+                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">啊哦……轻若还没有添加哦……</p>';
+                    } else {
+                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>';
+                    }
+                }
+            }
+
             tbody.innerHTML = filteredChars.map(char => `
                 <tr onclick="openCharacter('${char.id}')" style="cursor: pointer;">
                     <td>
