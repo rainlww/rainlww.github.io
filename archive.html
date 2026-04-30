@@ -138,10 +138,10 @@
 
         /* 表格视图 - PRTS Wiki 横向卡片风格 */
         .characters-table {
-            display: none;
+            display: none !important;
         }
         .characters-table.show {
-            display: table !important;
+            display: table;
             width: 100%;
             border-collapse: separate;
             border-spacing: 0 15px;
@@ -246,7 +246,7 @@
 
         /* 人物卡片网格 - PRTS 风格 */
         .characters-grid {
-            display: grid;
+            display: grid !important;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 20px;
             margin-bottom: 40px;
