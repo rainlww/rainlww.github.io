@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塞缪尔 - 硬币的一体三面</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1a1a1a; line-height: 1.7; min-height: 100vh; position: relative; font-weight: 500; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 100%); }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #5D4E37; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,230,211,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
+        .back-link:hover { color: #8B7355; background: rgba(232,213,196,0.9); }
+        .page-title { font-size: 2.5em; color: #5D4E37; font-weight: 700; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #8B7355; letter-spacing: 0; word-break: keep-all; white-space: normal; }
+        .collapse-section { margin-bottom: 20px; border: none; }
+        .collapse-section[open] { border-bottom: 1px solid rgba(139,115,85,0.3); padding-bottom: 15px; }
+        .collapse-title { list-style: none; display: flex; align-items: center; gap: 8px; font-size: 1.2em; font-weight: 600; color: #5D4E37; cursor: pointer; padding: 10px 0; margin: 0; transition: color 0.2s; }
+        .collapse-title:hover { color: #8B7355; }
+        .collapse-title::-webkit-details-marker { display: none; }
+        .collapse-icon { transition: transform 0.3s; flex-shrink: 0; }
+        .collapse-section[open] .collapse-icon { transform: rotate(180deg); }
+        .collapse-content { padding: 10px 0 0 28px; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .artwork-container { text-align: center; }
+        .artwork-frame { display: inline-block; max-width: 100%; padding: 12px; background: rgba(245,230,211,0.9); border-radius: 4px; box-shadow: 0 4px 15px rgba(93,78,55,0.15); backdrop-filter: blur(10px); }
+        .artwork-frame img { display: block; max-width: 100%; max-height: 650px; height: auto; border-radius: 2px; }
+        .artwork-caption { padding: 12px; text-align: center; background: rgba(249,249,249,0.9); font-size: 0.9em; color: #8B7355; border-top: 1px solid rgba(139,115,85,0.3); margin-top: 10px; border-radius: 4px; backdrop-filter: blur(10px); }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 6px; }
+        .toc-list a { color: #8B7355; text-decoration: none; font-size: 0.95em; }
+        .toc-list a:hover { color: #5D4E37; text-decoration: underline; }
+        .info-box { margin: 20px 0; padding: 15px 20px; background: rgba(245,230,211,0.8); border-left: 3px solid #8B7355; border-radius: 4px; }
+        .info-label { font-size: 0.9em; color: #8B7355; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px; }
+        .info-content { font-size: 0.95em; color: #5D4E37; font-style: italic; line-height: 1.8; }
+        .archive-box { background: rgba(245,245,245,0.8); padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; font-size: 1em; line-height: 1.8; border-radius: 4px; font-weight: 500; margin-bottom: 20px; }
+        .archive-title { font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px; }
+        @media (max-width: 768px) { .page-title { font-size: 2em; } }
+        @media (max-width: 480px) { .page-title { font-size: 1.5em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="triple-sides-of-one-coin.html" class="back-link">← 返回花名册</a>
+        <h1 class="page-title">塞缪尔</h1>
+        
+        <div class="info-box">
+            <div class="info-label">「 引言 」</div>
+            <div class="info-content">
+                <div>"……傻子。天底下最大的傻子。"</div>
+                <div>——关于荷穆勒夏</div>
+            </div>
+        </div>
+        
+        <details class="collapse-section">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                目录
+            </summary>
+            <div class="collapse-content">
+                <ul class="toc-list">
+                    <li><a href="#artwork">立绘展示</a></li>
+                    <li><a href="#basic">基础档案</a></li>
+                    <li><a href="#ability">能力</a></li>
+                    <li><a href="#quotes">经典台词</a></li>
+                    <li><a href="#about">关于……</a></li>
+                </ul>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="artwork">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                立绘展示
+            </summary>
+            <div class="collapse-content">
+                <div class="artwork-container">
+                    <div class="artwork-frame">
+                        <img src="https://placehold.co/400x600/E8D5C4/5D4E37?text=塞缪尔" alt="塞缪尔">
+                    </div>
+                    <div class="artwork-caption">塞缪尔—圣拉姆特副院长</div>
+                </div>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="basic">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                基础档案
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <div class="archive-title">「 基础档案 」</div>
+                    <p><strong>生日</strong>：三月十七日</p>
+                    <p><strong>年龄</strong>：约 30 岁</p>
+                    <p><strong>能力</strong>：承负（19 岁觉醒）</p>
+                    <p><strong>身份</strong>：圣拉姆特副院长、卢塞罗家族现任家主</p>
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #e0e0e0;">
+                    <p><strong>背景</strong>：</p>
+                    <p>卢塞罗家族，全大陆最古老的家族之一，至少八百年历史。</p>
+                    <p>家族内部分为：长老会（统筹全局）、明部（外界所见的赚钱家族）、暗部（情报收集、铲除障碍）。</p>
+                    <p>目前是家族首领，但"据说是因为没人想当，而我恰好不在家，他们才把我推上去的"。</p>
+                    <p>圣拉姆特是其名下财产，"她是院长，这里就是她的。我只是给她打下手的。"</p>
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #e0e0e0;">
+                    <p><strong>性格</strong>：表面散漫慵懒，爱开玩笑，成天乐呵呵，对很多事情不上心，但内在细腻。不动声色，但拼尽全力。</p>
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #e0e0e0;">
+                    <p><strong>喜好</strong>：啥都喜欢，最感兴趣的是园艺（当年是他教小伊斯派菈搞园艺的）。讨厌官腔、金钱势力。</p>
+                </div>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="ability">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                能力
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <div class="archive-title">「 承负 」</div>
+                    <p><strong>能力类型</strong>：正向能力</p>
+                    <p><strong>详细描述</strong>：通过身体接触，把对方身体层面上的伤痛部分转移到自己身上。</p>
+                    <p><strong>特点</strong>：</p>
+                    <ul>
+                        <li>只承受痛苦，不留下伤痕</li>
+                        <li>最多分担三成："够了。够护着你们院长了。"</li>
+                        <li>对意识上的伤痛无效，分担不了荷穆勒夏的反噬</li>
+                        <li>承负疼痛的承受时长和承受过来的痛觉多少有关。一次承负太多是会疼昏过去的</li>
+                    </ul>
+                    <p><strong>觉醒年龄</strong>：19 岁</p>
+                </div>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="quotes">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                经典台词
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <ul>
+                        <li>"……傻子。天底下最大的傻子。"（关于荷穆勒夏）</li>
+                        <li>"好好好，我的院长大人。"</li>
+                        <li>"你们院长护着整个圣拉姆特，我护着她。"</li>
+                    </ul>
+                </div>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="about">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                关于……
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <div class="archive-title">「 关于荷穆勒夏 」</div>
+                    <p>"第一次见到她时，她站在路边，不知道在想什么。我突然就想走过去，问问她需不需要帮助。我确实这么做了。然后……她看了我五秒，只说了句'不需要'，就走开了。嘶，那五秒，我连遗言都想好了……"</p>
+                    <p>"有一次她受伤，躲在一个破屋里。我在外面护了她一晚上。第二天早上，她打开门，看见我，一愣，第一句话竟然是'你有病啊'……不过她让我进去了。那是第一次，也是一切的开始。"</p>
+                    <p>"我们是生死之交。孩子们总是好奇这个问题。……或许，不一样。"</p>
+                </div>
+            </div>
+        </details>
+        
+        <div class="back-link" style="margin-top: 30px;">← 返回花名册</div>
+    </div>
+</body>
+</html>
