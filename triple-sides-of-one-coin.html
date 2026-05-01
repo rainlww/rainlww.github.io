@@ -460,6 +460,14 @@
                     <!-- 所属标签由 JavaScript 动态生成 -->
                 </div>
             </div>
+            
+            <!-- 按身份查找 -->
+            <div class="filter-section">
+                <div class="filter-section-title">按身份查找</div>
+                <div class="filter-tags" id="identityFilterTags">
+                    <!-- 身份标签由 JavaScript 动态生成 -->
+                </div>
+            </div>
         </div>
 
         <!-- 空状态提示 -->
@@ -705,6 +713,16 @@
                     </div>
                 `).join('');
             }
+            
+            // 渲染身份标签
+            const identityContainer = document.getElementById('identityFilterTags');
+            if (identityContainer) {
+                identityContainer.innerHTML = ["世界的孤儿"].map(tag => `
+                    <div class="filter-tag" data-tag="${tag}" onclick="toggleTag('${tag}')">
+                        ${tagDisplayNames[tag] || tag}
+                    </div>
+                `).join('');
+            }
         }
 
         // 切换标签选中状态
@@ -792,7 +810,7 @@
                     
                     if (hasUnaddedTag) {
                         // 有标签尚未添加人物
-                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">啊哦……轻若还没有添加哦……</p>';
+                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>';
                     } else {
                         // 交集为空
                         emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>';
@@ -850,7 +868,7 @@
                     const allTags = characters.flatMap(c => c.tags);
                     const hasUnaddedTag = selectedTags.some(tag => !allTags.includes(tag));
                     if (hasUnaddedTag) {
-                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">啊哦……轻若还没有添加哦……</p>';
+                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>';
                     } else {
                         emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>';
                     }
