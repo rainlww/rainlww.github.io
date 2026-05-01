@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>普罗旺斯 - 硬币的一体三面</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1a1a1a; line-height: 1.7; min-height: 100vh; position: relative; font-weight: 500; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; opacity: 0.25; z-index: -1; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,245,245,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
+        .back-link:hover { color: #7a6a7a; background: rgba(232,232,232,0.9); }
+        .page-title { font-size: 2.5em; color: #000; font-weight: 700; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #ddd; }
+        .page-subtitle { font-size: 1.1em; color: #666; margin-bottom: 20px; font-style: italic; }
+        .collapse-section { margin-bottom: 20px; border: none; }
+        .collapse-section[open] { border-bottom: 1px solid rgba(224,224,224,0.5); padding-bottom: 15px; }
+        .collapse-title { list-style: none; display: flex; align-items: center; gap: 8px; font-size: 1.2em; font-weight: 600; color: #1a1a1a; cursor: pointer; }
+        .collapse-title:hover { color: #9a7a8a; }
+        .collapse-title::-webkit-details-marker { display: none; }
+        .collapse-icon { transition: transform 0.3s; }
+        .collapse-section[open] .collapse-icon { transform: rotate(180deg); }
+        .collapse-content { padding: 10px 0 0 28px; }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 6px; }
+        .toc-list a { color: #9a7a8a; text-decoration: none; }
+        .toc-list a:hover { text-decoration: underline; }
+        .info-box { margin: 20px 0; padding: 15px 20px; background: rgba(245,245,245,0.8); border-left: 3px solid #9a7a8a; border-radius: 4px; }
+        .info-label { font-size: 0.9em; color: #9a7a8a; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px; }
+        .info-content { font-size: 0.95em; color: #666; font-style: italic; line-height: 1.8; }
+        .archive-box { background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; line-height: 1.8; border-radius: 4px; margin-bottom: 20px; }
+        .archive-title { font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+    <div class="page-bg"></div>
+    <div class="container">
+        <a href="triple-sides-of-one-coin.html" class="back-link">← 返回花名册</a>
+        <h1 class="page-title">普罗旺斯</h1>
+        <p class="page-subtitle">OW 成员</p>
+        <div class="info-box">
+            <div class="info-label">「 引言 」</div>
+            <div class="info-content">（待填写）</div>
+        </div>
+        <details class="collapse-section">
+            <summary class="collapse-title"><span class="collapse-icon">▼</span>目录</summary>
+            <div class="collapse-content">
+                <ul class="toc-list">
+                    <li><a href="#artwork">立绘展示</a></li>
+                    <li><a href="#description">人物简介</a></li>
+                    <li><a href="#related">相关人物</a></li>
+                    <li><a href="#external">外部链接</a></li>
+                </ul>
+            </div>
+        </details>
+        <details class="collapse-section" id="artwork">
+            <summary class="collapse-title"><span class="collapse-icon">▼</span>立绘展示</summary>
+            <div class="collapse-content">
+                <div style="text-align: center;">
+                    <div style="display: inline-block; padding: 12px; background: linear-gradient(135deg, rgba(232,228,217,0.9) 0%, rgba(212,207,196,0.9) 100%); border-radius: 4px;">
+                        <img src="" alt="普罗旺斯" style="max-width: 100%; max-height: 650px;">
+                    </div>
+                    <div style="padding: 12px; text-align: center; background: rgba(249,249,249,0.9); font-size: 0.9em; color: #666; margin-top: 10px;">（待填写）</div>
+                </div>
+            </div>
+        </details>
+        <details class="collapse-section" id="description">
+            <summary class="collapse-title"><span class="collapse-icon">▼</span>人物简介</summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <div class="archive-title">「 基础档案 」</div>
+                    <p>（待填写）</p>
+                </div>
+            </div>
+        </details>
+        <details class="collapse-section" id="related">
+            <summary class="collapse-title"><span class="collapse-icon">▼</span>相关人物</summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <p>（待填写）</p>
+                </div>
+            </div>
+        </details>
+        <details class="collapse-section" id="external">
+            <summary class="collapse-title"><span class="collapse-icon">▼</span>外部链接</summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <p>（待填写）</p>
+                </div>
+            </div>
+        </details>
+        <a href="triple-sides-of-one-coin.html" class="back-link" style="margin-top: 30px; display: inline-block;">← 返回花名册</a>
+    </div>
+</body>
+</html>
