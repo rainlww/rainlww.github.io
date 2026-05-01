@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卢卡斯 - 硬币的一体三面</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1a1a1a; line-height: 1.7; min-height: 100vh; position: relative; font-weight: 500; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; opacity: 0.25; z-index: -1; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,245,245,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
+        .back-link:hover { color: #7a6a7a; background: rgba(232,232,232,0.9); }
+        .page-title { font-size: 2.5em; color: #000; font-weight: 700; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #ddd; letter-spacing: 0; word-break: keep-all; white-space: normal; }
+        .page-subtitle { font-size: 1.1em; color: #666; margin-bottom: 20px; font-style: italic; }
+        .collapse-section { margin-bottom: 20px; border: none; }
+        .collapse-section[open] { border-bottom: 1px solid rgba(224,224,224,0.5); padding-bottom: 15px; }
+        .collapse-title { list-style: none; display: flex; align-items: center; gap: 8px; font-size: 1.2em; font-weight: 600; color: #1a1a1a; cursor: pointer; padding: 10px 0; margin: 0; transition: color 0.2s; }
+        .collapse-title:hover { color: #9a7a8a; }
+        .collapse-title::-webkit-details-marker { display: none; }
+        .collapse-icon { transition: transform 0.3s; flex-shrink: 0; }
+        .collapse-section[open] .collapse-icon { transform: rotate(180deg); }
+        .collapse-content { padding: 10px 0 0 28px; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 6px; }
+        .toc-list a { color: #9a7a8a; text-decoration: none; font-size: 0.95em; }
+        .toc-list a:hover { color: #7a6a7a; text-decoration: underline; }
+        .info-box { margin: 20px 0; padding: 15px 20px; background: rgba(245,245,245,0.8); border-left: 3px solid #9a7a8a; border-radius: 4px; }
+        .info-label { font-size: 0.9em; color: #9a7a8a; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px; }
+        .info-content { font-size: 0.95em; color: #666; font-style: italic; line-height: 1.8; }
+        .archive-box { background: rgba(245,245,245,0.8); padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; font-size: 1em; line-height: 1.8; border-radius: 4px; font-weight: 500; margin-bottom: 20px; }
+        .archive-title { font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px; }
+        @media (max-width: 768px) { .page-title { font-size: 2em; } }
+        @media (max-width: 480px) { .page-title { font-size: 1.5em; } }
+    </style>
+</head>
+<body>
+    <div class="page-bg" id="pageBg"></div>
+    <div class="container">
+        <a href="triple-sides-of-one-coin.html" class="back-link">← 返回花名册</a>
+        <h1 class="page-title">卢卡斯</h1>
+        <p class="page-subtitle">体能课教师</p>
+        
+        <div class="info-box">
+            <div class="info-label">「 引言 」</div>
+            <div class="info-content">
+                <div>因为在这，你不只是我哥。你是……同志，战友。</div>
+            </div>
+        </div>
+        
+        <details class="collapse-section">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                目录
+            </summary>
+            <div class="collapse-content">
+                <ul class="toc-list">
+                    <li><a href="#basic">基础档案</a></li>
+                    <li><a href="#ability">能力</a></li>
+                    <li><a href="#quotes">经典台词</a></li>
+                    <li><a href="#about">关于……</a></li>
+                    <li><a href="#related">相关人物</a></li>
+                </ul>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="basic">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                基础档案
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <div class="archive-title">「 基础档案 」</div>
+                    <p><strong>生日</strong>：一月二十六日</p>
+                    <p><strong>年龄</strong>：约 29 岁</p>
+                    <p><strong>能力</strong>：防护（17 岁觉醒）</p>
+                    <p><strong>身份</strong>：OW 作战部防御部门、圣拉姆特体能课教师</p>
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #e0e0e0;">
+                    <p><strong>背景</strong>：塞缪尔的表弟，儿时成天跟在他后面，一口一个"哥"。性格温和善良，内敛含蓄，行为端庄得体。第一个被塞缪尔拉进 OW 的卢塞罗家成员。</p>
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #e0e0e0;">
+                    <p><strong>能力</strong>：防护：能凭空唤出不可视的盾牌，替他人抵消一些外界伤害。如果伤害过高，他自己也会受到不小的伤害。</p>
+                </div>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="ability">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                能力
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <div class="archive-title">「 防护 」</div>
+                    <p><strong>能力类型</strong>：正向能力</p>
+                    <p><strong>详细描述</strong>：能凭空唤出不可视的盾牌，替他人抵消一些外界伤害。</p>
+                    <p><strong>特点</strong>：如果伤害过高，他自己也会受到不小的伤害。</p>
+                    <p><strong>觉醒年龄</strong>：17 岁</p>
+                </div>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="quotes">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                经典台词
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <ul>
+                        <li>"哥！额…副院长！"</li>
+                        <li>"因为在这，你不只是我哥。你是……同志，战友。"</li>
+                    </ul>
+                </div>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="about">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                关于……
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <div class="archive-title">「 关于塞缪尔 」</div>
+                    <p>儿时成天跟在他后面，一口一个"哥"。现在是并肩作战的战友。</p>
+                </div>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="related">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                相关人物
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <p>塞缪尔、维奥莱特</p>
+                </div>
+            </div>
+        </details>
+        
+        <div class="back-link" style="margin-top: 30px; display: inline-block;">← 返回花名册</div>
+    </div>
+</body>
+</html>
