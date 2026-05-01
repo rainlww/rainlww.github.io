@@ -3,50 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>伊斯派菈 - 硬币的一体三面</title>
+    <title>伊斯派菈 - 雨落们的档案馆</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1a1a1a; line-height: 1.7; min-height: 100vh; position: relative; font-weight: 500; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 100%); }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1a1a1a; line-height: 1.7; min-height: 100vh; position: relative; font-weight: 500; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; opacity: 0.25; z-index: -1; }
         .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
-        .back-link { display: inline-block; margin-bottom: 20px; color: #5D4E37; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,230,211,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
-        .back-link:hover { color: #8B7355; background: rgba(232,213,196,0.9); }
-        .page-title { font-size: 2.5em; color: #5D4E37; font-weight: 700; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #8B7355; letter-spacing: 0; word-break: keep-all; white-space: normal; }
-        .page-subtitle { font-size: 1.1em; color: #8B7355; margin-bottom: 20px; font-style: italic; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,245,245,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
+        .back-link:hover { color: #7a6a7a; background: rgba(232,232,232,0.9); }
+        .page-title { font-size: 2.5em; color: #000; font-weight: 700; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #ddd; letter-spacing: 0; word-break: keep-all; white-space: normal; }
+        .page-subtitle { font-size: 1.1em; color: #666; margin-bottom: 20px; font-style: italic; }
         .collapse-section { margin-bottom: 20px; border: none; }
-        .collapse-section[open] { border-bottom: 1px solid rgba(139,115,85,0.3); padding-bottom: 15px; }
-        .collapse-title { list-style: none; display: flex; align-items: center; gap: 8px; font-size: 1.2em; font-weight: 600; color: #5D4E37; cursor: pointer; padding: 10px 0; margin: 0; transition: color 0.2s; }
-        .collapse-title:hover { color: #8B7355; }
+        .collapse-section[open] { border-bottom: 1px solid rgba(224,224,224,0.5); padding-bottom: 15px; }
+        .collapse-title { list-style: none; display: flex; align-items: center; gap: 8px; font-size: 1.2em; font-weight: 600; color: #1a1a1a; cursor: pointer; padding: 10px 0; margin: 0; transition: color 0.2s; }
+        .collapse-title:hover { color: #9a7a8a; }
         .collapse-title::-webkit-details-marker { display: none; }
         .collapse-icon { transition: transform 0.3s; flex-shrink: 0; }
         .collapse-section[open] .collapse-icon { transform: rotate(180deg); }
         .collapse-content { padding: 10px 0 0 28px; animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .artwork-container { text-align: center; }
+        .artwork-frame { display: inline-block; max-width: 100%; padding: 12px; background: linear-gradient(135deg, rgba(232,228,217,0.9) 0%, rgba(212,207,196,0.9) 100%); border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); backdrop-filter: blur(10px); }
+        .artwork-frame img { display: block; max-width: 100%; max-height: 650px; height: auto; border-radius: 2px; }
+        .artwork-caption { padding: 12px; text-align: center; background: rgba(249,249,249,0.9); font-size: 0.9em; color: #666; border-top: 1px solid rgba(224,224,224,0.5); margin-top: 10px; border-radius: 4px; backdrop-filter: blur(10px); }
         .toc-list { list-style: none; }
         .toc-list li { margin-bottom: 6px; }
-        .toc-list a { color: #8B7355; text-decoration: none; font-size: 0.95em; }
-        .toc-list a:hover { color: #5D4E37; text-decoration: underline; }
-        .info-box { margin: 20px 0; padding: 15px 20px; background: rgba(245,230,211,0.8); border-left: 3px solid #8B7355; border-radius: 4px; }
-        .info-label { font-size: 0.9em; color: #8B7355; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px; }
-        .info-content { font-size: 0.95em; color: #5D4E37; font-style: italic; line-height: 1.8; }
-        .archive-box { background: rgba(245,245,245,0.8); padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; font-size: 1em; line-height: 1.8; border-radius: 4px; font-weight: 500; margin-bottom: 20px; }
+        .toc-list a { color: #9a7a8a; text-decoration: none; font-size: 0.95em; }
+        .toc-list a:hover { color: #7a6a7a; text-decoration: underline; }
+        .info-box { margin: 20px 0; padding: 15px 20px; background: rgba(245,245,245,0.8); border-left: 3px solid #9a7a8a; border-radius: 4px; }
+        .info-label { font-size: 0.9em; color: #9a7a8a; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px; }
+        .info-content { font-size: 0.95em; color: #666; font-style: italic; line-height: 1.8; }
+        .archive-box { background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; line-height: 1.8; border-radius: 4px; margin-bottom: 20px; }
         .archive-title { font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px; }
         @media (max-width: 768px) { .page-title { font-size: 2em; } }
         @media (max-width: 480px) { .page-title { font-size: 1.5em; } }
     </style>
 </head>
 <body>
+    <div class="page-bg" id="pageBg"></div>
     <div class="container">
         <a href="triple-sides-of-one-coin.html" class="back-link">← 返回花名册</a>
         <h1 class="page-title">伊斯派菈</h1>
         <p class="page-subtitle">总管家</p>
-        
         <div class="info-box">
             <div class="info-label">「 引言 」</div>
             <div class="info-content">
-                <div>家。两位院长的家，孩子们的家，OW 的家……我的家。</div>
+                <div>（待填写）</div>
             </div>
         </div>
-        
         <details class="collapse-section">
             <summary class="collapse-title">
                 <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
@@ -54,88 +58,39 @@
             </summary>
             <div class="collapse-content">
                 <ul class="toc-list">
-                    <li><a href="#basic">基础档案</a></li>
-                    <li><a href="#ability">能力</a></li>
-                    <li><a href="#quotes">经典台词</a></li>
-                    <li><a href="#about">关于……</a></li>
+                    <li><a href="#artwork">立绘展示</a></li>
+                    <li><a href="#description">人物简介</a></li>
                     <li><a href="#related">相关人物</a></li>
+                    <li><a href="#external">外部链接</a></li>
                 </ul>
             </div>
         </details>
-        
-        <details class="collapse-section" id="basic">
+        <details class="collapse-section" id="artwork">
             <summary class="collapse-title">
                 <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-                基础档案
+                立绘展示
+            </summary>
+            <div class="collapse-content">
+                <div class="artwork-container">
+                    <div class="artwork-frame">
+                        <img src="" alt="伊斯派菈">
+                    </div>
+                    <div class="artwork-caption">（待填写）</div>
+                </div>
+            </div>
+        </details>
+        <details class="collapse-section" id="description">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                人物简介
             </summary>
             <div class="collapse-content">
                 <div class="archive-box">
                     <div class="archive-title">「 基础档案 」</div>
-                    <p><strong>生日</strong>：五月二十三日（来到圣贝格尔的日子：三月十二日）</p>
-                    <p><strong>能力</strong>：暂未觉醒</p>
-                    <p><strong>身份</strong>：圣拉姆特总管家、OW 情报汇总及会议总结</p>
-                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #e0e0e0;">
-                    <p><strong>背景</strong>：</p>
-                    <p>在圣拉姆特长大，是第一个来到圣拉姆特的孩子。</p>
-                    <p>当时，她所在的村落被支配者的信徒侵扰，最终发展为冲突，整个村庄被烧成灰烬。荷穆勒夏和塞缪尔在一片废墟中发现了奄奄一息的她，将她带回了圣拉姆特。</p>
-                    <p>彼时圣拉姆特还叫"圣贝格尔"，那时的荷穆勒夏和塞缪尔刚刚二十岁出头，那时的伊斯派菈才十二岁。</p>
-                    <p>她在荷穆勒夏等救济院高层的抚养下长大，接受了优良的教育。</p>
-                    <p>在成年时，她看着荷穆勒夏的眼睛，眼神中充满坚定："院长。圣拉姆特缺一位总管家。""我可以。"</p>
-                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #e0e0e0;">
-                    <p><strong>性格</strong>：温柔含蓄，有礼貌，爱花。圣拉姆特的大花园是她一手建起来的。</p>
+                    <p>（待填写）</p>
                 </div>
             </div>
         </details>
-        
-        <details class="collapse-section" id="ability">
-            <summary class="collapse-title">
-                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-                能力
-            </summary>
-            <div class="collapse-content">
-                <div class="archive-box">
-                    <div class="archive-title">「 暂未觉醒 」</div>
-                    <p>"我的能力还没觉醒。院长说不必心急，能力并不是成为我自己所必须的。"</p>
-                    <p>"但如果我有能力，是不是院长就不用承受干涉带来的痛苦，是不是塞缪尔先生就不用一次次的承负……我帮不上忙，只能陪着他们，一遍遍告诉他们'我在'。"</p>
-                </div>
-            </div>
-        </details>
-        
-        <details class="collapse-section" id="quotes">
-            <summary class="collapse-title">
-                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-                经典台词
-            </summary>
-            <div class="collapse-content">
-                <div class="archive-box">
-                    <ul>
-                        <li>"您好，我是伊斯派菈，圣拉姆特总管家。在此居住期间，您若是有任何生活上的问题，都可以来找我。我将尽我所能帮助您。职责所在。"</li>
-                        <li>"我……没有姓氏。即便没有那场大火。"</li>
-                        <li>"两个值得尊敬的人，两座撑起我生命的灯塔。"</li>
-                        <li>"……两个傻子。"（关于两位院长）</li>
-                    </ul>
-                </div>
-            </div>
-        </details>
-        
-        <details class="collapse-section" id="about">
-            <summary class="collapse-title">
-                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-                关于……
-            </summary>
-            <div class="collapse-content">
-                <div class="archive-box">
-                    <div class="archive-title">「 关于圣拉姆特 」</div>
-                    <p>"家。两位院长的家，孩子们的家，OW 的家……我的家。"</p>
-                    <p>"我记得这里的每一个人，每一处花草，每一个房间，每一次变化。"</p>
-                </div>
-                <div class="archive-box">
-                    <div class="archive-title">「 关于两位院长 」</div>
-                    <p>"他们总希望对方不要一个人扛，可自己却还是这么做。我也希望他们不要扛下所有了。还有我，还有 OW 的大家。"</p>
-                </div>
-            </div>
-        </details>
-        
         <details class="collapse-section" id="related">
             <summary class="collapse-title">
                 <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
@@ -143,12 +98,22 @@
             </summary>
             <div class="collapse-content">
                 <div class="archive-box">
-                    <p>荷穆勒夏、塞缪尔</p>
+                    <p>（待填写）</p>
                 </div>
             </div>
         </details>
-        
-        <div class="back-link" style="margin-top: 30px; display: inline-block;">← 返回花名册</div>
+        <details class="collapse-section" id="external">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                外部链接
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <p>（待填写）</p>
+                </div>
+            </div>
+        </details>
+        <a href="triple-sides-of-one-coin.html" class="back-link" style="margin-top: 30px; display: inline-block;">← 返回花名册</a>
     </div>
 </body>
 </html>
