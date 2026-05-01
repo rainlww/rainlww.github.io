@@ -473,7 +473,7 @@
         <!-- 空状态提示 -->
         <div id="emptyState" style="display: none; text-align: center; padding: 60px 20px; color: #999;">
             <p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p>
-            <p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>
+            <p style="font-size: 0.9em; font-style: italic;">圣拉姆特的记录中没有这个人。</p>
         </div>
 
         <!-- 荷穆勒提示 --><!-- 视图切换 -->
@@ -810,10 +810,10 @@
                     
                     if (hasUnaddedTag) {
                         // 有标签尚未添加人物
-                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>';
+                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">圣拉姆特的记录中没有这个人。</p>';
                     } else {
                         // 交集为空
-                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>';
+                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">圣拉姆特的记录中没有这个人。</p>';
                     }
                 } else {
                     emptyState.style.display = 'none';
@@ -868,9 +868,9 @@
                     const allTags = characters.flatMap(c => c.tags);
                     const hasUnaddedTag = selectedTags.some(tag => !allTags.includes(tag));
                     if (hasUnaddedTag) {
-                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>';
+                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">圣拉姆特的记录中没有这个人。</p>';
                     } else {
-                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">观测站的记录里查无此人……是不是找错了？</p>';
+                        emptyState.innerHTML = '<p style="font-size: 0.9em; font-style: italic; margin-bottom: 10px;">(´• ω •`)</p><p style="font-size: 0.9em; font-style: italic;">圣拉姆特的记录中没有这个人。</p>';
                     }
                 }
             }
