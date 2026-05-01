@@ -623,7 +623,12 @@
         // 按所属查找标签
         const affiliationTags = ["圣拉姆特"];
         
-        const presetTags = [...characterTags, ...affiliationTags];
+        const presetTags = [...characterTags, ...affiliationTags, "世界的孤儿"];
+        
+        // 标签显示名称映射（用于添加引号等特殊格式）
+        const tagDisplayNames = {
+            "世界的孤儿": "\"世界的孤儿\""
+        };
 
         // 当前选中的标签
         let selectedTags = [];
