@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>维奥莱特 - 硬币的一体三面</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1a1a1a; line-height: 1.7; min-height: 100vh; position: relative; font-weight: 500; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; opacity: 0.25; z-index: -1; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,245,245,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
+        .back-link:hover { color: #7a6a7a; background: rgba(232,232,232,0.9); }
+        .page-title { font-size: 2.5em; color: #000; font-weight: 700; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #ddd; letter-spacing: 0; word-break: keep-all; white-space: normal; }
+        .page-subtitle { font-size: 1.1em; color: #666; margin-bottom: 20px; font-style: italic; }
+        .collapse-section { margin-bottom: 20px; border: none; }
+        .collapse-section[open] { border-bottom: 1px solid rgba(224,224,224,0.5); padding-bottom: 15px; }
+        .collapse-title { list-style: none; display: flex; align-items: center; gap: 8px; font-size: 1.2em; font-weight: 600; color: #1a1a1a; cursor: pointer; padding: 10px 0; margin: 0; transition: color 0.2s; }
+        .collapse-title:hover { color: #9a7a8a; }
+        .collapse-title::-webkit-details-marker { display: none; }
+        .collapse-icon { transition: transform 0.3s; flex-shrink: 0; }
+        .collapse-section[open] .collapse-icon { transform: rotate(180deg); }
+        .collapse-content { padding: 10px 0 0 28px; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 6px; }
+        .toc-list a { color: #9a7a8a; text-decoration: none; font-size: 0.95em; }
+        .toc-list a:hover { color: #7a6a7a; text-decoration: underline; }
+        .info-box { margin: 20px 0; padding: 15px 20px; background: rgba(245,245,245,0.8); border-left: 3px solid #9a7a8a; border-radius: 4px; }
+        .info-label { font-size: 0.9em; color: #9a7a8a; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px; }
+        .info-content { font-size: 0.95em; color: #666; font-style: italic; line-height: 1.8; }
+        .archive-box { background: rgba(245,245,245,0.8); padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; font-size: 1em; line-height: 1.8; border-radius: 4px; font-weight: 500; margin-bottom: 20px; }
+        .archive-title { font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px; }
+        @media (max-width: 768px) { .page-title { font-size: 2em; } }
+        @media (max-width: 480px) { .page-title { font-size: 1.5em; } }
+    </style>
+</head>
+<body>
+    <div class="page-bg" id="pageBg"></div>
+    <div class="container">
+        <a href="triple-sides-of-one-coin.html" class="back-link">← 返回花名册</a>
+        <h1 class="page-title">维奥莱特</h1>
+        <p class="page-subtitle">财务部负责人</p>
+        
+        <div class="info-box">
+            <div class="info-label">「 引言 」</div>
+            <div class="info-content">
+                <div>你是我见过最穷的富人。</div>
+            </div>
+        </div>
+        
+        <details class="collapse-section">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                目录
+            </summary>
+            <div class="collapse-content">
+                <ul class="toc-list">
+                    <li><a href="#basic">基础档案</a></li>
+                    <li><a href="#ability">能力</a></li>
+                    <li><a href="#quotes">经典台词</a></li>
+                    <li><a href="#about">关于……</a></li>
+                    <li><a href="#related">相关人物</a></li>
+                </ul>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="basic">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                基础档案
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <div class="archive-title">「 基础档案 」</div>
+                    <p><strong>年龄</strong>：约 31 岁</p>
+                    <p><strong>能力</strong>：推演（19 岁觉醒）</p>
+                    <p><strong>身份</strong>：圣拉姆特财务部负责人、OW 财务部</p>
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #e0e0e0;">
+                    <p><strong>背景</strong>：塞缪尔的表姐，卢塞罗家族里排的上号的人物，一个天生的商人。在年仅二十岁的时候就已经展露头角。表面优雅得体，但不少威严之气。</p>
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #e0e0e0;">
+                    <p><strong>能力</strong>：推演：根据目前的已知信息，在脑海里迅速预知可能的发展。准确率极高，据本人所说可以达到 80% 以上。准确度和掌握的信息多少有关。</p>
+                </div>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="ability">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                能力
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <div class="archive-title">「 推演 」</div>
+                    <p><strong>能力类型</strong>：正向能力</p>
+                    <p><strong>详细描述</strong>：根据目前的已知信息，在脑海里迅速预知可能的发展。</p>
+                    <p><strong>特点</strong>：准确率极高，据本人所说可以达到 80% 以上。准确度和掌握的信息多少有关。</p>
+                    <p><strong>觉醒年龄</strong>：19 岁</p>
+                </div>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="quotes">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                经典台词
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <ul>
+                        <li>"你是我见过最穷的富人。"（对塞缪尔）</li>
+                        <li>"滚。"（对塞缪尔）</li>
+                    </ul>
+                </div>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="about">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                关于……
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <div class="archive-title">「 关于塞缪尔 」</div>
+                    <p>表弟。表面嫌弃，实则关心。</p>
+                </div>
+            </div>
+        </details>
+        
+        <details class="collapse-section" id="related">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                相关人物
+            </summary>
+            <div class="collapse-content">
+                <div class="archive-box">
+                    <p>塞缪尔、卢卡斯</p>
+                </div>
+            </div>
+        </details>
+        
+        <div class="back-link" style="margin-top: 30px; display: inline-block;">← 返回花名册</div>
+    </div>
+</body>
+</html>
