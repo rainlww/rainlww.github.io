@@ -692,7 +692,7 @@
             if (charContainer) {
                 charContainer.innerHTML = characterTags.map(tag => `
                     <div class="filter-tag" data-tag="${tag}" onclick="toggleTag('${tag}')">
-                        ${tag}
+                        ${tagDisplayNames[tag] || tag}
                     </div>
                 `).join('');
             }
@@ -701,7 +701,7 @@
             if (affContainer) {
                 affContainer.innerHTML = affiliationTags.map(tag => `
                     <div class="filter-tag" data-tag="${tag}" onclick="toggleTag('${tag}')">
-                        ${tag}
+                        ${tagDisplayNames[tag] || tag}
                     </div>
                 `).join('');
             }
