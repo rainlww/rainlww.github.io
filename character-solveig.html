@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>索尔薇格 - 雨落们的档案馆</title>
     <style>
-        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1a1a1a; line-height: 1.7; min-height: 100vh; position: relative; font-weight: 500; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; opacity: 0.25; z-index: -1; }
@@ -30,13 +29,28 @@
         .toc-list li { margin-bottom: 6px; }
         .toc-list a { color: #9a7a8a; text-decoration: none; font-size: 0.95em; }
         .toc-list a:hover { color: #7a6a7a; text-decoration: underline; }
+        .info-box { margin: 20px 0; padding: 15px 20px; background: rgba(245,245,245,0.8); border-left: 3px solid #9a7a8a; border-radius: 4px; }
+        .info-label { font-size: 0.9em; color: #9a7a8a; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px; }
+        .info-content { font-size: 0.95em; color: #666; font-style: italic; line-height: 1.8; }
+        .archive-box { background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; line-height: 1.8; border-radius: 4px; margin-bottom: 20px; }
+        .archive-title { font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px; }
+        
+        /* 人物关系表样式 */
+        .relation-table { display: flex; flex-direction: column; gap: 12px; }
+        .relation-row { display: flex; align-items: center; gap: 10px; padding: 12px; background: #fff; border-radius: 6px; border: 1px solid #e0e0e0; transition: all 0.2s; }
+        .relation-row:hover { background: #f9f9f9; border-color: #9a7a8a; }
+        .relation-person { min-width: 80px; font-weight: 600; color: #1a1a1a; }
+        .relation-arrow { color: #9a7a8a; font-size: 1.2em; }
+        .relation-desc { flex: 1; color: #666; font-size: 0.95em; }
+        .relation-link { display: block; text-decoration: none; color: inherit; }
+        .relation-link:hover .relation-person { color: #9a7a8a; }
+        .center-person { background: linear-gradient(135deg, rgba(232,228,217,0.9) 0%, rgba(212,207,196,0.9) 100%); border: 2px solid #9a7a8a; font-weight: 700; }
+        
         @media (max-width: 768px) { .page-title { font-size: 2em; } }
         @media (max-width: 480px) { .page-title { font-size: 1.5em; } }
-    
     </style>
 </head>
 <body>
-    
     <div class="page-bg" id="pageBg"></div>
     <div class="container">
         <a href="triple-sides-of-one-coin.html" class="back-link">← 返回花名册</a>
@@ -59,7 +73,7 @@
                 <ul class="toc-list">
                     <li><a href="#artwork">立绘展示</a></li>
                     <li><a href="#description">人物简介</a></li>
-                    <li><a href="#related">相关人物</a></li>
+                    <li><a href="#relations">人物关系</a></li>
                     <li><a href="#external">外部链接</a></li>
                 </ul>
             </div>
@@ -93,7 +107,6 @@
                     <p>讨厌空荡虚无，讨厌苦味。</p>
                     <p>为人性格爽朗，爱护属下，处事圆滑周全，但做事极小心谨慎。</p>
                 </div>
-                
                 <div class="archive-box">
                     <div class="archive-title">「 档案资料（一） 」</div>
                     <p>"阿方索，买完菜赶紧回来。客人太多了。"</p>
@@ -128,14 +141,95 @@
                 </div>
             </div>
         </details>
-        <details class="collapse-section" id="related">
+        <details class="collapse-section" id="relations">
             <summary class="collapse-title">
                 <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-                相关人物
+                人物关系
             </summary>
             <div class="collapse-content">
                 <div class="archive-box">
-                    <p>荷穆勒夏、苏明若、林清落、小夜曲</p>
+                    <div class="archive-title">「 人物关系表 」</div>
+                    <div class="relation-table">
+                        <a href="character-solveig.html" class="relation-link">
+                            <div class="relation-row center-person">
+                                <span class="relation-person">索尔薇格</span>
+                                <span class="relation-arrow">⟲</span>
+                                <span class="relation-desc">（本人）</span>
+                            </div>
+                        </a>
+                        <a href="character-homulesha.html" class="relation-link">
+                            <div class="relation-row">
+                                <span class="relation-person">索尔薇格</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-desc">"能吃辣的院长"</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-person">荷穆勒夏</span>
+                            </div>
+                        </a>
+                        <a href="character-homulesha.html" class="relation-link">
+                            <div class="relation-row">
+                                <span class="relation-person">荷穆勒夏</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-desc">"外驻傀儡城，可信"</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-person">索尔薇格</span>
+                            </div>
+                        </a>
+                        <a href="character-mingruo.html" class="relation-link">
+                            <div class="relation-row">
+                                <span class="relation-person">索尔薇格</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-desc">"挚友，救命恩人"</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-person">苏明若</span>
+                            </div>
+                        </a>
+                        <a href="character-mingruo.html" class="relation-link">
+                            <div class="relation-row">
+                                <span class="relation-person">苏明若</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-desc">"爽朗的八卦伙伴"</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-person">索尔薇格</span>
+                            </div>
+                        </a>
+                        <a href="character-qingluo.html" class="relation-link">
+                            <div class="relation-row">
+                                <span class="relation-person">索尔薇格</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-desc">"可靠的医者"</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-person">林清落</span>
+                            </div>
+                        </a>
+                        <a href="character-qingluo.html" class="relation-link">
+                            <div class="relation-row">
+                                <span class="relation-person">林清落</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-desc">"OW 的联络人"</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-person">索尔薇格</span>
+                            </div>
+                        </a>
+                        <a href="character-nocturne.html" class="relation-link">
+                            <div class="relation-row">
+                                <span class="relation-person">索尔薇格</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-desc">"属下，情报员"</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-person">小夜曲</span>
+                            </div>
+                        </a>
+                        <a href="character-nocturne.html" class="relation-link">
+                            <div class="relation-row">
+                                <span class="relation-person">小夜曲</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-desc">"爽朗的上司"</span>
+                                <span class="relation-arrow">⟶</span>
+                                <span class="relation-person">索尔薇格</span>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </details>
@@ -151,6 +245,5 @@
             </div>
         </details>
     </div>
-
 </body>
 </html>
