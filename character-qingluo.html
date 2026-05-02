@@ -12,7 +12,6 @@
         .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,245,245,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
         .back-link:hover { color: #7a6a7a; background: rgba(232,232,232,0.9); }
         .page-title { font-size: 2.5em; color: #000; font-weight: 700; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #ddd; letter-spacing: 0; word-break: keep-all; white-space: normal; }
-        .page-subtitle { font-size: 1.1em; color: #666; margin-bottom: 20px; font-style: italic; }
         .collapse-section { margin-bottom: 20px; border: none; }
         .collapse-section[open] { border-bottom: 1px solid rgba(224,224,224,0.5); padding-bottom: 15px; }
         .collapse-title { list-style: none; display: flex; align-items: center; gap: 8px; font-size: 1.2em; font-weight: 600; color: #1a1a1a; cursor: pointer; padding: 10px 0; margin: 0; transition: color 0.2s; }
@@ -30,11 +29,6 @@
         .toc-list li { margin-bottom: 6px; }
         .toc-list a { color: #9a7a8a; text-decoration: none; font-size: 0.95em; }
         .toc-list a:hover { color: #7a6a7a; text-decoration: underline; }
-        .info-box { margin: 20px 0; padding: 15px 20px; background: rgba(245,245,245,0.8); border-left: 3px solid #9a7a8a; border-radius: 4px; }
-        .info-label { font-size: 0.9em; color: #9a7a8a; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px; }
-        .info-content { font-size: 0.95em; color: #666; font-style: italic; line-height: 1.8; }
-        .archive-box { background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; line-height: 1.8; border-radius: 4px; margin-bottom: 20px; }
-        .archive-title { font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px; }
         @media (max-width: 768px) { .page-title { font-size: 2em; } }
         @media (max-width: 480px) { .page-title { font-size: 1.5em; } }
     </style>
@@ -44,9 +38,9 @@
     <div class="container">
         <a href="triple-sides-of-one-coin.html" class="back-link">← 返回花名册</a>
         <h1 class="page-title">林清落</h1>
-        <div class="info-box">
-            <div class="info-label">「 引言 」</div>
-            <div class="info-content">
+        <div style="margin: 20px 0; padding: 15px 20px; background: rgba(245,245,245,0.8); border-left: 3px solid #9a7a8a; border-radius: 4px;">
+            <div style="font-size: 0.9em; color: #9a7a8a; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px;">「 引言 」</div>
+            <div style="font-size: 0.95em; color: #666; font-style: italic; line-height: 1.8;">
                 <div>（待填写）</div>
             </div>
         </div>
@@ -59,7 +53,7 @@
                 <ul class="toc-list">
                     <li><a href="#artwork">立绘展示</a></li>
                     <li><a href="#description">人物简介</a></li>
-                    <li><a href="#related">相关人物</a></li>
+                    <li><a href="#relations">人物关系</a></li>
                     <li><a href="#external">外部链接</a></li>
                 </ul>
             </div>
@@ -84,19 +78,22 @@
                 人物简介
             </summary>
             <div class="collapse-content">
-                <div class="archive-box">
-                    <div class="archive-title">「 基础档案 」</div>
-                    <p>（待填写）</p>
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 基础档案 」</div>
+                    <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; font-size: 1em; line-height: 1.8; border-radius: 4px; font-weight: 500;">
+                        <p style="margin: 0 0 12px 0;">（待填写）</p>
+                    </div>
                 </div>
             </div>
         </details>
-        <details class="collapse-section" id="related">
+        <details class="collapse-section" id="relations">
             <summary class="collapse-title">
                 <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-                相关人物
+                人物关系
             </summary>
             <div class="collapse-content">
-                <div class="archive-box">
+                <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; line-height: 1.8; border-radius: 4px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 人物关系表 」</div>
                     <p>（待填写）</p>
                 </div>
             </div>
@@ -107,11 +104,12 @@
                 外部链接
             </summary>
             <div class="collapse-content">
-                <div class="archive-box">
+                <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; line-height: 1.8; border-radius: 4px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 外部链接 」</div>
                     <p>（待填写）</p>
                 </div>
             </div>
         </details>
-            </div>
+    </div>
 </body>
 </html>
