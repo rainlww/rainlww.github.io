@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档阅读器 - 翻页版 - 雨落的世界</title>
+    <!-- 引入 mammoth.js 用于解析 Word 文档 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        /* 上传区域 */
+        .upload-area {
+            background: #fff;
+            border: 3px dashed #fff;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .upload-area:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .upload-hint {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* 书本容器 */
+        .book-wrapper {
+            display: none;
+            perspective: 1500px;
+            margin: 0 auto;
+        }
+
+        .book-wrapper.active {
+            display: block;
+        }
+
+        .book {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+        }
+
+        /* 书页 */
+        .page {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            background: #fff;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transform-origin: left center;
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+            backface-visibility: hidden;
+            overflow: hidden;
+        }
+
+        .page.left {
+            left: 0;
+            border-radius: 5px 0 0 5px;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .page.right {
+            left: 50%;
+            border-radius: 0 5px 5px 0;
+            border-left: 1px solid #e0e0e0;
+        }
+
+        .page.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        .page-content {
+            padding: 40px;
+            height: 100%;
+            overflow-y: auto;
+            line-height: 1.8;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .page-content h1,
+        .page-content h2,
+        .page-content h3 {
+            color: #667eea;
+            margin: 20px 0 15px 0;
+        }
+
+        .page-content h1 {
+            font-size: 1.6em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .page-content h2 {
+            font-size: 1.3em;
+        }
+
+        .page-content h3 {
+            font-size: 1.1em;
+        }
+
+        .page-content p {
+            margin-bottom: 15px;
+            text-indent: 2em;
+        }
+
+        .page-content ul,
+        .page-content ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        .page-content li {
+            margin-bottom: 8px;
+        }
+
+        /* 页码 */
+        .page-number {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .page.left .page-number {
+            left: 20px;
+            transform: none;
+        }
+
+        .page.right .page-number {
+            left: auto;
+            right: 20px;
+            transform: none;
+        }
+
+        /* 导航按钮 */
+        .nav-buttons {
+            display: none;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .nav-buttons.active {
+            display: flex;
+        }
+
+        .nav-btn {
+            background: #fff;
+            color: #667eea;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .nav-btn.secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .nav-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* 加载提示 */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #fff;
+            font-size: 1.2em;
+            display: none;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        /* 文档信息 */
+        .doc-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            color: #fff;
+        }
+
+        .doc-info.active {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .doc-title {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .doc-stats {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .book {
+                height: 500px;
+            }
+
+            .page-content {
+                padding: 30px 20px;
+                font-size: 1em;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .book {
+                height: 450px;
+            }
+
+            .page {
+                width: 100% !important;
+                left: 0 !important;
+            }
+
+            .page.right {
+                display: none;
+            }
+
+            .page-content {
+                padding: 20px 15px;
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 页面头部 -->
+        <div class="header">
+            <h1>📖 文档阅读器 - 翻页版</h1>
+            <p>上传 Word 文档，体验真实翻页效果</p>
+        </div>
+
+        <!-- 上传区域 -->
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📄</div>
+            <div class="upload-text">点击上传 Word 文档</div>
+            <div class="upload-hint">支持 .docx 格式，或直接拖拽文件到此处</div>
+            <input type="file" id="fileInput" accept=".docx" onchange="handleFileSelect(event)">
+        </div>
+
+        <!-- 加载提示 -->
+        <div class="loading" id="loading">
+            正在解析文档，请稍候...
+        </div>
+
+        <!-- 文档信息 -->
+        <div class="doc-info" id="docInfo">
+            <div class="doc-title" id="docTitle">文档标题</div>
+            <div class="doc-stats" id="docStats">字数：0</div>
+        </div>
+
+        <!-- 书本容器 -->
+        <div class="book-wrapper" id="bookWrapper">
+            <div class="book" id="book">
+                <!-- 书页会通过 JavaScript 动态生成 -->
+            </div>
+        </div>
+
+        <!-- 导航按钮 -->
+        <div class="nav-buttons" id="navButtons">
+            <button class="nav-btn" id="prevBtn" onclick="prevPage()" disabled>⬅️ 上一页</button>
+            <button class="nav-btn secondary" onclick="resetReader()">❌ 关闭</button>
+            <button class="nav-btn" id="nextBtn" onclick="nextPage()">下一页 ➡️</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        let totalPages = 0;
+        let pages = [];
+        let currentFileName = '';
+
+        // 处理文件选择
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                loadDocument(file);
+            }
+        }
+
+        // 处理拖拽上传
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.style.background = 'rgba(255, 255, 255, 0.95)';
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.style.background = '#fff';
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.style.background = '#fff';
+            const file = e.dataTransfer.files[0];
+            if (file && file.name.endsWith('.docx')) {
+                loadDocument(file);
+            } else {
+                alert('请上传 .docx 格式的 Word 文档');
+            }
+        });
+
+        // 加载文档
+        function loadDocument(file) {
+            currentFileName = file.name;
+            
+            // 显示加载提示
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('uploadArea').style.display = 'none';
+            document.getElementById('bookWrapper').classList.remove('active');
+            document.getElementById('navButtons').classList.remove('active');
+            document.getElementById('docInfo').classList.remove('active');
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const arrayBuffer = event.target.result;
+                
+                // 使用 mammoth.js 解析 Word 文档
+                mammoth.extractRawText({arrayBuffer: arrayBuffer})
+                    .then(result => {
+                        displayDocument(result.value);
+                    })
+                    .catch(handleError);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 显示文档内容
+        function displayDocument(text) {
+            const wordCount = text.replace(/\s/g, '').length;
+            
+            // 更新文档信息
+            document.getElementById('docTitle').textContent = currentFileName.replace('.docx', '');
+            document.getElementById('docStats').textContent = `字数：${wordCount}`;
+            document.getElementById('docInfo').classList.add('active');
+
+            // 将文档内容分割成页面
+            pages = splitIntoPages(text);
+            totalPages = pages.length;
+            currentPage = 0;
+
+            // 生成书页
+            createBookPages();
+
+            // 显示阅读器
+            document.getElementById('loading').classList.remove('active');
+            document.getElementById('bookWrapper').classList.add('active');
+            document.getElementById('navButtons').classList.add('active');
+
+            updateNavigation();
+        }
+
+        // 将内容分割成页面
+        function splitIntoPages(text) {
+            const paragraphs = text.split('\n\n').filter(p => p.trim());
+            const pages = [];
+            let currentPage = [];
+            let currentLength = 0;
+            const maxPerPage = 800; // 每页最大字符数
+
+            paragraphs.forEach(p => {
+                const trimmed = p.trim();
+                if (trimmed) {
+                    if (currentLength + trimmed.length > maxPerPage && currentPage.length > 0) {
+                        pages.push(currentPage.join('\n\n'));
+                        currentPage = [];
+                        currentLength = 0;
+                    }
+                    currentPage.push(trimmed);
+                    currentLength += trimmed.length;
+                }
+            });
+
+            if (currentPage.length > 0) {
+                pages.push(currentPage.join('\n\n'));
+            }
+
+            return pages;
+        }
+
+        // 创建书页
+        function createBookPages() {
+            const book = document.getElementById('book');
+            book.innerHTML = '';
+
+            // 总是显示两页（左页和右页）
+            for (let i = 0; i < Math.min(2, pages.length); i++) {
+                const pageDiv = document.createElement('div');
+                pageDiv.className = `page ${i === 0 ? 'left' : 'right'}`;
+                pageDiv.id = `page${i}`;
+                
+                const content = formatContent(pages[i]);
+                const pageNum = i + 1;
+                
+                pageDiv.innerHTML = `
+                    <div class="page-content">${content}</div>
+                    <div class="page-number">${pageNum} / ${totalPages}</div>
+                `;
+                
+                book.appendChild(pageDiv);
+            }
+        }
+
+        // 格式化内容
+        function formatContent(text) {
+            const paragraphs = text.split('\n\n').filter(p => p.trim());
+            let html = '';
+            
+            paragraphs.forEach(p => {
+                const trimmed = p.trim();
+                if (trimmed) {
+                    if (trimmed.startsWith('#')) {
+                        const level = trimmed.match(/^#+/)[0].length;
+                        const content = trimmed.replace(/^#+\s*/, '');
+                        html += `<h${level}>${content}</h${level}>`;
+                    } else {
+                        html += `<p>${trimmed}</p>`;
+                    }
+                }
+            });
+
+            return html || '<p>页面内容为空</p>';
+        }
+
+        // 翻页
+        function nextPage() {
+            if (currentPage + 2 < totalPages) {
+                // 翻页动画
+                const leftPage = document.getElementById('page0');
+                if (leftPage) {
+                    leftPage.classList.add('flipped');
+                    
+                    setTimeout(() => {
+                        // 更新内容
+                        currentPage += 2;
+                        updatePages();
+                        leftPage.classList.remove('flipped');
+                        updateNavigation();
+                    }, 400);
+                }
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 0) {
+                const leftPage = document.getElementById('page0');
+                if (leftPage) {
+                    leftPage.classList.add('flipped');
+                    
+                    setTimeout(() => {
+                        currentPage = Math.max(0, currentPage - 2);
+                        updatePages();
+                        leftPage.classList.remove('flipped');
+                        updateNavigation();
+                    }, 400);
+                }
+            }
+        }
+
+        // 更新页面内容
+        function updatePages() {
+            const leftPage = document.getElementById('page0');
+            const rightPage = document.getElementById('page1');
+
+            if (leftPage && currentPage < totalPages) {
+                const content = formatContent(pages[currentPage]);
+                const pageNum = currentPage + 1;
+                leftPage.innerHTML = `
+                    <div class="page-content">${content}</div>
+                    <div class="page-number">${pageNum} / ${totalPages}</div>
+                `;
+            }
+
+            if (rightPage && currentPage + 1 < totalPages) {
+                const content = formatContent(pages[currentPage + 1]);
+                const pageNum = currentPage + 2;
+                rightPage.innerHTML = `
+                    <div class="page-content">${content}</div>
+                    <div class="page-number">${pageNum} / ${totalPages}</div>
+                `;
+                rightPage.style.display = 'block';
+            } else if (rightPage) {
+                rightPage.style.display = 'none';
+            }
+        }
+
+        // 更新导航按钮
+        function updateNavigation() {
+            document.getElementById('prevBtn').disabled = currentPage === 0;
+            document.getElementById('nextBtn').disabled = currentPage + 2 >= totalPages;
+        }
+
+        // 处理错误
+        function handleError(err) {
+            console.error(err);
+            alert('文档解析失败，请确保是有效的 .docx 文件');
+            document.getElementById('loading').classList.remove('active');
+            document.getElementById('uploadArea').style.display = 'block';
+        }
+
+        // 重置阅读器
+        function resetReader() {
+            document.getElementById('bookWrapper').classList.remove('active');
+            document.getElementById('navButtons').classList.remove('active');
+            document.getElementById('docInfo').classList.remove('active');
+            document.getElementById('uploadArea').style.display = 'block';
+            document.getElementById('fileInput').value = '';
+            currentPage = 0;
+            totalPages = 0;
+            pages = [];
+            currentFileName = '';
+        }
+
+        // 键盘导航
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('bookWrapper').classList.contains('active')) {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    nextPage();
+                } else if (e.key === 'ArrowLeft') {
+                    prevPage();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
