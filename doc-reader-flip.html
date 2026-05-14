@@ -133,7 +133,7 @@
         .page-content {
             padding: 40px;
             height: 100%;
-            overflow-y: auto;
+            overflow: hidden;
             line-height: 1.8;
             font-size: 1.1em;
             color: #333;
@@ -453,24 +453,32 @@
             const paragraphs = text.split('\n\n').filter(p => p.trim());
             const pages = [];
             let currentPage = [];
-            let currentLength = 0;
-            const maxPerPage = 800; // 每页最大字符数
+            let currentLines = 0;
+            const maxLinesPerPage = 25; // 每页最大行数（根据页面高度调整）
 
             paragraphs.forEach(p => {
                 const trimmed = p.trim();
                 if (trimmed) {
-                    if (currentLength + trimmed.length > maxPerPage && currentPage.length > 0) {
+                    // 估算段落占用的行数（假设每行约 40 个字符）
+                    const estimatedLines = Math.ceil(trimmed.length / 40);
+                    
+                    if (currentLines + estimatedLines > maxLinesPerPage && currentPage.length > 0) {
                         pages.push(currentPage.join('\n\n'));
                         currentPage = [];
-                        currentLength = 0;
+                        currentLines = 0;
                     }
                     currentPage.push(trimmed);
-                    currentLength += trimmed.length;
+                    currentLines += estimatedLines;
                 }
             });
 
             if (currentPage.length > 0) {
                 pages.push(currentPage.join('\n\n'));
+            }
+
+            // 如果总页数是奇数，添加一个空白页作为封底
+            if (pages.length % 2 === 1) {
+                pages.push('');
             }
 
             return pages;
