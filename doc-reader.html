@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档阅读器 - 雨落的世界</title>
+    <!-- 引入 mammoth.js 用于解析 Word 文档 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1em;
+        }
+
+        .upload-area {
+            background: #fff;
+            border: 3px dashed #667eea;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .upload-area:hover {
+            background: #f8f9ff;
+            border-color: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .upload-area.dragover {
+            background: #e8ebff;
+            border-color: #764ba2;
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .upload-hint {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .reader-container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: none;
+        }
+
+        .reader-container.active {
+            display: block;
+        }
+
+        .reader-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reader-title {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .reader-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .reader-content {
+            padding: 40px;
+            max-height: 70vh;
+            overflow-y: auto;
+            line-height: 1.8;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .reader-content h1,
+        .reader-content h2,
+        .reader-content h3 {
+            color: #667eea;
+            margin: 30px 0 15px 0;
+        }
+
+        .reader-content h1 {
+            font-size: 1.8em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .reader-content h2 {
+            font-size: 1.5em;
+        }
+
+        .reader-content h3 {
+            font-size: 1.2em;
+        }
+
+        .reader-content p {
+            margin-bottom: 15px;
+            text-indent: 2em;
+        }
+
+        .reader-content ul,
+        .reader-content ol {
+            margin: 15px 0;
+            padding-left: 40px;
+        }
+
+        .reader-content li {
+            margin-bottom: 8px;
+        }
+
+        .page-info {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .word-count {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+            display: none;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .reader-content {
+                padding: 20px;
+                font-size: 1em;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .reader-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .reader-content {
+                padding: 15px;
+                font-size: 0.95em;
+            }
+
+            .upload-area {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 页面头部 -->
+        <div class="header">
+            <h1>📖 文档阅读器</h1>
+            <p>上传 Word 文档，在线阅读</p>
+        </div>
+
+        <!-- 上传区域 -->
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📄</div>
+            <div class="upload-text">点击上传 Word 文档</div>
+            <div class="upload-hint">支持 .docx 格式，或直接拖拽文件到此处</div>
+            <input type="file" id="fileInput" accept=".docx" onchange="handleFileSelect(event)">
+        </div>
+
+        <!-- 加载提示 -->
+        <div class="loading" id="loading">
+            正在解析文档，请稍候...
+        </div>
+
+        <!-- 阅读器 -->
+        <div class="reader-container" id="readerContainer">
+            <div class="reader-header">
+                <div class="reader-title" id="readerTitle">文档标题</div>
+                <div class="reader-controls">
+                    <button class="control-btn" onclick="toggleFontSize()">A+</button>
+                    <button class="control-btn" onclick="downloadAsText()">⬇️ 下载</button>
+                    <button class="control-btn" onclick="resetReader()">❌ 关闭</button>
+                </div>
+            </div>
+            <div class="reader-content" id="readerContent">
+                <!-- 文档内容将显示在这里 -->
+            </div>
+            <div class="page-info">
+                <div class="word-count" id="wordCount">字数：0</div>
+                <div class="word-count" id="fileName">文件名：-</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentFontSize = 1.1;
+        let currentContent = '';
+        let currentFileName = '';
+
+        // 处理文件选择
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                loadDocument(file);
+            }
+        }
+
+        // 处理拖拽上传
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.name.endsWith('.docx')) {
+                loadDocument(file);
+            } else {
+                alert('请上传 .docx 格式的 Word 文档');
+            }
+        });
+
+        // 加载文档
+        function loadDocument(file) {
+            currentFileName = file.name;
+            document.getElementById('fileName').textContent = `文件名：${file.name}`;
+            
+            // 显示加载提示
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('uploadArea').style.display = 'none';
+            document.getElementById('readerContainer').classList.remove('active');
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const arrayBuffer = event.target.result;
+                
+                // 使用 mammoth.js 解析 Word 文档
+                mammoth.extractRawText({arrayBuffer: arrayBuffer})
+                    .then(displayDocument)
+                    .catch(handleError);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 显示文档内容
+        function displayDocument(result) {
+            const text = result.value;
+            currentContent = text;
+            
+            // 简单格式化：将段落用 <p> 标签包裹
+            const paragraphs = text.split('\n\n').filter(p => p.trim());
+            let html = '';
+            
+            paragraphs.forEach(p => {
+                const trimmed = p.trim();
+                if (trimmed) {
+                    // 检查是否是标题
+                    if (trimmed.startsWith('#')) {
+                        const level = trimmed.match(/^#+/)[0].length;
+                        const content = trimmed.replace(/^#+\s*/, '');
+                        html += `<h${level}>${content}</h${level}>`;
+                    } else {
+                        html += `<p>${trimmed}</p>`;
+                    }
+                }
+            });
+
+            // 如果没有检测到标题，添加默认标题
+            document.getElementById('readerTitle').textContent = currentFileName.replace('.docx', '');
+            
+            // 显示阅读器
+            document.getElementById('readerContent').innerHTML = html || '<p>文档内容为空</p>';
+            document.getElementById('loading').classList.remove('active');
+            document.getElementById('readerContainer').classList.add('active');
+            
+            // 统计字数
+            const wordCount = text.replace(/\s/g, '').length;
+            document.getElementById('wordCount').textContent = `字数：${wordCount}`;
+        }
+
+        // 处理错误
+        function handleError(err) {
+            console.error(err);
+            alert('文档解析失败，请确保是有效的 .docx 文件');
+            document.getElementById('loading').classList.remove('active');
+            document.getElementById('uploadArea').style.display = 'block';
+        }
+
+        // 调整字体大小
+        function toggleFontSize() {
+            currentFontSize += 0.1;
+            if (currentFontSize > 1.5) {
+                currentFontSize = 1.0;
+            }
+            document.getElementById('readerContent').style.fontSize = currentFontSize + 'em';
+        }
+
+        // 下载为文本
+        function downloadAsText() {
+            if (!currentContent) return;
+            
+            const blob = new Blob([currentContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = currentFileName.replace('.docx', '.txt');
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 重置阅读器
+        function resetReader() {
+            document.getElementById('readerContainer').classList.remove('active');
+            document.getElementById('uploadArea').style.display = 'block';
+            document.getElementById('fileInput').value = '';
+            currentContent = '';
+            currentFileName = '';
+            currentFontSize = 1.1;
+        }
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'o') {
+                e.preventDefault();
+                document.getElementById('fileInput').click();
+            }
+        });
+    </script>
+</body>
+</html>
