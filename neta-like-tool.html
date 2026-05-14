@@ -306,11 +306,6 @@
                 <select id="commentStyle">
                     <option value="espira">💜 伊斯派菈（温柔含蓄型）</option>
                     <option value="xiaoyudi">✨ 小雨滴（活泼可爱型）</option>
-                    <option value="ai">🤖 AI 生成（根据作品内容定制）</option>
-                    <option value="warm">💜 温暖鼓励型</option>
-                    <option value="excited">✨ 兴奋赞美型</option>
-                    <option value="poetic">📝 诗意文艺型</option>
-                    <option value="custom">🖊️ 自定义模板</option>
                 </select>
             </div>
 
@@ -586,28 +581,6 @@ generate_comment() {
             )
             echo "${xiaoyudi_comments[$RANDOM % ${#xiaoyudi_comments[@]}]}"
             ;;
-        "warm")
-            echo "好棒的作品！感受到了满满的用心～加油！💜"
-            ;;
-        "excited")
-            echo "哇啊啊啊太厉害了！！！这个创作简直绝了！✨✨✨"
-            ;;
-        "poetic")
-            echo "如诗如画的创作，在字里行间遇见美好。"
-            ;;
-        "ai")
-            # 简化版 AI 留言（实际可以调用 AI API）
-            if [[ "$desc" == *"雨落"* ]]; then
-                echo "雨落系列的创作总是这么动人～喜欢这份用心！💜"
-            elif [[ "$title" == *"明"* ]]; then
-                echo "明亮的色彩，温暖的情感，很棒的创作！✨"
-            else
-                echo "很有创意的作品！每一个细节都能感受到用心～"
-            fi
-            ;;
-        "custom")
-            echo "${customComment}" | sed "s/{title}/\${TITLE}/g" | sed "s/{author}/\${AUTHOR}/g"
-            ;;
     esac
 }
 
@@ -702,10 +675,6 @@ echo "=========================================="
                     <div class="comment-preview">
                         <strong>✨ 小雨滴风格：</strong><br>
                         "哇～！这幅作品好棒好棒呀！小雨滴最喜欢这样的创作啦～！(≧∇≦) ﾉ"
-                    </div>
-                    <div class="comment-preview">
-                        <strong>🤖 AI 生成：</strong><br>
-                        "雨落系列的创作总是这么动人～喜欢这份用心！💜"
                     </div>
                 </div>
             `;
