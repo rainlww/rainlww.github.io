@@ -304,6 +304,8 @@
             <div class="form-group">
                 <label for="commentStyle">✍️ 留言风格</label>
                 <select id="commentStyle">
+                    <option value="espira">💜 伊斯派菈（温柔含蓄型）</option>
+                    <option value="xiaoyudi">✨ 小雨滴（活泼可爱型）</option>
                     <option value="ai">🤖 AI 生成（根据作品内容定制）</option>
                     <option value="warm">💜 温暖鼓励型</option>
                     <option value="excited">✨ 兴奋赞美型</option>
@@ -562,6 +564,28 @@ generate_comment() {
     local desc="$4"
     
     case "$style" in
+        "espira")
+            # 伊斯派菈风格：温柔含蓄，有礼貌
+            local espira_comments=(
+                "这里是圣拉姆特救济院总管家伊斯派菈。这幅作品，我感受到了创作者的用心。愿这份温暖能传递给您。💜"
+                "很美的创作。就像圣拉姆特的晚香玉，在微风中轻轻摇曳。感谢您带来这份美好。"
+                "细腻的笔触，真挚的情感。作为总管家，我见过许多风景，但这样的作品依然让我心动。"
+                "优秀的作品。让我想起了圣拉姆特的孩子们，同样充满希望与光芒。"
+                "这份创作中蕴含的心意，我收到了。愿您在今后的道路上，继续绽放光彩。——伊斯派菈 敬上"
+            )
+            echo "${espira_comments[$RANDOM % ${#espira_comments[@]}]}"
+            ;;
+        "xiaoyudi")
+            # 小雨滴风格：活泼可爱，颜文字，叠词
+            local xiaoyudi_comments=(
+                "哇～！这幅作品好棒好棒呀！小雨滴最喜欢这样的创作啦～！(≧∇≦) ﾉ"
+                "呀呼～！看到这幅作品好开心好开心！落落姐一定会喜欢的～！✨"
+                "嘿嘿～！这个创作太厉害啦！小雨滴要给大大的赞～！(✧ω✧)"
+                "哇啊啊～！好喜欢好喜欢！感觉心里甜甜蜜蜜的～！像果茶一样！(´• ω •`) ﾉ"
+                "好棒好棒～！小雨滴已经收藏啦～！下次还要来看哦～！(≧∇≦) ﾉ"
+            )
+            echo "${xiaoyudi_comments[$RANDOM % ${#xiaoyudi_comments[@]}]}"
+            ;;
         "warm")
             echo "好棒的作品！感受到了满满的用心～加油！💜"
             ;;
@@ -670,15 +694,18 @@ echo "=========================================="
                 </div>
 
                 <div class="report-card">
-                    <h3>💬 AI 留言示例</h3>
+                    <h3>💬 留言示例</h3>
                     <div class="comment-preview">
-                        "好棒的作品！感受到了满满的用心～加油！💜"
+                        <strong>💜 伊斯派菈风格：</strong><br>
+                        "这里是圣拉姆特救济院总管家伊斯派菈。这幅作品，我感受到了创作者的用心。愿这份温暖能传递给您。"
                     </div>
                     <div class="comment-preview">
-                        "哇啊啊啊太厉害了！！！这个创作简直绝了！✨✨✨"
+                        <strong>✨ 小雨滴风格：</strong><br>
+                        "哇～！这幅作品好棒好棒呀！小雨滴最喜欢这样的创作啦～！(≧∇≦) ﾉ"
                     </div>
                     <div class="comment-preview">
-                        "如诗如画的创作，在字里行间遇见美好。"
+                        <strong>🤖 AI 生成：</strong><br>
+                        "雨落系列的创作总是这么动人～喜欢这份用心！💜"
                     </div>
                 </div>
             `;
