@@ -213,6 +213,17 @@
                 <ul id="ranking-list" class="ranking-list"></ul>
             </div>
 
+            <!-- 测试 API -->
+            <div class="card">
+                <h3>🔧 测试 API</h3>
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <input type="text" id="test-tag" class="search-input" placeholder="输入标签名测试" style="flex: 1;" />
+                    <button onclick="testTagApi()" class="btn" style="background: #2196f3; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">测试获取作品</button>
+                    <button onclick="testLikeApi()" class="btn" style="background: #ff9800; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">测试点赞</button>
+                </div>
+                <div id="test-result" style="background: #1e1e1e; color: #81c784; padding: 12px; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 12px; max-height: 200px; overflow-y: auto;"></div>
+            </div>
+
             <!-- 日志 -->
             <div class="card">
                 <h3>📜 日志</h3>
@@ -539,11 +550,16 @@
                             { headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' } }
                         );
 
+                        console.log('获取作品 API 响应状态:', res.status);
+                        
                         if (!res.ok) {
-                            throw new Error(`HTTP ${res.status}`);
+                            const errorText = await res.text();
+                            console.error('获取作品失败，响应内容:', errorText);
+                            throw new Error(`HTTP ${res.status}: ${errorText}`);
                         }
 
                         const data = await res.json();
+                        console.log('获取作品 API 返回数据:', data);
                         const stories = data.list || [];
 
                         if (stories.length === 0) {
@@ -578,21 +594,32 @@
                                 continue;
                             }
 
-                            log(`❤️ 点赞：${story.name || '无题'}`, 'info');
+                            log(`❤️ 点赞：${story.name || '无题'} (ID: ${storyId})`, 'info');
+                        console.log('准备点赞，storyId:', storyId, '完整数据:', story);
                             
                             // 点赞 - 使用 story API
-                            const likeRes = await fetch(`${API_BASE}/v1/story/${storyId}/like`, {
+                            const likeUrl = `${API_BASE}/v1/story/${storyId}/like`;
+                            console.log('点赞 URL:', likeUrl);
+                            
+                            const likeRes = await fetch(likeUrl, {
                                 method: 'POST',
-                                headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' }
+                                headers: { 
+                                    'x-token': currentUser.token, 
+                                    'x-platform': 'nieta-app/web',
+                                    'Content-Type': 'application/json'
+                                }
                             });
 
-                            if (likeRes.ok) {
+                            console.log('点赞响应状态:', likeRes.status, likeRes.ok);
+                            const responseText = await likeRes.text();
+                            console.log('点赞响应内容:', responseText);
+
+                            if (likeRes.ok || responseText.includes('success') || responseText.includes('liked')) {
                                 stats.total++;
                                 log(`✅ 点赞成功`, 'success');
                             } else {
                                 stats.failed++;
-                                const errorText = await likeRes.text();
-                                log(`⚠️ 点赞失败：${errorText}`, 'error');
+                                log(`⚠️ 点赞失败：HTTP ${likeRes.status} - ${responseText}`, 'error');
                             }
 
                             updateStats();
@@ -635,6 +662,93 @@
 
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // 测试 API
+        async function testTagApi() {
+            const tagName = document.getElementById('test-tag').value.trim();
+            const resultEl = document.getElementById('test-result');
+            
+            if (!tagName) {
+                resultEl.innerHTML = '<span style="color: #f44336;">请输入标签名</span>';
+                return;
+            }
+            
+            resultEl.innerHTML = '加载中...';
+            console.log('测试获取作品，标签:', tagName);
+            
+            try {
+                const url = `${API_BASE}/v1/hashtag/${encodeURIComponent(tagName)}/stories?page_index=0&page_size=5`;
+                console.log('请求 URL:', url);
+                
+                const res = await fetch(url, {
+                    headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' }
+                });
+                
+                console.log('响应状态:', res.status);
+                
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    resultEl.innerHTML = `<span style="color: #f44336;">❌ HTTP ${res.status}\n\n${errorText}</span>`;
+                    return;
+                }
+                
+                const data = await res.json();
+                console.log('返回数据:', data);
+                
+                const stories = data.list || [];
+                let html = `<span style="color: #4caf50;">✅ 成功！获取到 ${stories.length} 个作品</span>\n\n`;
+                html += `<span style="color: #64b5f6;">作品列表：</span>\n`;
+                
+                stories.forEach((story, i) => {
+                    html += `\n${i + 1}. ${story.name || '无题'}`;
+                    html += `\n   UUID: ${story.uuid || story.storyId || '无'}`;
+                    html += `\n   作者：${story.creator_name || story.creator?.nick_name || '无'}`;
+                    html += `\n   点赞：${story.likeCount || 0}`;
+                });
+                
+                resultEl.innerHTML = html.replace(/\n/g, '<br>');
+            } catch (error) {
+                console.error('测试失败:', error);
+                resultEl.innerHTML = `<span style="color: #f44336;">❌ 错误：${error.message}</span>`;
+            }
+        }
+
+        async function testLikeApi() {
+            const storyId = prompt('请输入作品 UUID 进行测试：');
+            const resultEl = document.getElementById('test-result');
+            
+            if (!storyId) return;
+            
+            resultEl.innerHTML = '点赞中...';
+            console.log('测试点赞，storyId:', storyId);
+            
+            try {
+                const url = `${API_BASE}/v1/story/${storyId}/like`;
+                console.log('点赞 URL:', url);
+                
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 
+                        'x-token': currentUser.token, 
+                        'x-platform': 'nieta-app/web',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                console.log('响应状态:', res.status);
+                const responseText = await res.text();
+                console.log('响应内容:', responseText);
+                
+                if (res.ok || responseText.includes('success') || responseText.includes('liked')) {
+                    resultEl.innerHTML = `<span style="color: #4caf50;">✅ 点赞成功！\n\n响应：${responseText}</span>`;
+                } else {
+                    resultEl.innerHTML = `<span style="color: #f44336;">❌ 点赞失败\n\nHTTP ${res.status}\n\n${responseText}</span>`;
+                }
+            } catch (error) {
+                console.error('测试失败:', error);
+                resultEl.innerHTML = `<span style="color: #f44336;">❌ 错误：${error.message}</span>`;
+            }
         }
 
         // 日志
