@@ -14,7 +14,6 @@
         }
         .container { max-width: 900px; margin: 0 auto; }
         
-        /* 头部 */
         .header {
             background: white;
             border-radius: 12px;
@@ -30,7 +29,6 @@
         .user-avatar { width: 32px; height: 32px; border-radius: 50%; }
         .user-name { font-size: 14px; color: #666; }
         
-        /* 卡片 */
         .card {
             background: white;
             border-radius: 12px;
@@ -40,7 +38,6 @@
         }
         .card h3 { font-size: 16px; color: #333; margin-bottom: 15px; }
         
-        /* 表单 */
         .form-row { display: flex; gap: 10px; margin-bottom: 12px; }
         .form-row input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
         .form-row input:focus { outline: none; border-color: #667eea; }
@@ -49,7 +46,6 @@
         .btn-primary:hover { background: #5568d3; }
         .btn-danger { background: #f44336; color: white; }
         
-        /* 标签列表 */
         .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
         .tag-item {
             background: #667eea;
@@ -70,25 +66,20 @@
             border-radius: 50%;
             cursor: pointer;
             font-size: 14px;
-            line-height: 1;
         }
         
-        /* 配置网格 */
         .config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .config-item label { display: block; font-size: 13px; color: #666; margin-bottom: 5px; }
-        .config-item input, .config-item select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; }
+        .config-item input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; }
         
-        /* 进度条 */
         .progress { background: #e0e0e0; border-radius: 8px; overflow: hidden; margin: 15px 0; }
         .progress-bar { height: 24px; background: linear-gradient(90deg, #667eea, #764ba2); color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; transition: width 0.3s; }
         
-        /* 统计 */
         .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; }
         .stat-item { text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px; }
         .stat-value { font-size: 24px; font-weight: bold; color: #667eea; }
         .stat-label { font-size: 12px; color: #999; margin-top: 5px; }
         
-        /* 按钮组 */
         .btn-group { display: flex; gap: 10px; margin-top: 15px; }
         .btn-group .btn { flex: 1; padding: 12px; font-size: 15px; font-weight: 500; }
         .btn-start { background: #4caf50; color: white; }
@@ -97,7 +88,6 @@
         .btn-stop { background: #f44336; color: white; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         
-        /* 日志 */
         .log { max-height: 300px; overflow-y: auto; background: #1e1e1e; border-radius: 8px; padding: 12px; font-family: 'Consolas', monospace; font-size: 12px; line-height: 1.8; }
         .log-entry { padding: 4px 8px; border-radius: 4px; margin-bottom: 4px; }
         .log-success { background: rgba(76,175,80,0.2); color: #81c784; }
@@ -105,23 +95,19 @@
         .log-info { background: rgba(33,150,243,0.2); color: #64b5f6; }
         .log-warning { background: rgba(255,152,0,0.2); color: #ffb74d; }
         
-        /* 排行榜 */
         .ranking-list { list-style: none; }
         .ranking-item { display: flex; justify-content: space-between; padding: 10px 15px; background: #f8f9fa; border-radius: 6px; margin-bottom: 8px; }
         .ranking-rank { font-weight: bold; color: #667eea; width: 30px; }
         .ranking-name { flex: 1; color: #333; }
         .ranking-count { color: #999; font-size: 13px; }
         
-        /* 登录框 */
         .login-box { max-width: 450px; margin: 50px auto; text-align: center; }
         .login-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; margin-bottom: 15px; }
         .login-tip { text-align: left; background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; line-height: 2; color: #666; }
         .login-tip a { color: #667eea; }
         
-        /* 隐藏 */
         .hidden { display: none !important; }
         
-        /* 响应式 */
         @media (max-width: 768px) {
             .stats { grid-template-columns: repeat(2, 1fr); }
             .config-grid { grid-template-columns: 1fr; }
@@ -186,7 +172,7 @@
                     </div>
                     <div class="config-item">
                         <label>点赞速度 (ms)</label>
-                        <input type="number" id="like-speed" value="2000" min="500" step="100" />
+                        <input type="number" id="like-speed" value="3000" min="1000" step="500" />
                     </div>
                     <div class="config-item">
                         <label>排除创作者</label>
@@ -249,14 +235,16 @@
         let stats = { total: 0, skipped: 0, failed: 0, startTime: null };
         let timerInterval = null;
 
-        // 初始化
+        // 初始化 - 自动检查登录状态
         document.addEventListener('DOMContentLoaded', () => {
             checkLogin();
         });
 
-        // 检查登录
+        // 检查登录（自动）
         function checkLogin() {
             const token = localStorage.getItem('neta_token');
+            console.log('检查登录状态，token:', token ? '存在' : '不存在');
+            
             if (token) {
                 loadUserProfile(token);
             }
@@ -265,13 +253,20 @@
         // 加载用户信息
         async function loadUserProfile(token) {
             try {
+                console.log('正在验证 Token...');
                 const res = await fetch(`${API_BASE}/v1/user/`, {
                     headers: { 'x-token': token, 'x-platform': 'nieta-app/web' }
                 });
                 
-                if (!res.ok) throw new Error('Token 无效');
+                console.log('API 响应状态:', res.status);
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
                 
                 const data = await res.json();
+                console.log('用户数据:', data);
+                
                 currentUser = {
                     token: token,
                     name: data.nick_name || data.name || '用户',
@@ -279,21 +274,31 @@
                     uuid: data.uuid
                 };
 
+                // 自动保存登录状态
                 localStorage.setItem('neta_token', token);
-                document.getElementById('user-avatar').src = currentUser.avatar;
+                localStorage.setItem('neta_user_name', currentUser.name);
+                localStorage.setItem('neta_user_uuid', currentUser.uuid);
+
+                // 更新 UI
+                document.getElementById('user-avatar').src = currentUser.avatar || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNkMmQyZDciLz48dGV4dCB4PSIxNiIgeT0iMjAiIGZpbGw9IiM4Njg2OGIiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPj88L3RleHQ+PC9zdmc+';
                 document.getElementById('user-name').textContent = currentUser.name;
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('main-section').classList.remove('hidden');
                 
+                log('登录成功！欢迎，' + currentUser.name, 'success');
+                
                 loadTags();
                 loadRanking();
             } catch (error) {
+                console.error('登录失败:', error);
                 localStorage.removeItem('neta_token');
-                document.getElementById('login-status').textContent = 'Token 无效，请重新登录';
+                localStorage.removeItem('neta_user_name');
+                localStorage.removeItem('neta_user_uuid');
+                document.getElementById('login-status').textContent = 'Token 无效或已过期，请重新登录';
             }
         }
 
-        // 登录
+        // 登录按钮
         document.getElementById('login-btn').addEventListener('click', async () => {
             const token = document.getElementById('token-input').value.trim();
             if (!token) {
@@ -312,6 +317,8 @@
         function logout() {
             if (!confirm('确定要退出登录吗？')) return;
             localStorage.removeItem('neta_token');
+            localStorage.removeItem('neta_user_name');
+            localStorage.removeItem('neta_user_uuid');
             location.reload();
         }
 
@@ -374,7 +381,7 @@
 
             document.getElementById('btn-start').disabled = true;
             document.getElementById('btn-pause').disabled = false;
-            document.getElementById('btn-stop').disabled = false;
+            document.getElementById('btn-stop').disabled = true;
 
             timerInterval = setInterval(updateTimer, 1000);
             processTags(tags);
@@ -404,70 +411,94 @@
                 pageSize: parseInt(document.getElementById('page-size').value) || 10,
                 skipFirst: parseInt(document.getElementById('skip-first').value) || 0,
                 maxWorks: parseInt(document.getElementById('max-works').value) || 100,
-                likeSpeed: parseInt(document.getElementById('like-speed').value) || 2000,
+                likeSpeed: parseInt(document.getElementById('like-speed').value) || 3000,
                 excludeCreators: document.getElementById('exclude-creators').value.split(',').map(s => s.trim())
             };
 
-            const offset = config.startPage * config.pageSize + config.skipFirst;
+            log(`开始处理，配置：页码=${config.startPage}, 每页=${config.pageSize}, 跳过=${config.skipFirst}, 最多=${config.maxWorks}, 速度=${config.likeSpeed}ms`, 'info');
+
             let processed = 0;
 
             for (const tag of tags) {
                 if (!isRunning) break;
 
+                log(`━━━━━━━━━━━━━━━━━━━━━━━━`, 'info');
                 log(`开始处理标签：#${tag.name}`, 'info');
 
                 try {
-                    const res = await fetch(
-                        `${API_BASE}/v1/hashtag/${encodeURIComponent(tag.name)}/stories?page_index=${config.startPage}&page_size=${config.pageSize}`,
-                        { headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' } }
-                    );
+                    // 使用正确的 API：获取合集（collections）而不是故事（stories）
+                    const url = `${API_BASE}/v1/hashtag/${encodeURIComponent(tag.name)}/collections?page_index=${config.startPage}&page_size=${config.pageSize}`;
+                    log(`请求 API: ${url}`, 'info');
+                    
+                    const res = await fetch(url, {
+                        headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' }
+                    });
 
                     if (!res.ok) {
-                        throw new Error(`HTTP ${res.status}`);
+                        const errorText = await res.text();
+                        throw new Error(`HTTP ${res.status}: ${errorText}`);
                     }
 
                     const data = await res.json();
-                    const stories = data.list || [];
+                    console.log('API 返回数据:', data);
+                    
+                    const collections = data.list || [];
+                    log(`获取到 ${collections.length} 个作品`, 'success');
 
-                    log(`获取到 ${stories.length} 个作品`, 'success');
+                    if (collections.length === 0) {
+                        log(`标签 #${tag.name} 没有作品`, 'warning');
+                        continue;
+                    }
 
-                    for (let i = 0; i < stories.length && processed < config.maxWorks; i++) {
+                    for (let i = 0; i < collections.length && processed < config.maxWorks; i++) {
                         if (!isRunning) break;
                         if (isPaused) {
                             await sleep(500);
                             continue;
                         }
 
-                        const story = stories[i];
+                        const collection = collections[i];
                         processed++;
 
                         // 检查是否自己的作品
-                        const isOwn = config.excludeCreators.some(creator => 
-                            story.creator_name && story.creator_name.includes(creator)
-                        );
+                        const creatorName = collection.creator_name || collection.creator?.nick_name || '未知';
+                        const isOwn = config.excludeCreators.some(creator => creator.includes(creator));
 
                         if (isOwn) {
                             stats.skipped++;
-                            log(`⏭️ 跳过：${story.name || '无题'}（自己的作品）`, 'warning');
+                            log(`⏭️ 跳过：${collection.name || '无题'}（作者：${creatorName}）`, 'warning');
                             updateStats();
                             continue;
                         }
 
-                        // 点赞
-                        log(`❤️ 点赞：${story.name || '无题'}`, 'info');
+                        // 点赞合集（collection）
+                        const collectionUuid = collection.uuid || collection.collection_uuid;
+                        if (!collectionUuid) {
+                            log(`⚠️ 作品 ${collection.name} 缺少 UUID`, 'error');
+                            stats.failed++;
+                            continue;
+                        }
+
+                        log(`❤️ 点赞：${collection.name || '无题'}（UUID: ${collectionUuid}）`, 'info');
                         
-                        const likeRes = await fetch(`${API_BASE}/v1/story/${story.uuid}/like`, {
+                        // 使用正确的 API：点赞合集
+                        const likeUrl = `${API_BASE}/v1/collection/${collectionUuid}/like`;
+                        log(`点赞 API: ${likeUrl}`, 'info');
+                        
+                        const likeRes = await fetch(likeUrl, {
                             method: 'POST',
                             headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' }
                         });
 
-                        if (likeRes.ok) {
+                        const likeResult = await likeRes.text();
+                        console.log('点赞响应:', likeResult);
+
+                        if (likeRes.ok || likeResult.includes('success') || likeResult.includes('liked')) {
                             stats.total++;
                             log(`✅ 点赞成功`, 'success');
                         } else {
                             stats.failed++;
-                            const errorText = await likeRes.text();
-                            log(`⚠️ 点赞失败：${errorText}`, 'error');
+                            log(`⚠️ 点赞失败：${likeResult}`, 'error');
                         }
 
                         updateStats();
@@ -475,11 +506,14 @@
                     }
                 } catch (error) {
                     log(`处理标签 #${tag.name} 失败：${error.message}`, 'error');
+                    console.error('错误详情:', error);
                 }
             }
 
             stopLike();
+            log('━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
             log('所有标签处理完成！', 'success');
+            log(`总计：点赞 ${stats.total}, 跳过 ${stats.skipped}, 失败 ${stats.failed}`, 'info');
         }
 
         function updateStats() {
@@ -519,23 +553,35 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        // 排行榜
+        // 排行榜 - 使用真实 API
         async function loadRanking() {
             const container = document.getElementById('ranking-list');
             container.innerHTML = '<li style="text-align: center; color: #999; padding: 20px;">加载中...</li>';
 
             try {
+                log('正在加载热门标签排行榜...', 'info');
+                
                 const res = await fetch(`${API_BASE}/v1/configs/config?namespace=space&key=topic_tags_config`, {
                     headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' }
                 });
 
-                if (!res.ok) throw new Error('获取失败');
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
 
                 const data = await res.json();
-                const tags = Object.entries(data.value || {}).map(([name, config]) => ({
+                console.log('排行榜数据:', data);
+                
+                const configValue = data.value || {};
+                const tags = Object.entries(configValue).map(([name, config]) => ({
                     name,
-                    count: config.participants_count || 0
+                    count: config.participants_count || config.count || 0
                 })).sort((a, b) => b.count - a.count).slice(0, 20);
+
+                if (tags.length === 0) {
+                    container.innerHTML = '<li style="text-align: center; color: #999; padding: 20px;">暂无数据</li>';
+                    return;
+                }
 
                 container.innerHTML = tags.map((tag, index) => `
                     <li class="ranking-item">
@@ -545,8 +591,9 @@
                     </li>
                 `).join('');
                 
-                log('排行榜加载成功', 'success');
+                log(`排行榜加载成功，共 ${tags.length} 个标签`, 'success');
             } catch (error) {
+                console.error('排行榜加载失败:', error);
                 container.innerHTML = '<li style="text-align: center; color: #f44336; padding: 20px;">加载失败：' + error.message + '</li>';
                 log('排行榜加载失败：' + error.message, 'error');
             }
