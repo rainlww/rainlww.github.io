@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歌法蒂亚 - 雨落们的档案馆</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1a1a1a; line-height: 1.7; min-height: 100vh; position: relative; font-weight: 500; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; opacity: 0.25; z-index: -1; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,245,245,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
+        .back-link:hover { color: #7a6a7a; background: rgba(232,232,232,0.9); }
+        .page-title { font-size: 2.5em; color: #000; font-weight: 700; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #ddd; letter-spacing: 0; word-break: keep-all; white-space: normal; }
+        .collapse-section { margin-bottom: 20px; border: none; }
+        .collapse-section[open] { border-bottom: 1px solid rgba(224,224,224,0.5); padding-bottom: 15px; }
+        .collapse-title { list-style: none; display: flex; align-items: center; gap: 8px; font-size: 1.2em; font-weight: 600; color: #1a1a1a; cursor: pointer; padding: 10px 0; margin: 0; transition: color 0.2s; }
+        .collapse-title:hover { color: #9a7a8a; }
+        .collapse-title::-webkit-details-marker { display: none; }
+        .collapse-icon { transition: transform 0.3s; flex-shrink: 0; }
+        .collapse-section[open] .collapse-icon { transform: rotate(180deg); }
+        .collapse-content { padding: 10px 0 0 28px; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .artwork-container { text-align: center; }
+        .artwork-frame { display: inline-block; max-width: 100%; padding: 12px; background: linear-gradient(135deg, rgba(232,228,217,0.9) 0%, rgba(212,207,196,0.9) 100%); border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); backdrop-filter: blur(10px); }
+        .artwork-frame img { display: block; max-width: 100%; max-height: 650px; height: auto; border-radius: 2px; }
+        .artwork-caption { padding: 12px; text-align: center; background: rgba(249,249,249,0.9); font-size: 0.9em; color: #666; border-top: 1px solid rgba(224,224,224,0.5); margin-top: 10px; border-radius: 4px; backdrop-filter: blur(10px); }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 6px; }
+        .toc-list a { color: #9a7a8a; text-decoration: none; font-size: 0.95em; }
+        .toc-list a:hover { color: #7a6a7a; text-decoration: underline; }
+        @media (max-width: 768px) { .page-title { font-size: 2em; } }
+        @media (max-width: 480px) { .page-title { font-size: 1.5em; } }
+    </style>
+</head>
+<body>
+    <div class="page-bg" id="pageBg"></div>
+    <div class="container">
+        <a href="archive.html" class="back-link">← 返回档案馆</a>
+        <h1 class="page-title" id="pageTitle">歌法蒂亚</h1>
+        
+        <!-- 引言区域 -->
+        <div style="margin: 20px 0; padding: 15px 20px; background: rgba(245,245,245,0.8); border-left: 3px solid #9a7a8a; border-radius: 4px;">
+            <div style="font-size: 0.9em; color: #9a7a8a; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px;">「 引言 」</div>
+            <div style="font-size: 0.95em; color: #666; font-style: italic; line-height: 1.8;">
+                <div>（待填写）</div>
+            </div>
+        </div>
+        
+        <!-- 目录 -->
+        <details class="collapse-section">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                目录
+            </summary>
+            <div class="collapse-content">
+                <ul class="toc-list">
+                    <li><a href="#artwork">立绘展示</a></li>
+                    <li><a href="#description">人物简介</a></li>
+                    <li><a href="#related">相关人物</a></li>
+                    <li><a href="#external">外部链接</a></li>
+                </ul>
+            </div>
+        </details>
+        
+        <!-- 立绘展示 -->
+        <details class="collapse-section" id="artwork">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                立绘展示
+            </summary>
+            <div class="collapse-content">
+                <div class="artwork-container">
+                    <div class="artwork-frame">
+                        <img src="gofathia-cover.jpg" alt="歌法蒂亚">
+                    </div>
+                    <div class="artwork-caption">歌法蒂亚—（请填写图片说明）</div>
+                </div>
+            </div>
+        </details>
+        
+        <!-- 人物简介 -->
+        <details class="collapse-section" id="description">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                人物简介
+            </summary>
+            <div class="collapse-content">
+                
+                <!-- 基础档案 -->
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 基础档案 」</div>
+                    <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; font-size: 1em; line-height: 1.8; border-radius: 4px; font-weight: 500;">
+                        <p style="margin: 0 0 12px 0;">歌法蒂亚·维尔纳，维尔纳学术联盟化学及生命科学分支总负责人，能确认身份的"最初的维尔纳"。</p>
+                        <p style="margin: 0 0 12px 0;">其总负责人的职务并非来自于其血统，而是源自她的知识。即使没有这个姓，她坐上这个位置，也是理所应当。</p>
+                        <p style="margin: 0 0 12px 0;">性格温柔细腻，话不多，但不给人以距离感。做研究时严谨认真，不允许一点差错。</p>
+                        <p style="margin: 0 0 12px 0;">喜欢研究的过程，而不只是结果。喜欢生命，善于发现那些微小的美好瞬间。在来到圣拉姆特后，开始喜欢孩子们。</p>
+                        <p style="margin: 0 0 12px 0;">每周都会特意从审判城来圣拉姆特，给孩子们将科学课。孩子们喊她"歌法蒂亚姐姐""歌法姐姐"。</p>
+                        <p style="margin: 0;">OW 纪年元年，成为 OW 正式成员，因身份长期驻外，负责审判城情报收集及整理。</p>
+                    </div>
+                </div>
+                
+                <!-- 档案资料（一） -->
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 档案资料（一） 」</div>
+                    <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; font-size: 1em; line-height: 1.8; border-radius: 4px; font-weight: 500;">
+                        <p style="margin: 0 0 12px 0;">歌法蒂亚姐姐吗？她很好。</p>
+                        <p style="margin: 0 0 12px 0;">自打我十七岁起，她就成了圣拉姆特的常客，每周都会来给孩子们上课。科学，生命，地理……化学什么的我不太懂，不过她讲的东西，我到现在还记得很清楚。</p>
+                        <p style="margin: 0 0 12px 0;">有一次物理和化学连着上，那些更小的孩子们下课就编了一句，"高锰酸钾制氧气，Q 等于 cmΔt"。歌法蒂亚姐姐听说后很开心，当天就去和院长说，"孩子们喜欢上科学了。这是好事。"</p>
+                        <p style="margin: 0 0 12px 0;">虽然塞缪尔先生私下和院长说，孩子们只是觉得顺嘴。</p>
+                        <p style="margin: 0 0 12px 0;">我和歌法蒂亚姐姐有单独的书信往来。不只是情报方面。有时候，我会问她，联盟有没有某一类书，可不可以借阅。她很快就会回信，附上那本书。而且她亲自来的时候，还会问我，"小伊斯，书怎么样？不理解来找我。"</p>
+                    </div>
+                </div>
+                
+                <!-- 如需更多档案资料，复制上面的结构，修改标题为「 档案资料（二） 」等 -->
+                
+            </div>
+        </details>
+        
+        <!-- 相关人物 -->
+        <details class="collapse-section" id="related">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                相关人物
+            </summary>
+            <div class="collapse-content">
+                <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; line-height: 1.8; border-radius: 4px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 相关人物 」</div>
+                    <!-- 相关人物内容，可以用列表或段落 -->
+                    <p style="margin: 0; font-style: italic; color: #666;">（请填写相关人物内容）</p>
+                </div>
+            </div>
+        </details>
+        
+        <!-- 外部链接 -->
+        <details class="collapse-section" id="external">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                外部链接
+            </summary>
+            <div class="collapse-content">
+                <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; line-height: 1.8; border-radius: 4px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 外部链接 」</div>
+                    <p style="margin: 0; font-style: italic; color: #666;">（请填写外部链接）</p>
+                </div>
+            </div>
+        </details>
+        
+    </div>
+</body>
+</html>
