@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neta 点赞工具 - 网页版</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 头部 */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 24px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .btn-logout {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #e0e0e0;
+        }
+
+        /* 导航栏 */
+        .nav-tabs {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #f0f0f0;
+        }
+
+        /* 主内容区 */
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* 登录框 */
+        .login-box {
+            max-width: 500px;
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 配置区域 */
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .config-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .config-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #555;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .form-row input {
+            flex: 1;
+        }
+
+        .form-row button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .form-row button:hover {
+            background: #5568d3;
+        }
+
+        /* 标签列表 */
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .tag-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .tag-item button {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .tag-item button:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* 进度条 */
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 30px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* 日志区域 */
+        .log-container {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .log-entry.success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #81c784;
+        }
+
+        .log-entry.error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #e57373;
+        }
+
+        .log-entry.info {
+            background: rgba(33, 150, 243, 0.2);
+            color: #64b5f6;
+        }
+
+        .log-entry.warning {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ffb74d;
+        }
+
+        /* 控制按钮 */
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-control {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+        }
+
+        .btn-start:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-pause {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+        }
+
+        .btn-control:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 图表 */
+        .chart-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            height: 300px;
+        }
+
+        /* 热度排行 */
+        .ranking-list {
+            list-style: none;
+        }
+
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: background 0.3s;
+        }
+
+        .ranking-item:hover {
+            background: #e0e0e0;
+        }
+
+        .ranking-rank {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            width: 40px;
+        }
+
+        .ranking-name {
+            flex: 1;
+            color: #333;
+        }
+
+        .ranking-count {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* 开关 */
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: #e0e0e0;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #667eea;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+            }
+
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .control-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* 隐藏类 */
+        .hidden {
+            display: none !important;
+        }
+
+        /* 账号选择器 */
+        .account-selector {
+            position: relative;
+            display: inline-block;
+        }
+
+        .account-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .account-dropdown.show {
+            display: block;
+        }
+
+        .account-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .account-item:last-child {
+            border-bottom: none;
+        }
+
+        .account-item:hover {
+            background: #f8f9fa;
+        }
+
+        .account-item img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .account-item .delete-btn {
+            margin-left: auto;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 登录界面 -->
+        <div id="login-section" class="section login-box active">
+            <h1 style="color: #667eea; margin-bottom: 30px;">🔐 Neta 点赞工具</h1>
+            
+            <div class="config-card" style="text-align: left; margin-bottom: 20px;">
+                <h3>📝 如何获取 Token</h3>
+                <ol style="color: #666; line-height: 2;">
+                    <li>打开 <a href="https://www.talesofai.cn" target="_blank">捏 ta 网页版</a></li>
+                    <li>点击右上角个人头像</li>
+                    <li>选择"隐私设置"</li>
+                    <li>点击"获取 NETA TOKEN"</li>
+                    <li>复制 Token 并粘贴到下方</li>
+                </ol>
+            </div>
+
+            <input type="text" id="token-input" class="login-input" placeholder="请输入 NETA TOKEN" />
+            <button id="login-btn" class="btn-primary">登录</button>
+            <div id="login-status" style="margin-top: 15px; color: #f44336;"></div>
+
+            <!-- 快捷账号列表 -->
+            <div id="quick-login-list" class="config-card" style="margin-top: 20px; display: none;">
+                <h3>👥 快捷登录</h3>
+                <div id="account-list" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+
+        <!-- 主界面 -->
+        <div id="main-section" class="hidden">
+            <!-- 头部 -->
+            <div class="header">
+                <h1>💜 Neta 点赞工具 - 网页版</h1>
+                <div class="user-info">
+                    <img id="user-avatar" class="user-avatar" src="" alt="头像" />
+                    <span id="user-name" class="user-name">-</span>
+                    <div class="account-selector">
+                        <button class="btn-logout" onclick="toggleAccountDropdown()">切换账号 ▼</button>
+                        <div id="account-dropdown" class="account-dropdown"></div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">退出</button>
+                </div>
+            </div>
+
+            <!-- 导航栏 -->
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('like')">❤️ 点赞</button>
+                <button class="nav-tab" onclick="switchTab('follow')">👥 关注</button>
+                <button class="nav-tab" onclick="switchTab('stats')">📊 统计</button>
+                <button class="nav-tab" onclick="switchTab('ranking')">🔥 排行</button>
+            </div>
+
+            <!-- 点赞页面 -->
+            <div id="like-section" class="section active">
+                <div class="config-grid">
+                    <!-- 基础配置 -->
+                    <div class="config-card">
+                        <h3>📋 基础配置</h3>
+                        <div class="form-group">
+                            <label>标签名称（不带#）</label>
+                            <div class="form-row">
+                                <input type="text" id="tag-name" class="form-control" placeholder="例如：雨落们的观测记录" />
+                                <button onclick="addTag()">添加</button>
+                            </div>
+                        </div>
+                        <div id="tag-list" class="tag-list"></div>
+                    </div>
+
+                    <!-- 分页控制 -->
+                    <div class="config-card">
+                        <h3>📄 分页控制</h3>
+                        <div class="form-group">
+                            <label>起始页码（从 0 开始）</label>
+                            <input type="number" id="start-page" class="form-control" value="0" min="0" />
+                        </div>
+                        <div class="form-group">
+                            <label>每页数量</label>
+                            <input type="number" id="page-size" class="form-control" value="10" min="1" max="50" />
+                        </div>
+                        <div class="form-group">
+                            <label>额外跳过作品数</label>
+                            <input type="number" id="skip-first" class="form-control" value="0" min="0" />
+                        </div>
+                    </div>
+
+                    <!-- 速度控制 -->
+                    <div class="config-card">
+                        <h3>⏱️ 速度控制</h3>
+                        <div class="form-group">
+                            <label>点赞速度：<span id="like-speed-value">200</span>ms</label>
+                            <input type="range" id="like-speed" class="form-control" min="50" max="2000" step="50" value="200" />
+                            <div style="color: #666; font-size: 12px; margin-top: 5px;">快速 (50ms) ← → 慢速 (2000ms)</div>
+                        </div>
+                        <div class="form-group">
+                            <label>留言风格</label>
+                            <select id="comment-style" class="form-control">
+                                <option value="rotate">💜 伊斯 + ✨ 小雨滴（轮流）</option>
+                                <option value="espira">💜 仅伊斯派菈</option>
+                                <option value="xiaoyudi">✨ 仅小雨滴</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 高级选项 -->
+                    <div class="config-card">
+                        <h3>⚙️ 高级选项</h3>
+                        <div class="form-group">
+                            <label>最多处理作品数</label>
+                            <input type="number" id="max-works" class="form-control" value="100" min="1" />
+                        </div>
+                        <div class="form-group">
+                            <label>为热度前 N 留言</label>
+                            <input type="number" id="top-count" class="form-control" value="10" min="0" max="50" />
+                        </div>
+                        <div class="form-group">
+                            <label>排除创作者（逗号分隔）</label>
+                            <input type="text" id="exclude-creators" class="form-control" value="轻若雨落，rainlww,rain_lww" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 进度条 -->
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar" style="width: 0%;">0%</div>
+                </div>
+
+                <!-- 统计卡片 -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div id="stat-total" class="stat-value">0</div>
+                        <div class="stat-label">总点赞数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="stat-comments" class="stat-value">0</div>
+                        <div class="stat-label">留言数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="stat-skipped" class="stat-value">0</div>
+                        <div class="stat-label">跳过作品</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="stat-time" class="stat-value">00:00</div>
+                        <div class="stat-label">运行时间</div>
+                    </div>
+                </div>
+
+                <!-- 控制按钮 -->
+                <div class="control-buttons">
+                    <button id="btn-start" class="btn-control btn-start" onclick="startLike()">▶️ 开始</button>
+                    <button id="btn-pause" class="btn-control btn-pause" onclick="pauseLike()" disabled>⏸️ 暂停</button>
+                    <button id="btn-stop" class="btn-control btn-stop" onclick="stopLike()" disabled>⏹️ 停止</button>
+                </div>
+
+                <!-- 图表 -->
+                <div class="chart-container">
+                    <canvas id="like-chart"></canvas>
+                </div>
+
+                <!-- 日志 -->
+                <div class="config-card" style="margin-top: 20px;">
+                    <h3>📜 运行日志</h3>
+                    <div id="log-container" class="log-container"></div>
+                </div>
+            </div>
+
+            <!-- 关注页面 -->
+            <div id="follow-section" class="section">
+                <div class="config-card">
+                    <h3>👥 给关注列表点赞</h3>
+                    <div class="form-group">
+                        <label>最多处理关注人数</label>
+                        <input type="number" id="following-limit" class="form-control" value="5" min="1" max="50" />
+                    </div>
+                    <div class="form-group">
+                        <label>每人最多处理作品数</label>
+                        <input type="number" id="following-works-limit" class="form-control" value="3" min="1" max="20" />
+                    </div>
+                    <button class="btn-primary" onclick="startFollowing()" style="margin-top: 15px;">开始给关注的人点赞</button>
+                </div>
+            </div>
+
+            <!-- 统计页面 -->
+            <div id="stats-section" class="section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div id="stat-total-likes" class="stat-value">0</div>
+                        <div class="stat-label">总点赞</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="stat-total-comments" class="stat-value">0</div>
+                        <div class="stat-label">总留言</div>
+                    </div>
+                </div>
+                <div class="chart-container" style="height: 400px;">
+                    <canvas id="stats-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- 排行页面 -->
+            <div id="ranking-section" class="section">
+                <button class="btn-primary" onclick="loadRanking()" style="margin-bottom: 20px;">🔄 刷新排行榜</button>
+                <ul id="ranking-list" class="ranking-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ 全局状态 ============
+        const API_BASE = 'https://api.talesofai.cn';
+        let currentUser = null;
+        let isRunning = false;
+        let isPaused = false;
+        let likeStats = { total: 0, comments: 0, skipped: 0, startTime: null };
+        let likeChart = null;
+        let timerInterval = null;
+        let likeWorker = null;
+
+        // ============ 初始化 ============
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLogin();
+            initChart();
+            loadSavedTags();
+        });
+
+        // ============ 登录认证 ============
+        function checkLogin() {
+            const token = localStorage.getItem('neta_token');
+            if (token) {
+                loadUserProfile(token);
+            }
+        }
+
+        async function loadUserProfile(token) {
+            try {
+                const res = await fetch(`${API_BASE}/v1/user/`, {
+                    headers: { 
+                        'x-token': token, 
+                        'x-platform': 'nieta-app/web' 
+                    }
+                });
+
+                if (!res.ok) {
+                    throw new Error('Token 无效');
+                }
+
+                const data = await res.json();
+                currentUser = {
+                    token: token,
+                    name: data.nick_name || data.name || '用户',
+                    avatar: data.avatar_url || '',
+                    uuid: data.uuid
+                };
+
+                // 保存到账号历史
+                saveAccountToHistory(currentUser);
+
+                // 更新 UI
+                document.getElementById('user-avatar').src = currentUser.avatar;
+                document.getElementById('user-name').textContent = currentUser.name;
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('main-section').classList.remove('hidden');
+
+                // 检查是否是雨落小姐的账号
+                if (currentUser.uuid === 'bd1a9f8f-8c88-4f3f-b4d8-2f8af36a0d1b') {
+                    log('欢迎回来，雨落小姐！✨', 'success');
+                }
+
+                loadAccountList();
+            } catch (error) {
+                console.error('加载用户信息失败:', error);
+                localStorage.removeItem('neta_token');
+                document.getElementById('login-status').textContent = 'Token 无效，请重新登录';
+            }
+        }
+
+        function saveAccountToHistory(user) {
+            const accounts = JSON.parse(localStorage.getItem('neta_accounts') || '[]');
+            const exists = accounts.find(a => a.token === user.token);
+            
+            if (!exists) {
+                accounts.push({
+                    token: user.token,
+                    name: user.name,
+                    avatar: user.avatar,
+                    uuid: user.uuid,
+                    addedAt: Date.now()
+                });
+                localStorage.setItem('neta_accounts', JSON.stringify(accounts));
+            }
+        }
+
+        function loadAccountList() {
+            const accounts = JSON.parse(localStorage.getItem('neta_accounts') || '[]');
+            const dropdown = document.getElementById('account-dropdown');
+            
+            if (accounts.length === 0) {
+                dropdown.innerHTML = '<div style="padding: 15px; color: #666;">暂无其他账号</div>';
+                return;
+            }
+
+            dropdown.innerHTML = accounts.map((acc, index) => `
+                <div class="account-item" onclick="switchAccount('${acc.token}')">
+                    <img src="${acc.avatar || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiI+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNkMmQyZDciLz48dGV4dCB4PSIxNiIgeT0iMjAiIGZpbGw9IiM4Njg2OGIiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPj88L3RleHQ+PC9zdmc+'}" />
+                    <span>${acc.name}</span>
+                    ${acc.token !== currentUser.token ? `<button class="delete-btn" onclick="event.stopPropagation(); deleteAccount(${index})">删除</button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function toggleAccountDropdown() {
+            const dropdown = document.getElementById('account-dropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function switchAccount(token) {
+            localStorage.setItem('neta_token', token);
+            location.reload();
+        }
+
+        function deleteAccount(index) {
+            if (!confirm('确定要删除这个账号吗？')) return;
+            
+            const accounts = JSON.parse(localStorage.getItem('neta_accounts') || '[]');
+            accounts.splice(index, 1);
+            localStorage.setItem('neta_accounts', JSON.stringify(accounts));
+            loadAccountList();
+        }
+
+        function logout() {
+            if (!confirm('确定要退出登录吗？')) return;
+            
+            localStorage.removeItem('neta_token');
+            currentUser = null;
+            location.reload();
+        }
+
+        // 登录按钮事件
+        document.getElementById('login-btn').addEventListener('click', async () => {
+            const token = document.getElementById('token-input').value.trim();
+            if (!token) {
+                document.getElementById('login-status').textContent = '请输入 Token';
+                return;
+            }
+
+            document.getElementById('login-btn').disabled = true;
+            document.getElementById('login-btn').textContent = '登录中...';
+
+            await loadUserProfile(token);
+
+            document.getElementById('login-btn').disabled = false;
+            document.getElementById('login-btn').textContent = '登录';
+        });
+
+        // ============ 标签管理 ============
+        function loadSavedTags() {
+            const tags = JSON.parse(localStorage.getItem('saved_tags') || '[]');
+            renderTags(tags);
+        }
+
+        function addTag() {
+            const input = document.getElementById('tag-name');
+            const tagName = input.value.trim();
+            if (!tagName) return;
+
+            const tags = JSON.parse(localStorage.getItem('saved_tags') || '[]');
+            if (tags.some(t => t.name === tagName)) {
+                log(`标签 #${tagName} 已存在`, 'warning');
+                return;
+            }
+
+            tags.push({ name: tagName });
+            localStorage.setItem('saved_tags', JSON.stringify(tags));
+            renderTags(tags);
+            input.value = '';
+            log(`添加标签：#${tagName}`, 'success');
+        }
+
+        function removeTag(tagName) {
+            const tags = JSON.parse(localStorage.getItem('saved_tags') || '[]').filter(t => t.name !== tagName);
+            localStorage.setItem('saved_tags', JSON.stringify(tags));
+            renderTags(tags);
+            log(`移除标签：#${tagName}`, 'info');
+        }
+
+        function renderTags(tags) {
+            const container = document.getElementById('tag-list');
+            if (tags.length === 0) {
+                container.innerHTML = '<div style="color: #666; font-size: 14px;">暂无标签，请添加</div>';
+                return;
+            }
+
+            container.innerHTML = tags.map(tag => `
+                <div class="tag-item">
+                    #${tag.name}
+                    <button onclick="removeTag('${tag.name}')">×</button>
+                </div>
+            `).join('');
+        }
+
+        // ============ 点赞控制 ============
+        function startLike() {
+            const tags = JSON.parse(localStorage.getItem('saved_tags') || '[]');
+            if (tags.length === 0) {
+                alert('请先添加标签');
+                return;
+            }
+
+            isRunning = true;
+            isPaused = false;
+            likeStats = { total: 0, comments: 0, skipped: 0, startTime: Date.now() };
+
+            // 更新按钮状态
+            document.getElementById('btn-start').disabled = true;
+            document.getElementById('btn-pause').disabled = false;
+            document.getElementById('btn-stop').disabled = false;
+
+            // 启动定时器
+            timerInterval = setInterval(updateTimer, 1000);
+
+            // 开始点赞循环
+            processTags(tags);
+        }
+
+        function pauseLike() {
+            isPaused = !isPaused;
+            const btn = document.getElementById('btn-pause');
+            btn.textContent = isPaused ? '▶️ 继续' : '⏸️ 暂停';
+            log(isPaused ? '已暂停' : '继续点赞', isPaused ? 'warning' : 'success');
+        }
+
+        function stopLike() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            
+            document.getElementById('btn-start').disabled = false;
+            document.getElementById('btn-pause').disabled = true;
+            document.getElementById('btn-pause').textContent = '⏸️ 暂停';
+            document.getElementById('btn-stop').disabled = true;
+
+            log('已停止', 'error');
+        }
+
+        async function processTags(tags) {
+            const config = {
+                startPage: parseInt(document.getElementById('start-page').value) || 0,
+                pageSize: parseInt(document.getElementById('page-size').value) || 10,
+                skipFirst: parseInt(document.getElementById('skip-first').value) || 0,
+                maxWorks: parseInt(document.getElementById('max-works').value) || 100,
+                likeSpeed: parseInt(document.getElementById('like-speed').value) || 200,
+                excludeCreators: document.getElementById('exclude-creators').value.split(',')
+            };
+
+            const offset = config.startPage * config.pageSize + config.skipFirst;
+            let processed = 0;
+
+            for (const tag of tags) {
+                if (!isRunning) break;
+
+                log(`开始处理标签：#${tag.name}`, 'info');
+
+                try {
+                    // 获取作品列表
+                    const res = await fetch(
+                        `${API_BASE}/v1/hashtag/${encodeURIComponent(tag.name)}/stories?page_index=${config.startPage}&page_size=${config.pageSize}`,
+                        { headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' } }
+                    );
+
+                    const data = await res.json();
+                    const stories = data.list || [];
+
+                    log(`获取到 ${stories.length} 个作品`, 'success');
+
+                    for (let i = 0; i < stories.length && processed < config.maxWorks; i++) {
+                        if (!isRunning) break;
+                        if (isPaused) {
+                            await sleep(500);
+                            continue;
+                        }
+
+                        const story = stories[i];
+                        processed++;
+
+                        // 检查是否自己的作品
+                        const isOwn = config.excludeCreators.some(creator => 
+                            story.creator_name?.includes(creator.trim())
+                        );
+
+                        if (isOwn) {
+                            likeStats.skipped++;
+                            log(`⏭️ 跳过：${story.name}（自己的作品）`, 'warning');
+                            updateStats();
+                            continue;
+                        }
+
+                        // 点赞
+                        log(`❤️ 点赞：${story.name}`, 'info');
+                        const likeRes = await fetch(`${API_BASE}/v1/story/${story.uuid}/like`, {
+                            method: 'POST',
+                            headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' }
+                        });
+
+                        if (likeRes.ok) {
+                            likeStats.total++;
+                            log(`✅ 点赞成功`, 'success');
+                        } else {
+                            log(`⚠️ 点赞失败`, 'error');
+                        }
+
+                        updateStats();
+                        updateChart();
+                        await sleep(config.likeSpeed);
+                    }
+                } catch (error) {
+                    log(`处理标签 #${tag.name} 失败：${error.message}`, 'error');
+                }
+            }
+
+            stopLike();
+            log('所有标签处理完成！', 'success');
+        }
+
+        function updateStats() {
+            document.getElementById('stat-total').textContent = likeStats.total;
+            document.getElementById('stat-comments').textContent = likeStats.comments;
+            document.getElementById('stat-skipped').textContent = likeStats.skipped;
+
+            const total = likeStats.total + likeStats.skipped;
+            const percent = total > 0 ? Math.round((likeStats.total / total) * 100) : 0;
+            document.getElementById('progress-bar').style.width = percent + '%';
+            document.getElementById('progress-bar').textContent = percent + '%';
+        }
+
+        function updateTimer() {
+            if (!likeStats.startTime) return;
+
+            const elapsed = Math.floor((Date.now() - likeStats.startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('stat-time').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // ============ 图表 ============
+        function initChart() {
+            const ctx = document.getElementById('like-chart').getContext('2d');
+            likeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: '点赞数',
+                        data: [],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 500
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            if (!likeChart) return;
+
+            const now = new Date();
+            const timeLabel = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+            likeChart.data.labels.push(timeLabel);
+            likeChart.data.datasets[0].data.push(likeStats.total);
+
+            // 保持最近 20 个点
+            if (likeChart.data.labels.length > 20) {
+                likeChart.data.labels.shift();
+                likeChart.data.datasets[0].data.shift();
+            }
+
+            likeChart.update();
+        }
+
+        // ============ 日志 ============
+        function log(message, level = 'info') {
+            const container = document.getElementById('log-container');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${level}`;
+            
+            const time = new Date().toLocaleTimeString();
+            entry.textContent = `[${time}] ${message}`;
+            
+            container.appendChild(entry);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // ============ 切换标签页 ============
+        function switchTab(tabName) {
+            // 更新导航按钮
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.textContent.includes({
+                    'like': '点赞',
+                    'follow': '关注',
+                    'stats': '统计',
+                    'ranking': '排行'
+                }[tabName]));
+            });
+
+            // 更新内容区域
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const targetSection = document.getElementById(`${tabName}-section`);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // 加载排行数据
+            if (tabName === 'ranking') {
+                loadRanking();
+            }
+        }
+
+        // ============ 关注列表点赞 ============
+        async function startFollowing() {
+            const limit = parseInt(document.getElementById('following-limit').value) || 5;
+            const worksLimit = parseInt(document.getElementById('following-works-limit').value) || 3;
+
+            log('开始获取关注列表...', 'info');
+
+            try {
+                const res = await fetch(`${API_BASE}/v1/user/subscribes?page_index=0&page_size=${limit}`, {
+                    headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' }
+                });
+
+                const data = await res.json();
+                const users = data.list || [];
+
+                log(`获取到 ${users.length} 个关注的人`, 'success');
+
+                for (const user of users) {
+                    if (!isRunning) break;
+
+                    log(`处理用户：${user.nick_name}`, 'info');
+
+                    // 获取用户作品
+                    const storiesRes = await fetch(
+                        `${API_BASE}/v2/story/user-stories?uuid=${user.uuid}&page_index=0&page_size=${worksLimit}`,
+                        { headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' } }
+                    );
+
+                    const storiesData = await storiesRes.json();
+                    const stories = storiesData.list || [];
+
+                    for (const story of stories) {
+                        const likeRes = await fetch(`${API_BASE}/v1/story/${story.uuid}/like`, {
+                            method: 'POST',
+                            headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' }
+                        });
+
+                        if (likeRes.ok) {
+                            likeStats.total++;
+                            log(`✅ 点赞：${story.name}`, 'success');
+                        }
+
+                        updateStats();
+                        await sleep(200);
+                    }
+                }
+
+                log('关注列表点赞完成！', 'success');
+            } catch (error) {
+                log(`关注列表点赞失败：${error.message}`, 'error');
+            }
+        }
+
+        // ============ 热度排行 ============
+        async function loadRanking() {
+            const container = document.getElementById('ranking-list');
+            container.innerHTML = '<li style="text-align: center; color: #666;">加载中...</li>';
+
+            try {
+                const res = await fetch(`${API_BASE}/v1/configs/config?namespace=space&key=topic_tags_config`, {
+                    headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' }
+                });
+
+                const data = await res.json();
+                const tags = Object.entries(data.value || {}).map(([name, config]) => ({
+                    name,
+                    count: config.participants_count || 0
+                })).sort((a, b) => b.count - a.count).slice(0, 20);
+
+                container.innerHTML = tags.map((tag, index) => `
+                    <li class="ranking-item">
+                        <span class="ranking-rank">${index + 1}</span>
+                        <span class="ranking-name">#${tag.name}</span>
+                        <span class="ranking-count">${tag.count.toLocaleString()} 人参与</span>
+                    </li>
+                `).join('');
+            } catch (error) {
+                container.innerHTML = '<li style="text-align: center; color: #f44336;">加载失败</li>';
+            }
+        }
+    </script>
+</body>
+</html>

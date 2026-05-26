@@ -1557,6 +1557,26 @@
                     </p>
                     <button class="entry-btn" data-i18n="home-card5-btn">使用工具</button>
                 </div>
+
+                <!-- Neta 点赞工具 -->
+                <div class="entry-card" onclick="navigateTo('neta-web.html')">
+                    <h2 class="entry-title">💜 Neta 点赞工具</h2>
+                    <p class="entry-desc">
+                        批量点赞 / 留言 / 关注列表<br>
+                        实时图表 / 多账号管理
+                    </p>
+                    <button class="entry-btn">使用工具</button>
+                </div>
+
+                <!-- Neta 身份验证 -->
+                <div class="entry-card" onclick="openNetaLoginModal()">
+                    <h2 class="entry-title">🔐 Neta 身份验证</h2>
+                    <p class="entry-desc">
+                        使用 Neta Token 登录<br>
+                        雨落账号自动开启开发者模式
+                    </p>
+                    <button class="entry-btn" style="background: linear-gradient(135deg, #667eea, #764ba2);">验证登录</button>
+                </div>
             </div>
 
             <!-- 暗号专用区域 - footer 第一行（增加上边距） -->
@@ -1609,6 +1629,31 @@
                 <button class="secret-modal-btn cancel" onclick="closeSecretModalDirect()" data-i18n="home-secret-modal-return">返回</button>
                 <button class="secret-modal-btn" onclick="submitSecretCode()" data-i18n="home-secret-modal-confirm">确定</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Neta 登录弹窗 -->
+    <div class="secret-modal" id="netaLoginModal" onclick="closeNetaLoginModal(event)">
+        <div class="secret-modal-content">
+            <span class="secret-modal-close" onclick="closeNetaLoginModal(event)">×</span>
+            <h3 class="secret-modal-title">💜 Neta 身份验证</h3>
+            <div class="secret-modal-text" style="text-align: left; line-height: 1.8; padding: 20px;">
+                请输入您的 NETA TOKEN 进行身份验证。<br>
+                验证通过后，如果是雨落小姐的账号，<br>
+                将自动开启开发者模式！<br><br>
+                <strong style="color: #667eea;">获取 Token 方法：</strong><br>
+                1. 打开 <a href="https://www.talesofai.cn" target="_blank" style="color: #667eea;">捏 ta 网页版</a><br>
+                2. 点击右上角个人头像<br>
+                3. 选择"隐私设置"<br>
+                4. 点击"获取 NETA TOKEN"<br>
+                5. 复制并粘贴到下方
+            </div>
+            <input type="text" class="secret-modal-input" id="netaTokenInput" placeholder="请输入 NETA TOKEN" style="width: 100%; margin: 15px 0; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+            <div class="secret-modal-buttons">
+                <button class="secret-modal-btn cancel" onclick="closeNetaLoginModalDirect()">返回</button>
+                <button class="secret-modal-btn" onclick="submitNetaToken()" style="background: linear-gradient(135deg, #667eea, #764ba2);">验证登录</button>
+            </div>
+            <div id="netaLoginStatus" style="margin-top: 15px; color: #f44336; font-size: 14px;"></div>
         </div>
     </div>
 
@@ -2167,6 +2212,111 @@
         function closeXiaoyudiModal(event) {
             if (event.target.id === 'xiaoyudiModal') {
                 document.getElementById('xiaoyudiModal').classList.remove('active');
+            }
+        }
+
+        // 5.5 Neta 登录弹窗
+        function openNetaLoginModal() {
+            const modal = document.getElementById('netaLoginModal');
+            modal.classList.add('active');
+            document.getElementById('netaTokenInput').value = '';
+            document.getElementById('netaTokenInput').focus();
+            document.getElementById('netaLoginStatus').textContent = '';
+        }
+
+        function closeNetaLoginModalDirect() {
+            document.getElementById('netaLoginModal').classList.remove('active');
+        }
+
+        function closeNetaLoginModal(event) {
+            if (event.target.id === 'netaLoginModal') {
+                document.getElementById('netaLoginModal').classList.remove('active');
+            }
+        }
+
+        async function submitNetaToken() {
+            const token = document.getElementById('netaTokenInput').value.trim();
+            const statusEl = document.getElementById('netaLoginStatus');
+            
+            if (!token) {
+                statusEl.textContent = '请输入 Token';
+                return;
+            }
+
+            statusEl.textContent = '验证中...';
+            
+            try {
+                const res = await fetch('https://api.talesofai.cn/v1/user/', {
+                    headers: { 
+                        'x-token': token, 
+                        'x-platform': 'nieta-app/web' 
+                    }
+                });
+
+                if (!res.ok) {
+                    throw new Error('Token 无效');
+                }
+
+                const data = await res.json();
+                const userUuid = data.uuid;
+
+                // 检查是否是雨落小姐的账号
+                if (userUuid === 'bd1a9f8f-8c88-4f3f-b4d8-2f8af36a0d1b') {
+                    // 是雨落小姐！自动开启开发者模式
+                    closeNetaLoginModalDirect();
+                    
+                    // 显示 Loading 页
+                    const loadingScreen = document.getElementById('loading-screen');
+                    const mainScreen = document.getElementById('main-screen');
+                    const loadingText = document.getElementById('loadingText');
+                    
+                    loadingScreen.classList.remove('hidden');
+                    loadingScreen.style.display = 'flex';
+                    loadingScreen.style.opacity = '1';
+                    mainScreen.classList.remove('visible');
+                    
+                    loadingText.textContent = '观测站身份系统识别中…';
+                    
+                    // 重新创建雨滴效果
+                    const existingRain = loadingScreen.querySelectorAll('.raindrop');
+                    existingRain.forEach(r => r.remove());
+                    createRain();
+                    
+                    // 2 秒后开启开发者模式
+                    setTimeout(function() {
+                        loadingScreen.classList.add('hidden');
+                        mainScreen.classList.add('visible');
+                        
+                        devMode = true;
+                        document.getElementById('devModeIndicator').classList.add('active');
+                        document.getElementById('devExitBtn').classList.add('active');
+                        document.getElementById('devDebugPanel').classList.add('active');
+                        refreshDebugInfo();
+                        
+                        unlockArchive();
+                        
+                        setTimeout(function() {
+                            loadingScreen.style.display = 'none';
+                            alert('🔓 识别成功！\n\n欢迎回家，雨落小姐！💜');
+                        }, 1000);
+                    }, 2000);
+                } else {
+                    // 不是雨落小姐的账号
+                    statusEl.textContent = '✅ 验证成功！（非雨落账号，开发者模式未开启）';
+                    statusEl.style.color = '#4caf50';
+                    
+                    // 保存 Token 到 localStorage
+                    localStorage.setItem('neta_token', token);
+                    localStorage.setItem('neta_user_name', data.nick_name || data.name || '用户');
+                    
+                    setTimeout(function() {
+                        closeNetaLoginModalDirect();
+                        statusEl.textContent = '';
+                        statusEl.style.color = '#f44336';
+                    }, 1500);
+                }
+            } catch (error) {
+                statusEl.textContent = '❌ 验证失败：' + error.message;
             }
         }
 
