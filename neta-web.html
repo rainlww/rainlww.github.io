@@ -217,7 +217,11 @@
             <!-- 排行榜 -->
             <div class="card">
                 <h3>🔥 热门标签排行榜 <span style="font-size: 12px; color: #999; font-weight: normal;">（点击标签添加到点赞列表）</span></h3>
-                <button class="btn btn-primary" onclick="loadRanking()" style="margin-bottom: 15px; background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">🔄 刷新</button>
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; align-items: center;">
+                    <button class="btn btn-primary" onclick="loadRanking(20)" style="background: #667eea; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px;">TOP 20</button>
+                    <button class="btn" onclick="loadRanking(50)" style="background: #f0f0f0; color: #666; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px;">TOP 50</button>
+                    <button class="btn" onclick="loadRanking(100)" style="background: #f0f0f0; color: #666; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px;">TOP 100</button>
+                </div>
                 <ul id="ranking-list" class="ranking-list"></ul>
             </div>
 
@@ -257,7 +261,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             checkLogin();
             setupTagSearch();
-            loadRanking();
+            loadRanking(20);  // 默认加载 TOP 20
             
             // 加载保存的点赞速度
             const savedSpeed = localStorage.getItem('like_speed');
@@ -860,7 +864,7 @@
         }
 
         // 排行榜 - 真实数据
-        async function loadRanking() {
+        async function loadRanking(limit = 20) {
             const container = document.getElementById('ranking-list');
             container.innerHTML = '<li style="text-align: center; color: #999; padding: 20px;">加载中...</li>';
 
@@ -879,6 +883,7 @@
                 // 重要：value 是 JSON 字符串，需要解析！
                 const configValue = typeof data.value === 'string' ? JSON.parse(data.value) : (data.value || {});
                 console.log('解析后的 configValue:', configValue);
+                console.log('总标签数:', Object.keys(configValue).length);
                 
                 const tags = Object.entries(configValue)
                     .map(([name, config]) => ({
@@ -886,7 +891,7 @@
                         count: config.participants_count || 0
                     }))
                     .sort((a, b) => b.count - a.count)
-                    .slice(0, 20);
+                    .slice(0, limit);
 
                 if (tags.length === 0) {
                     container.innerHTML = '<li style="text-align: center; color: #999; padding: 20px;">暂无数据</li>';
@@ -902,7 +907,7 @@
                     </li>
                 `).join('');
                 
-                log('排行榜加载成功', 'success');
+                log(`排行榜加载成功：显示前 ${limit} 个标签（共 ${Object.keys(configValue).length} 个）`, 'success');
             } catch (error) {
                 container.innerHTML = '<li style="text-align: center; color: #f44336; padding: 20px;">加载失败</li>';
                 log('排行榜加载失败：' + error.message, 'error');
