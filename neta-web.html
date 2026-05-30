@@ -507,9 +507,6 @@
             localStorage.setItem('saved_tags', JSON.stringify(savedTags));
             renderTags();
             log(`从排行榜添加标签：#${tagName}`, 'success');
-            
-            // 滚动到标签列表
-            document.getElementById('selected-tags').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         function renderTags() {
