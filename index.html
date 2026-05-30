@@ -1501,13 +1501,13 @@
                 </div>
 
                 <!-- 圣拉姆特花名册 -->
-                <div class="entry-card" onclick="navigateTo('triple-sides-of-one-coin.html')">
+                <div class="entry-card" id="rosterCard" onclick="window.location.href='triple-sides-of-one-coin.html?v=20260530'">
                     <h2 class="entry-title">🌸 圣拉姆特花名册</h2>
                     <p class="entry-desc">
                         圣拉姆特救济院成员档案<br>
                         院长 / 总管家 / OW 成员 / 孩子们
                     </p>
-                    <button class="entry-btn">查看花名册</button>
+                    <button class="entry-btn" id="rosterBtn" onclick="event.stopPropagation(); window.location.href='triple-sides-of-one-coin.html?v=20260530'">查看花名册</button>
                 </div>
             </div>
 
@@ -2507,40 +2507,12 @@
             const archiveBtn = document.getElementById('archiveBtn');
             
             // 移除锁定样式
-            archiveCard.style.opacity = '1';
-            archiveCard.style.cursor = 'pointer';
-            archiveCard.removeAttribute('style');
-            archiveCard.classList.add('unlocked');
-            
-            // 设置点击跳转
-            archiveCard.onclick = function(e) {
-                e.stopPropagation();
-                navigateTo('archive.html');
-            };
-            
-            // 解锁按钮
-            archiveBtn.style.background = 'linear-gradient(135deg, #5a7d8a, #7a9da8)';
-            archiveBtn.style.cursor = 'pointer';
-            archiveBtn.textContent = '进入档案馆';
-            archiveBtn.onclick = function(e) {
-                e.stopPropagation();
-                navigateTo('archive.html');
-            };
-            
-            // 更新描述中的锁定提示
-            const lockSpan = archiveCard.querySelector('span');
-            if (lockSpan) {
-                lockSpan.style.color = '#9a7a8a';
-                lockSpan.textContent = '✨ 开发者模式已解锁';
-            }
+            // 花名册无需解锁，始终可访问
         }
 
-        // 尝试解锁档案馆（点击时）
-        function tryUnlockArchive() {
-            if (devMode) {
-                navigateTo('archive.html');
-            }
-            // 否则不响应（被 opacity 和 cursor 覆盖）
+        // 花名册点击函数
+        function navigateToRoster() {
+            navigateTo('triple-sides-of-one-coin.html');
         }
         
         // 页面加载时初始化语言和打字机效果（合并到主监听器）
