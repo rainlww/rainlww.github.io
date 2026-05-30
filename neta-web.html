@@ -585,15 +585,24 @@
                         const data = await res.json();
                         console.log('获取作品 API 返回数据:', data);
                         console.log('第一个作品数据结构:', data.list?.[0]);
+                        
+                        // 检查是否有 total 字段（总作品数）
+                        const total = data.total || data.count || 0;
+                        console.log(`总作品数：${total}, 当前页：${page}, 当前页数量：${data.list?.length || 0}`);
+                        
                         const stories = data.list || [];
 
                         if (stories.length === 0) {
-                            log(`标签 #${tag.name} 已遍历完所有作品`, 'info');
+                            log(`标签 #${tag.name} 第 ${page + 1} 页没有作品了`, 'info');
+                            // 检查是否是第一页就没数据
+                            if (page === 0) {
+                                log(`⚠️ 标签 #${tag.name} 可能不存在或没有公开作品`, 'warning');
+                            }
                             tagFinished[tag.name] = true;
                             break;
                         }
 
-                        log(`第 ${page + 1} 页，获取到 ${stories.length} 个作品`, 'info');
+                        log(`第 ${page + 1} 页，获取到 ${stories.length} 个作品（总：${total > 0 ? total : '未知'}）`, 'info');
 
                         for (const story of stories) {
                             if (!isRunning) break;
@@ -664,12 +673,21 @@
                             await sleep(likeSpeed);  // 使用滑块设置的速度
                         }
 
+                        // 翻页
                         page++;
+                        console.log(`准备翻到第 ${page + 1} 页继续获取...`);
+                        
+                        // 添加延迟避免 API 限流
+                        await sleep(500);
+                        
                     } catch (error) {
                         log(`处理标签 #${tag.name} 失败：${error.message}`, 'error');
+                        console.error('错误详情:', error);
                         hasMore = false;
                     }
                 }
+                
+                log(`标签 #${tag.name} 处理完成，共遍历 ${page} 页`, 'info');
             }
 
             stopLike();
@@ -716,39 +734,51 @@
             console.log('测试获取作品，标签:', tagName);
             
             try {
-                const url = `${API_BASE}/v1/hashtag/${encodeURIComponent(tagName)}/stories?page_index=0&page_size=5`;
-                console.log('请求 URL:', url);
+                // 测试多页
+                let totalStories = 0;
+                let html = '';
                 
-                const res = await fetch(url, {
-                    headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' }
-                });
-                
-                console.log('响应状态:', res.status);
-                
-                if (!res.ok) {
-                    const errorText = await res.text();
-                    resultEl.innerHTML = `<span style="color: #f44336;">❌ HTTP ${res.status}\n\n${errorText}</span>`;
-                    return;
+                for (let page = 0; page < 3; page++) {
+                    const url = `${API_BASE}/v1/hashtag/${encodeURIComponent(tagName)}/stories?page_index=${page}&page_size=10`;
+                    console.log(`请求第 ${page + 1} 页:`, url);
+                    
+                    const res = await fetch(url, {
+                        headers: { 'x-token': currentUser.token, 'x-platform': 'nieta-app/web' }
+                    });
+                    
+                    if (!res.ok) {
+                        const errorText = await res.text();
+                        html += `<span style="color: #f44336;">第 ${page + 1} 页失败：HTTP ${res.status}\n\n${errorText}</span><br>`;
+                        break;
+                    }
+                    
+                    const data = await res.json();
+                    const stories = data.list || [];
+                    const total = data.total || data.count || '未知';
+                    
+                    totalStories += stories.length;
+                    
+                    html += `<span style="color: #4caf50;">✅ 第 ${page + 1} 页：获取到 ${stories.length} 个作品（总：${total}）</span><br>`;
+                    
+                    if (stories.length === 0) {
+                        html += `<span style="color: #ff9800;">⚠️ 第 ${page + 1} 页没有作品了，停止测试</span><br>`;
+                        break;
+                    }
+                    
+                    await sleep(300);
                 }
                 
-                const data = await res.json();
-                console.log('返回数据:', data);
+                html += `<br><span style="color: #2196f3;">📊 3 页测试总计：${totalStories} 个作品</span>`;
                 
-                const stories = data.list || [];
-                let html = `<span style="color: #4caf50;">✅ 成功！获取到 ${stories.length} 个作品</span>\n\n`;
-                html += `<span style="color: #64b5f6;">第一个作品完整数据：</span>\n`;
-                html += `<pre style="color: #81c784; font-size: 11px;">${JSON.stringify(stories[0], null, 2)}</pre>`;
-                html += `<span style="color: #64b5f6;">\n作品列表：</span>\n`;
+                if (totalStories === 0) {
+                    html += `<br><span style="color: #f44336;">❌ 标签可能不存在或没有公开作品</span>`;
+                } else if (totalStories < 30) {
+                    html += `<br><span style="color: #ff9800;">⚠️ 作品数较少，可能是标签作品不多或 API 有限制</span>`;
+                } else {
+                    html += `<br><span style="color: #4caf50;">✅ 作品数正常</span>`;
+                }
                 
-                stories.forEach((story, i) => {
-                    html += `\n${i + 1}. ${story.name || '无题'}`;
-                    html += `\n   storyId: ${story.storyId || '无'}`;
-                    html += `\n   uuid: ${story.uuid || '无'}`;
-                    html += `\n   作者：${story.creator_name || story.creator?.nick_name || '无'}`;
-                    html += `\n   点赞：${story.likeCount || 0}`;
-                });
-                
-                resultEl.innerHTML = html.replace(/\n/g, '<br>');
+                resultEl.innerHTML = html;
             } catch (error) {
                 console.error('测试失败:', error);
                 resultEl.innerHTML = `<span style="color: #f44336;">❌ 错误：${error.message}</span>`;
