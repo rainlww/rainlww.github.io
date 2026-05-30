@@ -256,6 +256,8 @@
         let tagPageMap = {};
         let tagFinished = {};
         let likeSpeed = 200;  // 默认 200ms
+        let elapsedTime = 0;  // 累计运行时间（秒）
+        let lastUpdateTime = null;  // 上次更新时间
 
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
@@ -539,6 +541,8 @@
             isRunning = true;
             isPaused = false;
             stats = { total: 0, skipped: 0, failed: 0, startTime: Date.now() };
+            elapsedTime = 0;
+            lastUpdateTime = Date.now();
             tagPageMap = {};
             tagFinished = {};
 
@@ -553,7 +557,13 @@
         function pauseLike() {
             isPaused = !isPaused;
             document.getElementById('btn-pause').textContent = isPaused ? '▶️ 继续' : '⏸️ 暂停';
-            log(isPaused ? '已暂停' : '继续点赞', 'warning');
+            
+            if (isPaused) {
+                log('已暂停（计时已停止）', 'warning');
+            } else {
+                log('继续点赞（计时恢复）', 'success');
+                lastUpdateTime = Date.now();  // 继续时重置更新时间
+            }
         }
 
         function stopLike() {
@@ -726,9 +736,21 @@
 
         function updateTimer() {
             if (!stats.startTime) return;
-            const elapsed = Math.floor((Date.now() - stats.startTime) / 1000);
-            const minutes = Math.floor(elapsed / 60);
-            const seconds = elapsed % 60;
+            
+            // 暂停时不计时
+            if (isPaused) {
+                lastUpdateTime = Date.now();  // 记录暂停时间
+                return;
+            }
+            
+            // 计算从上次更新到现在经过的时间
+            const now = Date.now();
+            const delta = now - lastUpdateTime;
+            elapsedTime += delta / 1000;  // 累加秒数
+            lastUpdateTime = now;
+            
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = Math.floor(elapsedTime % 60);
             document.getElementById('stat-time').textContent = 
                 `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
