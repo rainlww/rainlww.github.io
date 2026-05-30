@@ -595,31 +595,41 @@
                             }
 
                             log(`❤️ 点赞：${story.name || '无题'} (ID: ${storyId})`, 'info');
-                        console.log('准备点赞，storyId:', storyId, '完整数据:', story);
+                            console.log('准备点赞，storyId:', storyId, '完整数据:', story);
                             
-                            // 点赞 - 使用 story API
-                            const likeUrl = `${API_BASE}/v1/story/${storyId}/like`;
+                            // 点赞 - 使用正确的 API（参考 clouds-agent.github.io）
+                            const likeUrl = `${API_BASE}/v1/story/story-like`;
                             console.log('点赞 URL:', likeUrl);
+                            console.log('点赞 Body:', JSON.stringify({ storyId: storyId, is_cancel: false }));
                             
                             const likeRes = await fetch(likeUrl, {
-                                method: 'POST',
+                                method: 'PUT',
                                 headers: { 
                                     'x-token': currentUser.token, 
                                     'x-platform': 'nieta-app/web',
                                     'Content-Type': 'application/json'
-                                }
+                                },
+                                body: JSON.stringify({
+                                    storyId: storyId,
+                                    is_cancel: false  // false = 点赞，true = 取消
+                                })
                             });
 
                             console.log('点赞响应状态:', likeRes.status, likeRes.ok);
                             const responseText = await likeRes.text();
                             console.log('点赞响应内容:', responseText);
 
-                            if (likeRes.ok || responseText.includes('success') || responseText.includes('liked')) {
+                            if (likeRes.ok) {
                                 stats.total++;
                                 log(`✅ 点赞成功`, 'success');
                             } else {
                                 stats.failed++;
-                                log(`⚠️ 点赞失败：HTTP ${likeRes.status} - ${responseText}`, 'error');
+                                try {
+                                    const errorData = await likeRes.json();
+                                    log(`⚠️ 点赞失败：${errorData.message || responseText}`, 'error');
+                                } catch (e) {
+                                    log(`⚠️ 点赞失败：HTTP ${likeRes.status} - ${responseText}`, 'error');
+                                }
                             }
 
                             updateStats();
@@ -724,26 +734,37 @@
             console.log('测试点赞，storyId:', storyId);
             
             try {
-                const url = `${API_BASE}/v1/story/${storyId}/like`;
+                // 使用正确的 API（参考 clouds-agent.github.io）
+                const url = `${API_BASE}/v1/story/story-like`;
                 console.log('点赞 URL:', url);
+                console.log('点赞 Body:', JSON.stringify({ storyId: storyId, is_cancel: false }));
                 
                 const res = await fetch(url, {
-                    method: 'POST',
+                    method: 'PUT',
                     headers: { 
                         'x-token': currentUser.token, 
                         'x-platform': 'nieta-app/web',
                         'Content-Type': 'application/json'
-                    }
+                    },
+                    body: JSON.stringify({
+                        storyId: storyId,
+                        is_cancel: false
+                    })
                 });
                 
                 console.log('响应状态:', res.status);
                 const responseText = await res.text();
                 console.log('响应内容:', responseText);
                 
-                if (res.ok || responseText.includes('success') || responseText.includes('liked')) {
-                    resultEl.innerHTML = `<span style="color: #4caf50;">✅ 点赞成功！\n\n响应：${responseText}</span>`;
+                if (res.ok) {
+                    resultEl.innerHTML = `<span style="color: #4caf50;">✅ 点赞成功！</span>`;
                 } else {
-                    resultEl.innerHTML = `<span style="color: #f44336;">❌ 点赞失败\n\nHTTP ${res.status}\n\n${responseText}</span>`;
+                    try {
+                        const errorData = await res.json();
+                        resultEl.innerHTML = `<span style="color: #f44336;">❌ 点赞失败\n\nHTTP ${res.status}\n\n${errorData.message || responseText}</span>`;
+                    } catch (e) {
+                        resultEl.innerHTML = `<span style="color: #f44336;">❌ 点赞失败\n\nHTTP ${res.status}\n\n${responseText}</span>`;
+                    }
                 }
             } catch (error) {
                 console.error('测试失败:', error);
