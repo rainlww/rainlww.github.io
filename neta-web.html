@@ -560,6 +560,7 @@
 
                         const data = await res.json();
                         console.log('获取作品 API 返回数据:', data);
+                        console.log('第一个作品数据结构:', data.list?.[0]);
                         const stories = data.list || [];
 
                         if (stories.length === 0) {
@@ -587,9 +588,12 @@
                                 continue;
                             }
 
-                            const storyId = story.uuid || story.storyId;
+                            // 参考网页使用 story.storyId，不是 story.uuid
+                            const storyId = story.storyId || story.uuid;
+                            console.log('作品 ID 提取：storyId=', storyId, 'uuid=', story.uuid, 'story.storyId=', story.storyId);
+                            
                             if (!storyId) {
-                                log(`⚠️ 作品缺少 UUID`, 'error');
+                                log(`⚠️ 作品缺少 ID（完整数据：${JSON.stringify(story)}）`, 'error');
                                 stats.failed++;
                                 continue;
                             }
@@ -708,11 +712,14 @@
                 
                 const stories = data.list || [];
                 let html = `<span style="color: #4caf50;">✅ 成功！获取到 ${stories.length} 个作品</span>\n\n`;
-                html += `<span style="color: #64b5f6;">作品列表：</span>\n`;
+                html += `<span style="color: #64b5f6;">第一个作品完整数据：</span>\n`;
+                html += `<pre style="color: #81c784; font-size: 11px;">${JSON.stringify(stories[0], null, 2)}</pre>`;
+                html += `<span style="color: #64b5f6;">\n作品列表：</span>\n`;
                 
                 stories.forEach((story, i) => {
                     html += `\n${i + 1}. ${story.name || '无题'}`;
-                    html += `\n   UUID: ${story.uuid || story.storyId || '无'}`;
+                    html += `\n   storyId: ${story.storyId || '无'}`;
+                    html += `\n   uuid: ${story.uuid || '无'}`;
                     html += `\n   作者：${story.creator_name || story.creator?.nick_name || '无'}`;
                     html += `\n   点赞：${story.likeCount || 0}`;
                 });
