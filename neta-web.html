@@ -181,6 +181,14 @@
                 <div class="progress">
                     <div id="progress-bar" class="progress-bar" style="width: 0%;">0%</div>
                 </div>
+                <div style="margin: 15px 0;">
+                    <label style="font-size: 13px; color: #666;">点赞速度：<span id="like-speed-value">200</span>ms</label>
+                    <input type="range" id="like-speed" min="50" max="2000" step="50" value="200" style="width: 100%; margin-top: 8px;" />
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #999; margin-top: 4px;">
+                        <span>快 (50ms)</span>
+                        <span>慢 (2000ms)</span>
+                    </div>
+                </div>
                 <div class="stats">
                     <div class="stat-item">
                         <div id="stat-total" class="stat-value">0</div>
@@ -243,12 +251,28 @@
         let savedTags = [];
         let tagPageMap = {};
         let tagFinished = {};
+        let likeSpeed = 200;  // 默认 200ms
 
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             checkLogin();
             setupTagSearch();
             loadRanking();
+            
+            // 加载保存的点赞速度
+            const savedSpeed = localStorage.getItem('like_speed');
+            if (savedSpeed) {
+                likeSpeed = parseInt(savedSpeed);
+                document.getElementById('like-speed').value = likeSpeed;
+                document.getElementById('like-speed-value').textContent = likeSpeed;
+            }
+            
+            // 速度滑块事件
+            document.getElementById('like-speed').addEventListener('input', (e) => {
+                likeSpeed = parseInt(e.target.value);
+                document.getElementById('like-speed-value').textContent = likeSpeed;
+                localStorage.setItem('like_speed', likeSpeed);
+            });
         });
 
         // 检查登录
@@ -637,7 +661,7 @@
                             }
 
                             updateStats();
-                            await sleep(2000);
+                            await sleep(likeSpeed);  // 使用滑块设置的速度
                         }
 
                         page++;
