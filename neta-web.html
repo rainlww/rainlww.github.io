@@ -859,7 +859,13 @@
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
                 const data = await res.json();
-                const configValue = data.value || {};
+                console.log('排行榜 API 返回数据:', data);
+                console.log('排行榜 value 字段类型:', typeof data.value);
+                console.log('排行榜 value 原始内容:', data.value);
+                
+                // 重要：value 是 JSON 字符串，需要解析！
+                const configValue = typeof data.value === 'string' ? JSON.parse(data.value) : (data.value || {});
+                console.log('解析后的 configValue:', configValue);
                 
                 const tags = Object.entries(configValue)
                     .map(([name, config]) => ({
