@@ -216,7 +216,7 @@
 
             <!-- 排行榜 -->
             <div class="card">
-                <h3>🔥 热门标签排行榜</h3>
+                <h3>🔥 热门标签排行榜 <span style="font-size: 12px; color: #999; font-weight: normal;">（点击标签添加到点赞列表）</span></h3>
                 <button class="btn btn-primary" onclick="loadRanking()" style="margin-bottom: 15px; background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">🔄 刷新</button>
                 <ul id="ranking-list" class="ranking-list"></ul>
             </div>
@@ -494,6 +494,22 @@
             localStorage.setItem('saved_tags', JSON.stringify(savedTags));
             renderTags();
             log(`移除标签：#${name}`, 'info');
+        }
+
+        // 从排行榜添加标签
+        function addTagFromRanking(tagName, tagType) {
+            if (savedTags.some(t => t.name === tagName)) {
+                log(`标签 #${tagName} 已在点赞列表中`, 'warning');
+                return;
+            }
+            
+            savedTags.push({ name: tagName, type: tagType || 'space' });
+            localStorage.setItem('saved_tags', JSON.stringify(savedTags));
+            renderTags();
+            log(`从排行榜添加标签：#${tagName}`, 'success');
+            
+            // 滚动到标签列表
+            document.getElementById('selected-tags').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         function renderTags() {
@@ -881,10 +897,11 @@
                 }
 
                 container.innerHTML = tags.map((tag, index) => `
-                    <li class="ranking-item">
+                    <li class="ranking-item" style="cursor: pointer;" onclick="addTagFromRanking('${tag.name.replace(/'/g, "\\'")}', 'space')" title="点击添加到点赞列表">
                         <span class="ranking-rank">${index + 1}</span>
                         <span class="ranking-name">#${tag.name}</span>
                         <span class="ranking-count">${tag.count.toLocaleString()} 人参与</span>
+                        <span style="color: #667eea; font-size: 12px; margin-left: 8px;">➕</span>
                     </li>
                 `).join('');
                 
