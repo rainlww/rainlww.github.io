@@ -1,0 +1,6 @@
+{
+  "ok": false,
+  "provider": "cohub",
+  "model": "birefnet-general",
+  "error": "upload plan failed: HTTP 400 {\"message\":\"presigned_put_v1 upload protocol is required\"}"
+}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#2b3327">
+<title>客人今天去哪了</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="scene" id="scene">
+    <img class="scene-bg" id="sceneBg" src="assets/backgrounds/background-saint-lament-garden-dusk-864x1536.webp" alt="圣拉姆特的花园，白玫瑰与菜地">
+    <div class="tint" id="tint"></div>
+    <div class="garden-layer" id="gardenLayer"></div>
+    <div class="rabbit-wrap" id="rabbitWrap">
+      <img class="rabbit" id="rabbit" src="assets/characters/character-guest-rabbit-idle-transparent-640.webp" alt="灰兔客人">
+    </div>
+    <div class="vignette"></div>
+    <div class="scene-scrim"></div>
+  </div>
+
+  <header class="hud">
+    <div class="hud-left">
+      <span class="day-chip" id="dayChip">第 1 天</span>
+      <span class="weather" id="weather">晴</span>
+    </div>
+    <div class="hud-right">
+      <button class="hud-btn" id="albumBtn" type="button">信册</button>
+      <button class="hud-btn" id="shelfBtn" type="button">架子</button>
+      <button class="hud-btn hud-btn--icon" id="soundBtn" type="button" aria-label="开关声音">声</button>
+    </div>
+  </header>
+
+  <p class="narration" id="narration"></p>
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+  <section class="panel" id="panel" aria-live="polite"></section>
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true"></div>
+  <div class="rotate-hint"><strong>把手机竖过来</strong><span>这是一封竖着写的信</span></div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

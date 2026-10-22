@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0e0d16" />
+<title>院长的棋局 · 圣拉姆特</title>
+<link rel="stylesheet" href="style.css?v=10" />
+</head>
+<body>
+<div class="room" aria-hidden="true"></div>
+<div class="room-vignette" aria-hidden="true"></div>
+<div class="room-glow" aria-hidden="true"></div>
+<div class="dust" aria-hidden="true"></div>
+
+<!-- ─────────────  开场  ───────────── -->
+<section id="intro" class="screen intro">
+  <div class="intro-room" aria-hidden="true">
+    <p class="room-caption">三楼办公室 · 棋已摆好</p>
+  </div>
+
+  <div class="intro-panel">
+    <header class="masthead">
+      <p class="kicker">圣拉姆特救济院 · 夜</p>
+      <h1>院长的棋局</h1>
+      <p class="lede">她摆好了一副棋。白棋在你这边。</p>
+    </header>
+
+    <div class="modes" role="radiogroup" aria-label="对局方式">
+      <button class="mode-card is-on" data-mode="narrative" role="radio" aria-checked="true">
+        <span class="mode-en">TALK</span>
+        <span class="mode-label">棋谈</span>
+        <span class="mode-blurb">推棋即说话，落子即沉默。</span>
+        <span class="mode-note">落子推进对话，不争输赢。</span>
+      </button>
+      <button class="mode-card" data-mode="duel" role="radio" aria-checked="false">
+        <span class="mode-en">DUEL</span>
+        <span class="mode-label">对局</span>
+        <span class="mode-blurb">带上你这个人，和她下。</span>
+        <span class="mode-note">她会读你。你也有自己的办法。</span>
+      </button>
+      <button class="mode-card" data-mode="serious" role="radio" aria-checked="false">
+        <span class="mode-en">SERIOUS</span>
+        <span class="mode-label">认真局</span>
+        <span class="mode-blurb">这一局，我不听。</span>
+        <span class="mode-note">无读心，无能力，全力出手。</span>
+      </button>
+    </div>
+
+    <div class="difficulty">
+      <p class="section-label">棋力</p>
+      <div class="diff-row" role="radiogroup" aria-label="难度">
+        <button class="diff-btn" data-diff="gentle" role="radio" aria-checked="false">陪你走</button>
+        <button class="diff-btn is-on" data-diff="normal" role="radio" aria-checked="true">认真</button>
+        <button class="diff-btn" data-diff="hard" role="radio" aria-checked="false">不留情</button>
+      </div>
+    </div>
+
+    <div class="seats">
+      <p class="section-label">谁坐下</p>
+      <div class="seat-row" id="seat-row"></div>
+    </div>
+
+    <footer class="intro-foot">
+      <div class="serious-options hidden" id="serious-options">
+        <label class="check"><input type="checkbox" id="clock-toggle" /> <span>各十分钟</span></label>
+      </div>
+      <button id="sit-btn" class="primary">落座</button>
+      <p class="foot-hint">点选棋子，再点目标格。棋子落地，她会应。</p>
+    </footer>
+  </div>
+</section>
+
+<!-- ─────────────  对局  ───────────── -->
+<main id="game" class="screen game hidden">
+  <section class="board-side">
+    <div class="board-frame">
+      <div class="board-frame-inner">
+        <div class="board-arena">
+          <div id="board" class="board" role="grid" aria-label="国际象棋棋盘"></div>
+          <div id="move-layer" class="move-layer" aria-hidden="true"></div>
+        </div>
+        <div class="board-coords" aria-hidden="true">
+          <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+        </div>
+      </div>
+    </div>
+    <div class="board-foot">
+      <div class="turn" id="turn-indicator"><span class="turn-dot"></span><span id="turn-text">轮到你</span></div>
+      <div class="foot-btns">
+        <button id="sound-btn" class="ghost" aria-pressed="true">声 · 开</button>
+        <button id="hint-btn" class="ghost">提示 · 3</button>
+        <button id="collect-btn" class="ghost">收棋</button>
+        <button id="leave-btn" class="ghost">离席</button>
+      </div>
+      <div class="review-controls" id="review-bar">
+        <button id="rev-prev" class="rev-btn" aria-label="上一步">‹</button>
+        <span id="rev-label" class="rev-label">复盘 · 开局</span>
+        <button id="rev-next" class="rev-btn" aria-label="下一步">›</button>
+        <button id="rev-exit" class="rev-exit">回到棋局</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="table-side">
+    <p class="seat-chip" id="seat-chip">你执白</p>
+    <div class="who">
+      <div class="portrait-wrap" id="portrait-wrap">
+        <img id="dean-img" class="portrait is-on" src="assets/chars/homulesia.webp" alt="荷穆勒夏" />
+        <img id="char-img" class="portrait" alt="" />
+        <div class="portrait-glow" aria-hidden="true"></div>
+        <div class="portrait-fade" aria-hidden="true"></div>
+      </div>
+      <div class="name-block">
+        <p class="role" id="char-role"></p>
+        <h2 id="char-name"></h2>
+        <p class="seat-note" id="char-seat"></p>
+      </div>
+      <div class="captured" id="captured">
+        <div class="cap-row"><span class="cap-label">她收走</span><span class="cap-pieces" id="cap-her"></span></div>
+        <div class="cap-row"><span class="cap-label">你收走</span><span class="cap-pieces" id="cap-you"></span></div>
+      </div>
+    </div>
+
+    <div class="dialogue" id="dialogue" aria-live="polite">
+      <p class="speaker"><span id="speaker">荷穆勒夏</span><span class="speaker-rule"></span></p>
+      <p class="line" id="line">坐吧。白棋归你。</p>
+      <div class="transcript" id="transcript"></div>
+      <div class="line-dots" id="line-dots" aria-hidden="true"></div>
+      <button id="continue-btn" class="continue-btn hidden">看完了 · 继续</button>
+    </div>
+
+    <div class="ability" id="ability-panel">
+      <button id="ability-btn" class="ability-btn">
+        <span class="ability-top"><span id="ability-name">坦诚</span><span id="ability-uses">2</span></span>
+        <span id="ability-hint" class="ability-hint">摊开这一步。她听不见它。</span>
+      </button>
+    </div>
+
+    <div class="chat hidden" id="chat-panel">
+      <button id="chat-btn" class="chat-btn">
+        <span class="chat-title">再说一句</span>
+        <span class="chat-hint">桌边闲话</span>
+      </button>
+    </div>
+
+    <div class="meta">
+      <div class="clocks hidden" id="clocks">
+        <div class="clock"><span>你</span><b id="clock-player">10:00</b></div>
+        <div class="clock"><span>院长</span><b id="clock-dean">10:00</b></div>
+      </div>
+      <p class="last-move" id="last-move">棋局未开</p>
+      <div class="meta-row">
+        <span class="ply" id="ply-count">第 1 手</span>
+        <div class="meta-btns">
+          <button id="diff-btn" class="ghost small">认真</button>
+          <button id="log-btn" class="ghost small">棋谱</button>
+          <button id="copy-btn" class="ghost small">复制</button>
+        </div>
+      </div>
+      <ol id="move-log" class="move-log hidden" aria-label="棋谱"></ol>
+    </div>
+  </aside>
+</main>
+
+<div id="whisper" class="whisper hidden" aria-live="polite">她听见了。</div>
+
+<div id="promo" class="overlay hidden">
+  <div class="card narrow">
+    <p class="kicker">升变</p>
+    <h2>走到尽头了</h2>
+    <div class="promo-row">
+      <button data-promo="Q">♛</button>
+      <button data-promo="R">♜</button>
+      <button data-promo="B">♝</button>
+      <button data-promo="N">♞</button>
+    </div>
+  </div>
+</div>
+
+<div id="endcard" class="overlay hidden">
+  <div class="card">
+    <p class="kicker" id="end-kicker">棋谈 · 收棋</p>
+    <h2 id="end-title">这一局，就到这里</h2>
+    <p class="end-text" id="end-text"></p>
+    <p class="end-stats" id="end-stats"></p>
+    <div class="end-btns">
+      <button id="again-btn" class="primary">再来一局</button>
+      <button id="review-end-btn" class="ghost">复盘</button>
+      <button id="back-btn" class="ghost">回到桌边</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden" role="status"></div>
+
+<script src="engine.js?v=10"></script>
+<script src="data.js?v=10"></script>
+<script src="app.js?v=10"></script>
+</body>
+</html>

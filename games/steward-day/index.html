@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#e8dcc2">
+<title>总管家的一天 · 圣拉姆特</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section id="title-screen" class="title-screen">
+  <div class="title-map" aria-hidden="true"></div>
+  <div class="title-card">
+    <div class="title-seal">圣拉姆特</div>
+    <p class="title-kicker">救济院 · 晚秋 · 星期三</p>
+    <h1>总管家<br>的一天</h1>
+    <p class="title-sub">六点差一刻。灶膛里还有一点火。</p>
+
+    <div class="title-rules">
+      <p><span>一</span>点待办，划掉一件是一件。</p>
+      <p><span>二</span>时间和体力只够做一部分，选你要紧的。灶上的事会自己走，记得回来起锅。</p>
+      <p><span>三</span>天黑之前，把晚饭端上桌。</p>
+    </div>
+
+    <button id="start-btn" class="btn-primary">翻开记事本</button>
+    <p class="title-foot">本日值班 · 伊斯派菈</p>
+  </div>
+</section>
+
+<main id="game" class="game" hidden>
+  <div class="notebook">
+
+    <section class="page page-left" id="todo-sheet">
+      <button class="sheet-handle" id="sheet-handle" aria-expanded="false">
+        <span>今日待办</span>
+        <span class="sheet-stove" id="sheet-stove" hidden></span>
+        <span class="sheet-count" id="sheet-count">0 / 13</span>
+        <span class="sheet-arrow" aria-hidden="true"></span>
+      </button>
+
+      <div class="page-left-inner">
+        <header class="todo-head">
+          <div>
+            <p class="todo-date">晚秋 · 星期三</p>
+            <p class="todo-place">圣拉姆特救济院</p>
+          </div>
+          <div class="todo-progress">
+            <span id="done-count">0</span><i>/</i><span id="all-count">13</span>
+            <em>件</em>
+          </div>
+        </header>
+
+        <div class="stove" id="stove" hidden>
+          <div class="stove-head">
+            <span>灶上</span>
+            <span class="stove-time" id="stove-time"></span>
+          </div>
+          <div class="stove-row">
+            <div class="stove-main">
+              <b id="stove-title"></b>
+              <em id="stove-note"></em>
+            </div>
+            <button type="button" class="stove-btn" id="stove-btn">起锅</button>
+          </div>
+          <div class="stove-bar"><i id="stove-fill"></i></div>
+        </div>
+
+        <div class="todo-list" id="todo-list" role="list"></div>
+
+        <button type="button" class="bench-note" id="bench-note"></button>
+
+        <p class="todo-foot" id="todo-foot">按先后次序排的。也可以不按。</p>
+      </div>
+    </section>
+
+    <section class="page page-right">
+      <header class="hud">
+        <div class="hud-clock">
+          <span class="hud-day" id="hud-day">星期三</span>
+          <strong id="clock">06:00</strong>
+        </div>
+        <div class="hud-meters">
+          <div class="meter meter-stamina">
+            <div class="meter-label"><span>体力</span><b id="stamina-num">100</b></div>
+            <div class="meter-track"><i id="stamina-bar"></i></div>
+          </div>
+          <div class="meter meter-morale">
+            <div class="meter-label"><span>心气</span><b id="morale-num">60</b></div>
+            <div class="meter-track"><i id="morale-bar"></i></div>
+          </div>
+          <div class="meter meter-pantry">
+            <div class="meter-label"><span>米缸</span><b id="pantry-num">2</b></div>
+            <div class="meter-dots" id="pantry-dots"></div>
+          </div>
+        </div>
+      </header>
+
+      <div class="map-frame">
+        <span class="tape tape-a" aria-hidden="true"></span>
+        <span class="tape tape-b" aria-hidden="true"></span>
+        <div class="map">
+          <img src="assets/map-courtyard-day.webp" alt="圣拉姆特中庭的俯瞰图：三面是楼，中间是花园、菜地、长椅和一棵大树。" draggable="false">
+          <div class="map-wash" aria-hidden="true"></div>
+          <div class="tokens" id="tokens"></div>
+          <div class="map-caption">圣拉姆特 · 中庭</div>
+        </div>
+      </div>
+
+      <div class="scene" id="scene" aria-live="polite">
+        <div class="scene-portrait" id="scene-portrait" hidden>
+          <img id="scene-portrait-img" alt="">
+        </div>
+        <div class="scene-body">
+          <div class="scene-name" id="scene-name" hidden></div>
+          <div class="scene-text" id="scene-text"></div>
+          <div class="scene-choices" id="scene-choices"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<section id="ending-screen" class="ending-screen" hidden>
+  <div class="ending-card">
+    <p class="ending-kicker" id="ending-kicker">星期三 · 结束</p>
+    <h2 id="ending-title"></h2>
+    <div class="ending-body" id="ending-body"></div>
+    <div class="ending-journal" id="ending-journal"></div>
+    <div class="ending-stats" id="ending-stats"></div>
+    <div class="ending-actions">
+      <button id="again-btn" class="btn-primary">再来一天</button>
+      <button id="title-btn" class="btn-ghost">翻回封面</button>
+    </div>
+  </div>
+</section>
+
+<script src="data.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

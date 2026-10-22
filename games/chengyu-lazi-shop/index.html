@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#2a1d17">
+<title>成渝辣子店 · 打烊后的柜台</title>
+<link rel="stylesheet" href="style.css">
+<style id="fallback">
+/* Applied only when html.nocss is set (i.e. style.css failed to load/stripped). */
+.nocss body{background:#1e1510;margin:0;color:#3b2a20;font-family:"Noto Serif SC","Songti SC",serif}
+.nocss #app{display:block}
+.nocss .stage{position:relative;height:56vh;min-height:240px;overflow:hidden}
+.nocss .stage .bg{width:100%;height:100%;object-fit:cover}
+.nocss .voice,.nocss .panel,.nocss .item,.nocss .dock,.nocss .mcard{background:#f4ead8;color:#3b2a20;padding:8px}
+.nocss .hud{background:#6b4a35;color:#f4ead8;padding:8px}
+.nocss .item{display:flex;gap:10px;align-items:center;border:2px solid #3b2a20;margin:6px 0}
+.nocss .item img{width:52px;height:52px;object-fit:contain}
+.nocss .btn,.nocss .open{background:#b8432f;color:#fff6e6;border:2px solid #3b2a20;padding:8px 12px;width:100%;margin-top:6px}
+.nocss .tabs button,.nocss .mode{background:#ebdcc2;color:#3b2a20;border:1px solid #b7a48c;padding:8px;margin:2px}
+.nocss .title{position:fixed;inset:0;background:linear-gradient(rgba(25,15,10,.75),rgba(25,15,10,.9));color:#f4ead8;overflow:auto;padding:20px}
+.nocss .title-inner{max-width:520px;margin:0 auto;text-align:center}
+.nocss .plaque{position:relative;max-width:420px;margin:0 auto}
+.nocss .plaque img{width:100%}
+.nocss .plaque h1{position:absolute;left:0;right:0;top:50%;transform:translateY(-40%);margin:0;font-size:40px;color:#3b2316}
+.nocss .intro{display:flex;gap:10px;align-items:center;background:#f4ead8;color:#3b2a20;padding:10px;margin:16px 0;text-align:left}
+.nocss .intro img{width:48px}
+.nocss .modal{position:fixed;inset:0;background:rgba(20,12,8,.7);padding:14px;overflow:auto}
+.nocss .mcard{max-width:460px;margin:20px auto;border:3px solid #3b2a20}
+.nocss .mbtns .btn{display:block}
+</style>
+</head>
+<body>
+<div id="app">
+  <section class="left">
+    <div class="stage" id="stage">
+      <img class="bg" src="assets/bg-shop-interior-closed-night-stage.webp" alt="成渝辣子店店内" draggable="false">
+      <div class="warm" id="warm"></div>
+      <div id="layer"></div>
+      <div class="glow" id="glow"></div>
+      <div class="peak-badge" id="peakBadge">高峰 · 收益×2</div>
+      <div class="closed-tag" id="closedTag">已打烊</div>
+      <div class="toast" id="toast"></div>
+    </div>
+    <div class="voice" id="voice">
+      <img src="assets/ui-mingruo-note-knife-voice-icon.webp" alt="明若的字条">
+      <div class="vtext">
+        <b id="voiceWho">明若 · 柜台上的字条</b>
+        <p id="voiceText">……</p>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel" id="panel">
+    <header class="hud">
+      <div class="hud-day" id="hudDay">第 1 天</div>
+      <div class="hud-visit" id="hudVisit">视察还有 <b>6</b> 天</div>
+      <div class="hud-money"><img src="assets/ui-coins-cash-string-hud-icon.webp" alt=""><span id="hudMoney">300</span><small>文</small></div>
+      <div class="hud-rep" title="口碑"><span>口碑</span><div class="repbar"><i id="hudRepFill"></i></div><em id="hudRep">10</em></div>
+      <div class="hud-rep" title="苏家认可"><span>苏家</span><div class="repbar su"><i id="hudSuFill"></i></div><em id="hudSu">0</em></div>
+      <button class="hud-reset" id="btnReset" aria-label="重新开店">重开</button>
+    </header>
+    <div id="panelBody"></div>
+  </aside>
+</div>
+
+<div class="modal" id="modal" hidden><div class="mcard" id="modalCard"></div></div>
+
+<div class="title" id="title">
+  <div class="title-inner">
+    <div class="plaque">
+      <img src="assets/ui-signboard-blank-wood-title.webp" alt="">
+      <h1>成渝辣子店</h1>
+    </div>
+    <p class="subtitle">赤莲街 · 打烊后的柜台</p>
+    <div class="intro" id="intro">
+      <img src="assets/ui-mingruo-note-knife-voice-icon.webp" alt="">
+      <p id="introText"></p>
+    </div>
+    <div class="title-btns" id="titleBtns"></div>
+  </div>
+</div>
+
+<script>
+(function(){try{var c=getComputedStyle(document.body);if(c.overflow!=='hidden'){document.documentElement.classList.add('nocss');}}catch(e){document.documentElement.classList.add('nocss');}})();
+</script>
+<script src="lines.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
