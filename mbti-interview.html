@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBTI · 模拟访谈</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ink: #24312c; --ink-mid: #4a5a53; --ink-soft: #7d8b84;
+    --paper: #f7f4ec; --card: #fffdf8; --line: #e2ddd0;
+    --green: #5f9b86; --green-deep: #3f7262; --amber: #b8863f; --rose: #b06a6a;
+    --serif: "Noto Serif SC", "Songti SC", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  body { background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.8; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 20px 90px; }
+  .back { display: inline-block; color: var(--green-deep); text-decoration: none; font-size: .86em; padding: 6px 14px; background: rgba(255,255,255,.72); border: 1px solid var(--line); border-radius: 999px; margin-bottom: 24px; }
+  h1 { font-family: var(--serif); font-size: clamp(1.7rem, 4vw, 2.4rem); letter-spacing: .12em; font-weight: 600; }
+  .sub { color: var(--ink-soft); font-size: .88em; margin-top: 10px; max-width: 660px; }
+  .rule { height: 1px; background: var(--line); margin: 24px 0; }
+
+  .tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 22px; }
+  .tab { appearance: none; border: 1px solid var(--line); background: #fff; color: var(--ink-mid); border-radius: 999px; padding: 9px 20px; font-size: .88em; font-family: var(--sans); cursor: pointer; transition: all .2s; }
+  .tab:hover { border-color: var(--green); }
+  .tab.on { background: var(--green-deep); border-color: var(--green-deep); color: #fff; }
+
+  .result { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 24px; box-shadow: 0 8px 24px rgba(60,50,30,.05); }
+  .hero { display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+  .type { font-family: var(--serif); font-size: clamp(3rem, 7vw, 4.2rem); letter-spacing: .08em; line-height: 1; color: var(--green-deep); }
+  .meta { padding-bottom: 6px; }
+  .meta .name { font-family: var(--serif); font-size: 1.25em; letter-spacing: .08em; }
+  .meta .role { color: var(--ink-soft); font-size: .82em; margin-top: 4px; }
+  .meta .stack { color: var(--ink-soft); font-size: .76em; margin-top: 6px; letter-spacing: .04em; }
+
+  .axes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+  @media (max-width: 680px) { .axes { grid-template-columns: 1fr; } }
+  .axis { border: 1px solid var(--line); border-radius: 10px; padding: 13px 16px; background: #fff; }
+  .axis-head { display: flex; justify-content: space-between; align-items: baseline; font-size: .8em; color: var(--ink-mid); }
+  .axis-head em { font-style: normal; color: var(--ink-soft); font-size: .82em; }
+  .bar { height: 9px; background: #eceae2; border-radius: 5px; overflow: hidden; margin: 10px 0 7px; }
+  .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--green), #7fb5a2); border-radius: 5px; width: 0; transition: width .6s ease; }
+  .bar.to-right span { margin-left: auto; background: linear-gradient(90deg, #7fb5a2, var(--green)); }
+  .axis-foot { display: flex; justify-content: space-between; font-size: .72em; color: var(--ink-soft); }
+
+  .block { margin-top: 30px; }
+  .block h2 { font-family: var(--serif); font-size: .8em; letter-spacing: .3em; color: var(--amber); font-weight: 500; margin-bottom: 6px; }
+  .block .hint { color: var(--ink-soft); font-size: .76em; margin-bottom: 14px; }
+
+  .q { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 15px 17px; margin-bottom: 10px; }
+  .q-text { font-size: .88em; color: var(--ink); }
+  .q-id { display: inline-block; min-width: 3.2em; color: var(--ink-soft); font-size: .72em; letter-spacing: .06em; }
+  .opts { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .opt { display: flex; gap: 9px; align-items: baseline; font-size: .82em; color: var(--ink-soft); padding: 6px 10px; border: 1px solid transparent; border-radius: 6px; }
+  .opt .m { font-family: var(--serif); color: var(--ink-soft); font-size: .9em; width: 1em; flex: 0 0 auto; }
+  .opt.on { background: #f0f7f3; border-color: #cfe4da; color: var(--ink-mid); }
+  .opt.on .m { color: var(--green-deep); }
+  .pole { margin-left: auto; flex: 0 0 auto; font-size: .7em; letter-spacing: .08em; color: var(--green-deep); border: 1px solid #cfe4da; border-radius: 999px; padding: 1px 7px; }
+  .strength { flex: 0 0 auto; font-size: .68em; color: var(--ink-soft); border: 1px solid var(--line); border-radius: 999px; padding: 1px 7px; }
+  .why { margin-top: 9px; padding-top: 9px; border-top: 1px dashed var(--line); font-size: .78em; color: var(--ink-soft); }
+  .why b { color: var(--ink-mid); font-weight: 600; }
+
+  .notice { margin-top: 28px; border: 1px dashed var(--line); border-radius: 8px; padding: 13px 16px; font-size: .78em; color: var(--ink-soft); background: rgba(255,255,255,.5); }
+  .footer { margin-top: 34px; text-align: center; font-size: .74em; color: var(--ink-soft); letter-spacing: .08em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="test-choice.html">← 返回测试选择</a>
+  <h1>MBTI · 模拟访谈</h1>
+  <p class="sub">三十二道具体情境题。回答不是角色本人说的，是从人物简介里推出来的“她会怎么答”；每题都写了理由，计分在本地完成。</p>
+
+  <div class="rule"></div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="result">
+    <div class="hero">
+      <div class="type" id="type">—</div>
+      <div class="meta">
+        <div class="name" id="name"></div>
+        <div class="role" id="role"></div>
+        <div class="stack" id="stack"></div>
+      </div>
+    </div>
+    <div class="axes" id="axes"></div>
+  </div>
+
+  <div id="groups"></div>
+
+  <div class="notice">
+    <b>怎么读：</b>每题只有一个选择，强度分「明确」与「偏向」。百分比是八题加权后的倾向，不是概率。
+    「INTJ」只是这套题下的结果，不是给角色下的定义；简介没写到的地方，这里也不该替她编。
+  </div>
+
+  <p class="footer">模拟访谈 v1 · 32 题 · 每轴 8 题 · 含反向题</p>
+</div>
+
+<script src="mbti-interview-data.js"></script>
+<script>
+const D = window.MBTI_INTERVIEW;
+const $ = (id) => document.getElementById(id);
+const AXES = {
+  EI: ['E', 'I', '外倾', '内倾'],
+  SN: ['S', 'N', '实感', '直觉'],
+  TF: ['T', 'F', '思考', '情感'],
+  JP: ['J', 'P', '判断', '感知']
+};
+const STACK = { INTJ: 'Ni · Te · Fi · Se', ISFJ: 'Si · Fe · Ti · Ne' };
+let subject = 'homulesha';
+
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+function renderTabs() {
+  const tabs = $('tabs');
+  tabs.innerHTML = '';
+  Object.keys(D.subjects).forEach(k => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (k === subject ? ' on' : '');
+    b.textContent = D.subjects[k].name;
+    b.addEventListener('click', () => { subject = k; render(); });
+    tabs.appendChild(b);
+  });
+}
+
+function render() {
+  renderTabs();
+  const s = D.subjects[subject];
+  const r = s.result;
+
+  $('type').textContent = r.type;
+  $('name').textContent = s.name;
+  $('role').textContent = s.role;
+  $('stack').textContent = r.type ? '功能栈模拟 · ' + (STACK[r.type] || '—') : '';
+
+  const axes = $('axes');
+  axes.innerHTML = '';
+  r.axes.forEach(a => {
+    const [L, R, ln, rn] = AXES[a.pair];
+    const box = document.createElement('div');
+    box.className = 'axis';
+    box.innerHTML = `
+      <div class="axis-head"><span>${L} ${a.pctA}%</span><em>${ln} / ${rn}</em><span>${a.pctB}% ${R}</span></div>
+      <div class="bar ${a.pctA >= 50 ? '' : 'to-right'}"><span style="width:${Math.max(a.pctA, a.pctB)}%"></span></div>
+      <div class="axis-foot"><span>${a.massA} : ${a.massB} 分</span><b>答案一致度 ${Math.round(a.confidence * 100)}%</b></div>`;
+    axes.appendChild(box);
+  });
+
+  const groups = $('groups');
+  groups.innerHTML = '';
+  ['EI', 'SN', 'TF', 'JP'].forEach(axis => {
+    const [L, R, ln, rn] = AXES[axis];
+    const block = document.createElement('div');
+    block.className = 'block';
+    block.innerHTML = `<h2>${axis} · ${ln} / ${rn}</h2><p class="hint">${axis === 'EI' ? '能量从哪来' : axis === 'SN' ? '先信什么' : axis === 'TF' ? '凭什么下判断' : '怎么对待计划'}</p>`;
+
+    D.items.filter(it => it.axis === axis).forEach(it => {
+      const ans = s.answers[it.id];
+      const chosen = ans[0] === 'a' ? it.a : it.b;
+      const other = ans[0] === 'a' ? it.b : it.a;
+      const q = document.createElement('div');
+      q.className = 'q';
+      q.innerHTML = `
+        <div class="q-text"><span class="q-id">${it.id}</span>${esc(it.scene)}</div>
+        <div class="opts">
+          <div class="opt on"><span class="m">${ans[0].toUpperCase()}</span><span>${esc(chosen.text)}</span><span class="strength">${ans[1] === 2 ? '明确' : '偏向'}</span><span class="pole">${chosen.pole}</span></div>
+          <div class="opt"><span class="m">${ans[0] === 'a' ? 'B' : 'A'}</span><span>${esc(other.text)}</span></div>
+        </div>
+        <div class="why"><b>为什么：</b>${esc(ans[2])}</div>`;
+      block.appendChild(q);
+    });
+    groups.appendChild(block);
+  });
+}
+
+render();
+</script>
+</body>
+</html>
