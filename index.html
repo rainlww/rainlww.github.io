@@ -109,6 +109,37 @@
             z-index: 10;
         }
 
+        /* 省略号：一个一个蹦出来，再一起退回去，循环 */
+        .loading-dots {
+            display: inline-flex;
+            align-items: flex-end;
+            width: 1.15em;
+            margin-left: 0.04em;
+        }
+
+        .loading-dots span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(0.12em) scale(0.6);
+            animation: dotPop 1.6s ease-in-out infinite;
+            will-change: opacity, transform;
+        }
+
+        .loading-dots span:nth-child(1) { animation-delay: 0s; }
+        .loading-dots span:nth-child(2) { animation-delay: 0.16s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.32s; }
+
+        @keyframes dotPop {
+            0%, 6%   { opacity: 0; transform: translateY(0.16em) scale(0.5); }
+            10%      { opacity: 1; transform: translateY(-0.06em) scale(1.08); }
+            14%, 56% { opacity: 1; transform: translateY(0) scale(1); }
+            64%, 100%{ opacity: 0; transform: translateY(0) scale(0.92); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .loading-dots span { animation: none; opacity: 1; transform: none; }
+        }
+
         /* 水墨云层 - 分层明显 */
         .cloud {
             position: absolute;
@@ -1419,7 +1450,7 @@
 <body>
     <!-- Loading 页面 -->
     <div id="loading-screen">
-        <div class="loading-text" id="loadingText">Loading</div>
+        <div class="loading-text" id="loadingText">Loading<span class="loading-dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></div>
         <div class="loading-tips" id="loadingTips"></div>
     </div>
 
@@ -2039,24 +2070,6 @@
                 }
             }
             
-            // 平板端完全跳过省略号动画（防止卡死）
-            let dotInterval = null;
-            if (!isTablet && !hasVisited) {
-                // 仅桌面端 + 首次访问运行省略号动画
-                let dotCount = 0;
-                dotInterval = setInterval(function() {
-                    dotCount = (dotCount + 1) % 4;
-                    let dots = '';
-                    for (let i = 0; i < dotCount; i++) {
-                        dots += '.';
-                    }
-                    loadingText.textContent = 'Loading' + dots;
-                }, 400);
-            } else {
-                // 平板端或非首次访问直接显示 "Loading..."
-                loadingText.textContent = 'Loading...';
-            }
-            
             // 非首次访问跳过 Loading 直接显示主页
             if (hasVisited) {
                 console.log('非首次访问，跳过 Loading');
@@ -2072,12 +2085,6 @@
             // 单一超时控制（避免多个 setTimeout 冲突）
             setTimeout(function() {
                 console.log('超时触发，开始清理');
-                
-                // 1. 清除省略号动画
-                if (dotInterval) {
-                    clearInterval(dotInterval);
-                    dotInterval = null;
-                }
                 
                 // 2. 标记已访问（本次会话不再显示 Loading）
                 sessionStorage.setItem('hasVisited', 'true');
