@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俞朝鸿 - 雨落们的档案馆</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1a1a1a; line-height: 1.7; min-height: 100vh; position: relative; font-weight: 500; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; opacity: 0.25; z-index: -1; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,245,245,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
+        .back-link:hover { color: #7a6a7a; background: rgba(232,232,232,0.9); }
+        .page-title { font-size: 2.5em; color: #000; font-weight: 700; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #ddd; letter-spacing: 0; word-break: keep-all; white-space: normal; }
+        .collapse-section { margin-bottom: 20px; border: none; }
+        .collapse-section[open] { border-bottom: 1px solid rgba(224,224,224,0.5); padding-bottom: 15px; }
+        .collapse-title { list-style: none; display: flex; align-items: center; gap: 8px; font-size: 1.2em; font-weight: 600; color: #1a1a1a; cursor: pointer; padding: 10px 0; margin: 0; transition: color 0.2s; }
+        .collapse-title:hover { color: #9a7a8a; }
+        .collapse-title::-webkit-details-marker { display: none; }
+        .collapse-icon { transition: transform 0.3s; flex-shrink: 0; }
+        .collapse-section[open] .collapse-icon { transform: rotate(180deg); }
+        .collapse-content { padding: 10px 0 0 28px; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .artwork-container { text-align: center; }
+        .artwork-frame { display: inline-block; max-width: 100%; padding: 12px; background: linear-gradient(135deg, rgba(232,228,217,0.9) 0%, rgba(212,207,196,0.9) 100%); border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); backdrop-filter: blur(10px); }
+        .artwork-frame img { display: block; max-width: 100%; max-height: 650px; height: auto; border-radius: 2px; }
+        .artwork-caption { padding: 12px; text-align: center; background: rgba(249,249,249,0.9); font-size: 0.9em; color: #666; border-top: 1px solid rgba(224,224,224,0.5); margin-top: 10px; border-radius: 4px; backdrop-filter: blur(10px); }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 6px; }
+        .toc-list a { color: #9a7a8a; text-decoration: none; font-size: 0.95em; }
+        .toc-list a:hover { color: #7a6a7a; text-decoration: underline; }
+        @media (max-width: 768px) { .page-title { font-size: 2em; } }
+        @media (max-width: 480px) { .page-title { font-size: 1.5em; } }
+    </style>
+</head>
+<body>
+    <div class="page-bg" id="pageBg"></div>
+    <div class="container">
+        <a href="triple-sides-of-one-coin.html" class="back-link">← 返回花名册</a>
+        <h1 class="page-title" id="pageTitle">俞朝鸿</h1>
+
+        <div style="margin: 20px 0; padding: 15px 20px; background: rgba(245,245,245,0.8); border-left: 3px solid #9a7a8a; border-radius: 4px;">
+            <div style="font-size: 0.9em; color: #9a7a8a; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px;">「 引言 」</div>
+            <div style="font-size: 0.95em; color: #666; font-style: italic; line-height: 1.8;">
+                <div>演戏的得吃饭，看戏的也得吃饭。</div>
+            </div>
+        </div>
+
+        <details class="collapse-section" open>
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                目录
+            </summary>
+            <div class="collapse-content">
+                <ul class="toc-list">
+                    <li><a href="#artwork">立绘展示</a></li>
+                    <li><a href="#description">人物简介</a></li>
+                    <li><a href="#related">相关人物</a></li>
+                    <li><a href="#external">外部链接</a></li>
+                </ul>
+            </div>
+        </details>
+
+        <details class="collapse-section" id="artwork" open>
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                立绘展示
+            </summary>
+            <div class="collapse-content">
+                <div class="artwork-container">
+                    <div class="artwork-frame">
+                        <img src="yuchong-cover-opt.jpg" alt="俞朝鸿">
+                    </div>
+                    <div class="artwork-caption">俞朝鸿 · 圣拉姆特档案馆立绘</div>
+                </div>
+            </div>
+        </details>
+
+        <details class="collapse-section" id="description" open>
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                人物简介
+            </summary>
+            <div class="collapse-content">
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 基础档案 」</div>
+                    <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; font-size: 1em; line-height: 1.8; border-radius: 4px; font-weight: 500;">
+                        <p style="margin: 0 0 12px 0;">男性，裕宏茶馆现任掌柜。成渝辣子店的正对门邻居，与苏明若常有来往。</p><p style="margin: 0 0 12px 0;">性格随和圆融，却不失原则。对他而言，一碗茶、一出戏、一批又一批老主顾，就是最好的日子。</p>
+                    </div>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 档案资料（一） 」</div>
+                    <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; font-size: 1em; line-height: 1.8; border-radius: 4px; font-weight: 500;">
+                        <p style="margin: 0 0 12px 0;">经营裕宏茶馆多年，将一座普通茶馆做成了赤莲街的文化地标。白日评书、夜晚戏曲，日日不重样。</p><p style="margin: 0 0 12px 0;">不收门票，因为一碗茶钱就够了——「演戏的得吃饭，看戏的也得吃饭。」</p><p style="margin: 0 0 12px 0;">苏明若责怪他的戏害得客人们不好好吃饭，他不急不恼：「再晚，耽误明儿上工了。」最终想出让客人带面碗进茶馆的折中方案，还主动提出赔偿损坏的碗筷。</p>
+                    </div>
+                </div>
+            </div>
+        </details>
+
+        <details class="collapse-section" id="related">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                相关人物
+            </summary>
+            <div class="collapse-content">
+                <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; line-height: 1.8; border-radius: 4px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 相关人物 」</div>
+                    <p style="margin: 0 0 8px 0;">与苏明若是老对门邻居，常为客源问题协商，也在一来一往里生出默契。</p><p style="margin: 0;">茶馆与梨香园形成赤莲街的高低搭配——「这戏虽比不上梨香园里的腔，却也听的。」</p>
+                </div>
+            </div>
+        </details>
+
+        <details class="collapse-section" id="external">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                外部链接
+            </summary>
+            <div class="collapse-content">
+                <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; line-height: 1.8; border-radius: 4px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 外部链接 」</div>
+                    <p style="margin: 0; font-style: italic; color: #666;">Neta 角色页待补。</p>
+                </div>
+            </div>
+        </details>
+
+    </div>
+</body>
+</html>

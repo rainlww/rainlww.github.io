@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贝兰斯坦 - 雨落们的档案馆</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1a1a1a; line-height: 1.7; min-height: 100vh; position: relative; font-weight: 500; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .page-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; opacity: 0.25; z-index: -1; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #9a7a8a; text-decoration: none; font-size: 0.9em; padding: 6px 14px; background: rgba(245,245,245,0.9); border-radius: 4px; backdrop-filter: blur(10px); }
+        .back-link:hover { color: #7a6a7a; background: rgba(232,232,232,0.9); }
+        .page-title { font-size: 2.5em; color: #000; font-weight: 700; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #ddd; letter-spacing: 0; word-break: keep-all; white-space: normal; }
+        .collapse-section { margin-bottom: 20px; border: none; }
+        .collapse-section[open] { border-bottom: 1px solid rgba(224,224,224,0.5); padding-bottom: 15px; }
+        .collapse-title { list-style: none; display: flex; align-items: center; gap: 8px; font-size: 1.2em; font-weight: 600; color: #1a1a1a; cursor: pointer; padding: 10px 0; margin: 0; transition: color 0.2s; }
+        .collapse-title:hover { color: #9a7a8a; }
+        .collapse-title::-webkit-details-marker { display: none; }
+        .collapse-icon { transition: transform 0.3s; flex-shrink: 0; }
+        .collapse-section[open] .collapse-icon { transform: rotate(180deg); }
+        .collapse-content { padding: 10px 0 0 28px; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .artwork-container { text-align: center; }
+        .artwork-frame { display: inline-block; max-width: 100%; padding: 12px; background: linear-gradient(135deg, rgba(232,228,217,0.9) 0%, rgba(212,207,196,0.9) 100%); border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); backdrop-filter: blur(10px); }
+        .artwork-frame img { display: block; max-width: 100%; max-height: 650px; height: auto; border-radius: 2px; }
+        .artwork-caption { padding: 12px; text-align: center; background: rgba(249,249,249,0.9); font-size: 0.9em; color: #666; border-top: 1px solid rgba(224,224,224,0.5); margin-top: 10px; border-radius: 4px; backdrop-filter: blur(10px); }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 6px; }
+        .toc-list a { color: #9a7a8a; text-decoration: none; font-size: 0.95em; }
+        .toc-list a:hover { color: #7a6a7a; text-decoration: underline; }
+        @media (max-width: 768px) { .page-title { font-size: 2em; } }
+        @media (max-width: 480px) { .page-title { font-size: 1.5em; } }
+    </style>
+</head>
+<body>
+    <div class="page-bg" id="pageBg"></div>
+    <div class="container">
+        <a href="triple-sides-of-one-coin.html" class="back-link">← 返回花名册</a>
+        <h1 class="page-title" id="pageTitle">贝兰斯坦</h1>
+
+        <div style="margin: 20px 0; padding: 15px 20px; background: rgba(245,245,245,0.8); border-left: 3px solid #9a7a8a; border-radius: 4px;">
+            <div style="font-size: 0.9em; color: #9a7a8a; font-weight: 600; margin-bottom: 10px; letter-spacing: 2px;">「 引言 」</div>
+            <div style="font-size: 0.95em; color: #666; font-style: italic; line-height: 1.8;">
+                <div>她被两位院长从河水中捞起来时，还在发抖。后来，她把情报部部长的位置让给了伊斯派菈。</div>
+            </div>
+        </div>
+
+        <details class="collapse-section" open>
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                目录
+            </summary>
+            <div class="collapse-content">
+                <ul class="toc-list">
+                    <li><a href="#artwork">立绘展示</a></li>
+                    <li><a href="#description">人物简介</a></li>
+                    <li><a href="#related">相关人物</a></li>
+                    <li><a href="#external">外部链接</a></li>
+                </ul>
+            </div>
+        </details>
+
+        <details class="collapse-section" id="artwork" open>
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                立绘展示
+            </summary>
+            <div class="collapse-content">
+                <div class="artwork-container">
+                    <div class="artwork-frame">
+                        <img src="berenstein-cover-opt.jpg" alt="贝兰斯坦">
+                    </div>
+                    <div class="artwork-caption">贝兰斯坦 · 圣拉姆特档案馆立绘</div>
+                </div>
+            </div>
+        </details>
+
+        <details class="collapse-section" id="description" open>
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                人物简介
+            </summary>
+            <div class="collapse-content">
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 基础档案 」</div>
+                    <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; font-size: 1em; line-height: 1.8; border-radius: 4px; font-weight: 500;">
+                        <p style="margin: 0 0 12px 0;">女性，二十出头，蓝发短发，灰色眼睛，头顶翘起一撮呆毛。性格开朗幽默，有亲和力，但在细节之处从不马虎。喜欢毛茸茸的小动物。</p><p style="margin: 0 0 12px 0;">圣拉姆特副总管家兼 OW 情报部副部长，第二个来到圣拉姆特的孩子。</p>
+                    </div>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 档案资料（一） 」</div>
+                    <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; font-size: 1em; line-height: 1.8; border-radius: 4px; font-weight: 500;">
+                        <p style="margin: 0 0 12px 0;">十四岁时为躲避信徒屠杀跳入河中，差点溺亡，被荷穆勒夏和塞缪尔救起带回圣拉姆特。</p><p style="margin: 0 0 12px 0;">OW 情报部建立后主动请缨，却将部长的位置让给了伊斯派菈。</p><p style="margin: 0 0 12px 0;">主持了「客人起名投票活动」，最终为灰兔定下全名：阿耳忒弥斯·卢娜·塞勒涅·客人。</p>
+                    </div>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 能力 」</div>
+                    <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; font-size: 1em; line-height: 1.8; border-radius: 4px; font-weight: 500;">
+                        <p style="margin: 0 0 12px 0;">暂未在源材料中明确记载。</p>
+                    </div>
+                </div>
+            </div>
+        </details>
+
+        <details class="collapse-section" id="related">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                相关人物
+            </summary>
+            <div class="collapse-content">
+                <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; line-height: 1.8; border-radius: 4px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 相关人物 」</div>
+                    <p style="margin: 0 0 8px 0;">与伊斯派菈是最好的朋友，两人之间的信任与默契被比作「第二对生死之交」。</p><p style="margin: 0;">深受孩子们喜爱，是圣拉姆特气氛的调节者。</p>
+                </div>
+            </div>
+        </details>
+
+        <details class="collapse-section" id="external">
+            <summary class="collapse-title">
+                <svg class="collapse-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                外部链接
+            </summary>
+            <div class="collapse-content">
+                <div style="background: #f5f5f5; padding: 18px 22px; border: 2px solid #e0e0e0; color: #1a1a1a; line-height: 1.8; border-radius: 4px;">
+                    <div style="font-size: 1.05em; color: #1a1a1a; font-weight: 700; margin: 20px 0 12px 0; letter-spacing: 2px;">「 外部链接 」</div>
+                    <p style="margin: 0; font-style: italic; color: #666;">Neta 角色页待补。</p>
+                </div>
+            </div>
+        </details>
+
+    </div>
+</body>
+</html>
