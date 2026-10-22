@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBTI · 证据引擎</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ink: #24312c;
+    --ink-mid: #4a5a53;
+    --ink-soft: #7d8b84;
+    --paper: #f7f4ec;
+    --card: #fffdf8;
+    --line: #e2ddd0;
+    --green: #5f9b86;
+    --green-deep: #3f7262;
+    --green-soft: #e7f0eb;
+    --amber: #b8863f;
+    --rose: #b06a6a;
+    --serif: "Noto Serif SC", "Songti SC", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  body { background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.8; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+  .back { display: inline-block; color: var(--green-deep); text-decoration: none; font-size: .86em; padding: 6px 14px; background: rgba(255,255,255,.7); border: 1px solid var(--line); border-radius: 999px; margin-bottom: 26px; }
+  .back:hover { border-color: var(--green); }
+  h1 { font-family: var(--serif); font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: .12em; font-weight: 600; }
+  .sub { color: var(--ink-soft); font-size: .9em; margin-top: 10px; max-width: 640px; }
+  .rule { height: 1px; background: var(--line); margin: 28px 0; }
+
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 22px; box-shadow: 0 8px 24px rgba(60,50,30,.05); }
+  textarea {
+    width: 100%; min-height: 150px; resize: vertical; border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px 16px; font-family: var(--sans); font-size: .95em; line-height: 1.9; color: var(--ink);
+    background: #fff; outline: none; transition: border-color .2s, box-shadow .2s;
+  }
+  textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(95,155,134,.12); }
+  .samples { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 16px; }
+  .samples span { font-size: .76em; color: var(--ink-soft); align-self: center; margin-right: 2px; }
+  .sample { border: 1px solid var(--line); background: #fff; color: var(--ink-mid); border-radius: 999px; padding: 5px 12px; font-size: .78em; cursor: pointer; font-family: var(--sans); transition: all .2s; }
+  .sample:hover { border-color: var(--green); color: var(--green-deep); transform: translateY(-1px); }
+  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .analyze { border: 0; background: linear-gradient(135deg, var(--green), var(--green-deep)); color: #fff; border-radius: 8px; padding: 12px 30px; font-size: .95em; font-family: var(--sans); letter-spacing: .08em; cursor: pointer; box-shadow: 0 6px 16px rgba(63,114,98,.25); transition: transform .2s, box-shadow .2s; }
+  .analyze:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(63,114,98,.3); }
+  .hint { font-size: .76em; color: var(--ink-soft); }
+
+  .result { display: none; margin-top: 28px; }
+  .result.show { display: block; animation: rise .4s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .hero { display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+  .type { font-family: var(--serif); font-size: clamp(3.2rem, 8vw, 4.6rem); letter-spacing: .08em; line-height: 1; color: var(--green-deep); }
+  .type.is-pending { font-size: clamp(1.5rem, 4vw, 2rem); letter-spacing: .04em; color: var(--ink-mid); }
+  .type-meta { padding-bottom: 6px; }
+  .type-name { font-family: var(--serif); font-size: 1.2em; letter-spacing: .1em; }
+  .type-line { color: var(--ink-soft); font-size: .86em; margin-top: 4px; max-width: 520px; }
+  .conf { margin-left: auto; text-align: right; font-size: .78em; color: var(--ink-soft); }
+  .conf b { display: block; font-family: var(--serif); font-size: 1.8em; font-weight: 500; color: var(--ink); line-height: 1.2; }
+  .conf .dots { display: inline-flex; gap: 4px; margin-top: 6px; }
+  .conf .dots i { width: 22px; height: 4px; border-radius: 2px; background: var(--line); }
+  .conf .dots i.on { background: var(--green); }
+
+  .axes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+  @media (max-width: 680px) { .axes { grid-template-columns: 1fr; } }
+  .axis { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+  .axis-head { display: flex; justify-content: space-between; align-items: baseline; font-size: .82em; color: var(--ink-mid); }
+  .axis-head em { font-style: normal; color: var(--ink-soft); font-size: .82em; }
+  .axis-bar { position: relative; height: 10px; background: #eceae2; border-radius: 6px; margin: 12px 0 8px; overflow: hidden; }
+  .axis-bar span { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, var(--green), #7fb5a2); border-radius: 6px; transition: width .6s ease; }
+  .axis-foot { display: flex; justify-content: space-between; font-size: .74em; color: var(--ink-soft); }
+  .axis-foot b { font-weight: 600; color: var(--ink-mid); }
+  .weak .axis-bar span { background: linear-gradient(90deg, #c9b38a, #d8c6a2); }
+  .unknown .axis-bar span { background: #d9d5c8; }
+
+  .block { margin-top: 26px; }
+  .block h2 { font-family: var(--serif); font-size: .82em; letter-spacing: .32em; color: var(--amber); font-weight: 500; margin-bottom: 12px; }
+  .ev-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  @media (max-width: 680px) { .ev-grid { grid-template-columns: 1fr; } }
+  .ev { background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--green); border-radius: 6px; padding: 11px 14px; font-size: .82em; color: var(--ink-mid); }
+  .ev.neg { border-left-color: var(--rose); }
+  .ev .t { font-weight: 600; color: var(--ink); }
+  .ev .q { display: block; color: var(--ink-soft); font-size: .92em; margin-top: 4px; line-height: 1.7; }
+  .ev .me { font-size: .86em; color: var(--ink-soft); }
+
+  .notice { border: 1px dashed var(--line); background: rgba(255,255,255,.5); border-radius: 8px; padding: 12px 16px; font-size: .82em; color: var(--ink-soft); margin-top: 16px; }
+  .notice b { color: var(--ink-mid); font-weight: 600; }
+  .notice ul { margin: 6px 0 0 18px; }
+  .notice li { margin-bottom: 2px; }
+  .footer { margin-top: 36px; color: var(--ink-soft); font-size: .75em; text-align: center; letter-spacing: .08em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="test-choice.html">← 返回测试选择</a>
+  <h1>MBTI · 证据引擎</h1>
+  <p class="sub">不联网，不调用模型。把你或 ta 的简介拆成一条条证据，四组维度各自记账，再让十六个类型来认领。每条百分比都能指回原句。</p>
+
+  <div class="rule"></div>
+
+  <div class="panel">
+    <textarea id="text" placeholder="粘贴一段人物简介、行为描述或自述。写得越具体，证据越多。&#10;&#10;例如：我平时不太爱出门，人多的场合会累……做决定前会在心里把所有可能推演一遍……"></textarea>
+    <div class="samples">
+      <span>试试：</span>
+      <button class="sample" data-k="quiet">偏静 · 爱推演</button>
+      <button class="sample" data-k="warm">爱热闹 · 先看人</button>
+      <button class="sample" data-k="order">务实 · 按部就班</button>
+      <button class="sample" data-k="free">随性 · 想得多</button>
+    </div>
+    <div class="row">
+      <button class="analyze" id="go">开始分析</button>
+      <span class="hint" id="hint">本地计算 · 不上传 · 不花钱</span>
+    </div>
+
+    <div class="result" id="result">
+      <div class="hero">
+        <div class="type" id="type">—</div>
+        <div class="type-meta">
+          <div class="type-name" id="typeName"></div>
+          <div class="type-line" id="typeLine"></div>
+        </div>
+        <div class="conf">
+          <span>置信度</span>
+          <b id="confNum">0%</b>
+          <span id="confLevel">证据不足</span>
+          <div class="dots" id="confDots"><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </div>
+
+      <div class="axes" id="axes"></div>
+
+      <div class="block" id="evBlock">
+        <h2>判断依据</h2>
+        <div class="ev-grid" id="evGrid"></div>
+      </div>
+
+      <div class="notice" id="notice"></div>
+    </div>
+  </div>
+
+  <p class="footer">证据引擎 v1 · 没有证据就不下结论 · 只算，不猜</p>
+</div>
+
+<script src="mbti-engine.js"></script>
+<script>
+const SAMPLES = {
+  quiet: '我平时不太爱出门，人多的场合会累，需要一个人待着缓一缓。做决定之前会在心里把所有可能推演一遍，想清楚再说。别人常说我冷静、直接，有点不近人情，但我只是觉得对就是对。答应的事一定会做完，不喜欢临时改计划。',
+  warm: '我喜欢热闹，朋友很多，谁有事我都想第一个到场。我很在意大家的感受和氛围，宁愿自己多做一些，也不想让人难堪。做事喜欢提前安排、有条理，答应的事一定收尾。',
+  order: '我做事按部就班，喜欢提前列清单，答应的事一定按时做完。比起空谈理论，我更相信亲眼看到的事实和过去的经验。判断事情讲原则、讲对错，不太会被情绪带着走。生活里我习惯固定的节奏，不喜欢临时变化。',
+  free: '我大部分时间一个人待着，喜欢安静地看书、写字。心里有很多想象和说不清的预感，也很在意事情对自己的意义。做选择时先问自己是不是真的认同，怕伤到别人，也怕违背自己。不喜欢被安排，想保留一点自由。'
+};
+const $ = (id) => document.getElementById(id);
+const PAIRS = { EI: ['E', 'I'], SN: ['S', 'N'], TF: ['T', 'F'], JP: ['J', 'P'] };
+
+document.querySelectorAll('.sample').forEach(b => {
+  b.addEventListener('click', () => { $('text').value = SAMPLES[b.dataset.k]; $('text').focus(); });
+});
+
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+function render(r) {
+  const result = $('result');
+  result.classList.add('show');
+
+  const typeEl = $('type');
+  if (r.type) {
+    typeEl.textContent = r.type;
+    typeEl.classList.remove('is-pending');
+    $('typeName').textContent = r.typeName || '';
+    $('typeLine').textContent = r.typeLine || '';
+  } else if (r.candidates && r.candidates.length) {
+    typeEl.textContent = r.candidates.join(' / ');
+    typeEl.classList.add('is-pending');
+    $('typeName').textContent = '四缺一 · 两种可能';
+    $('typeLine').textContent = '缺的那一组没有足够证据，先不下结论。';
+  } else {
+    typeEl.textContent = '暂无法判定';
+    typeEl.classList.add('is-pending');
+    $('typeName').textContent = '证据不足';
+    $('typeLine').textContent = '再补一两句具体的行为描述。';
+  }
+
+  const pct = Math.round(r.confidence * 100);
+  $('confNum').textContent = pct + '%';
+  $('confLevel').textContent = { '低': '证据偏少', '中': '可以据此讨论', '高': '证据扎实' }[r.level] || '';
+  const dots = $('confDots').children;
+  for (let i = 0; i < dots.length; i++) dots[i].classList.toggle('on', i < Math.round(r.confidence * 5));
+
+  const axesEl = $('axes');
+  axesEl.innerHTML = '';
+  r.axes.forEach(a => {
+    const [L, R] = PAIRS[a.pair];
+    const known = !!a.letter;
+    const weak = known && a.confidence < 0.35;
+    const box = document.createElement('div');
+    box.className = 'axis' + (known ? (weak ? ' weak' : '') : ' unknown');
+    box.innerHTML = `
+      <div class="axis-head"><span>${L} ${a.pctA}%</span><em>${a.pair} · ${known ? '置信 ' + Math.round(a.confidence * 100) + '%' : '证据不足'}</em><span>${a.pctB}% ${R}</span></div>
+      <div class="axis-bar"><span style="width:${a.pctA}%"></span></div>
+      <div class="axis-foot"><span>${a.evidence.length ? '命中 ' + a.evidence.length + ' 条线索' : '没有命中线索'}</span><b>${a.massA} / ${a.massB}</b></div>`;
+    axesEl.appendChild(box);
+  });
+
+  const evGrid = $('evGrid');
+  evGrid.innerHTML = '';
+  let shown = 0;
+  r.axes.forEach(a => {
+    const seen = new Set();
+    let perAxis = 0;
+    a.evidence.forEach(e => {
+      if (perAxis >= 2) return;
+      if (seen.has(e.sentence)) return;
+      seen.add(e.sentence);
+      perAxis += 1;
+      const div = document.createElement('div');
+      div.className = 'ev' + (e.negated ? ' neg' : '');
+      div.innerHTML = `<span class="t">${e.dim}</span> <span class="me">· ${esc(e.label)}</span><span class="q">「${esc(e.sentence)}」</span>`;
+      evGrid.appendChild(div);
+      shown++;
+    });
+  });
+  if (!shown) {
+    evGrid.innerHTML = '<div class="ev">没有任何线索命中——换一段更具体的描述试试。</div>';
+  }
+
+  const notice = $('notice');
+  const bits = [];
+  if (r.type && r.runnerUp) {
+    bits.push(`<div><b>另一个可能：</b>${r.runnerUp.type}（${r.runnerUp.name}）——分岔在 ${r.runnerUp.axis} 轴（${r.runnerUp.pctA} : ${r.runnerUp.pctB}）。</div>`);
+  }
+  if (r.needed && r.needed.length) {
+    bits.push('<div><b>还差这些：</b><ul>' + r.needed.map(n => `<li>${n.pair} — ${n.hint}</li>`).join('') + '</ul></div>');
+  }
+  if (r.warnings && r.warnings.length) {
+    bits.push('<div><b>提醒：</b>' + r.warnings.join('；') + '。</div>');
+  }
+  bits.push(`<div style="margin-top:8px">本次共命中 <b>${r.evidenceCount}</b> 条证据，总权重 <b>${r.mass}</b>；文本 ${r.chars} 字。</div>`);
+  notice.innerHTML = bits.join('');
+}
+
+$('go').addEventListener('click', () => {
+  const text = $('text').value.trim();
+  if (text.length < 10) {
+    $('hint').textContent = '至少写 10 个字，不然没有证据可算。';
+    return;
+  }
+  $('hint').textContent = '本地计算 · 不上传 · 不花钱';
+  render(MBTIEngine.analyze(text));
+  $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+</script>
+</body>
+</html>
